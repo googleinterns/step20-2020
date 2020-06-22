@@ -1,4 +1,5 @@
 # Shef
 ## Recipe sharing made fun
 
-Welcome to Shef! Run <p>mvn package appengine:run</p> to get Sheffin'!
+Welcome to Shef! Run mvn package appengine:run to get Sheffin'!
+![Shef](/assets/images/shef.png "Shef")
