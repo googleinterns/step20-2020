@@ -1,14 +1,14 @@
+import java.util.LinkedList;
 
 public class Recipe {
 
-  private String name, description;
+  protected String name, description;
+  protected LinkedList<Step> steps;
   
-  
-  public Recipe() {
-
+  public Recipe(String recipeName, String recipeDescription, LinkedList<Step> recipeSteps) {
+    this.name = recipeName;
+    this.description = recipeDescription;
+    this.steps = recipeSteps;
   }
-
-
-
 
 }
