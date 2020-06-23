@@ -8,6 +8,7 @@ public class SpinOff extends Recipe {
     this.description = original.description;
     this.steps = original.steps;
     this.parent = original;
+    original.addSpinOff(this);
   }
 
 }
