@@ -14,19 +14,19 @@
 
 public class Step {
 
-  private String direction;
+  private String instruction;
 
-  public Step(String stepDirection) {
-    this.direction = stepDirection;
+  public Step(String instruction) {
+    this.instruction = instruction;
   }
 
-  public String getDirection() {
-    return direction;
+  public String getInstruction() {
+    return instruction;
   }
 
   @Override
   public String toString() {
-    return direction;
+    return instruction;
   }
 
 }
