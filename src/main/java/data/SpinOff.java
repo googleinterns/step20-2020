@@ -17,9 +17,7 @@ public class SpinOff extends Recipe {
   private Recipe original;
 
   public SpinOff(Recipe original) {
-    this.name = original.name;
-    this.description = original.description;
-    this.steps = original.steps;
+    super(original);
     this.original = original;
     original.addSpinOff(this);
   }

@@ -20,9 +20,14 @@ public class Recipe {
   protected String name;
   protected String description;
   protected List<Step> steps;
-  private List<SpinOff> spinOffs;
+  protected List<SpinOff> spinOffs;
 
-  public Recipe() {}
+  public Recipe(Recipe original) {
+    this.name = original.name;
+    this.description = original.description;
+    this.steps = original.steps;
+    this.spinOffs = original.spinOffs;
+  }
   
   public Recipe(String name, String description, List<Step> steps) {
     this.name = name;
