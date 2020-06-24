@@ -6,4 +6,13 @@ public class Step {
     this.direction = stepDirection;
   }
 
+  public String getDirection() {
+    return direction;
+  }
+
+  @Override
+  public String toString() {
+    return direction;
+  }
+
 }
