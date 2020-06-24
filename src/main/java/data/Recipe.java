@@ -17,16 +17,17 @@ import java.util.List;
 
 public class Recipe {
 
-  protected String name, description;
+  protected String name;
+  protected String description;
   protected List<Step> steps;
   private List<SpinOff> spinOffs;
 
   public Recipe() {}
   
-  public Recipe(String recipeName, String recipeDescription, List<Step> recipeSteps) {
-    this.name = recipeName;
-    this.description = recipeDescription;
-    this.steps = recipeSteps;
+  public Recipe(String name, String description, List<Step> steps) {
+    this.name = name;
+    this.description = description;
+    this.steps = steps;
     this.spinOffs = new LinkedList<>();
   }
 
@@ -36,8 +37,10 @@ public class Recipe {
 
   public void addStep(int position, Step newStep) {
     if (position < 0) {
+      System.err.println("Position " + position + " out of bounds, failed to add step [" + newStep + "]");
       return;
     } else if (position >= steps.size()) {
+      System.err.println("Position " + position + " out of bounds, appending step [" + newStep + "]");
       appendStep(newStep);
     } else {
       steps.add(position, newStep);
@@ -45,40 +48,47 @@ public class Recipe {
   }
 
   public void setStep(int position, Step newStep) {
-    if (position < 0 || position > steps.size() - 1) {
+    if (!isValidStepPosition(position)) {
       return;
     }
     steps.set(position, newStep);
   }
 
   public void removeStep(int position) {
-    if (position < 0 || position > steps.size() - 1) {
+    if (!isValidStepPosition(position)) {
       return;
     }
     steps.remove(position);
-  }
-
-  protected void addSpinOff(SpinOff spinOff) {
-    spinOffs.add(spinOff);
   }
 
   public List<Step> getSteps() {
     return steps;
   }
 
+  protected void addSpinOff(SpinOff spinOff) {
+    spinOffs.add(spinOff);
+  }
+
+  protected boolean isValidStepPosition(int position) {
+    if (position < 0 || position > steps.size() - 1) {
+      return false;
+    }
+    return true;
+  }
+
   @Override
   public String toString() {
-    String printed = "\nName: ";
-    printed += name;
-    printed += "\nDescription: ";
-    printed += description;
-    printed += "\nSteps:\n";
+    String str = "\nName: ";
+    str += name;
+    str += "\nDescription: ";
+    str += description;
+    str += "\nSteps:\n";
     for (Step step : steps) {
-      printed += "\t";
-      printed += step.getDirection();
-      printed += "\n";
+      str += "\t";
+      str += step.getInstruction();
+      str += "\n";
     }
-    return printed;
+    return str;
   }
 
   @Override
@@ -94,8 +104,8 @@ public class Recipe {
     for (int i = 0; i < a.steps.size(); i++) {
       Step aStep = a.steps.get(i);
       Step bStep = b.steps.get(i);
-      sameSteps = aStep.getDirection().equals(bStep.getDirection());
+      sameSteps = aStep.getInstruction().equals(bStep.getInstruction());
     }
-    return a.name.equals(b.name) && a.description.equals(b.description) && sameSteps;
+    return sameSteps && a.name.equals(b.name) && a.description.equals(b.description);
   }
 }
