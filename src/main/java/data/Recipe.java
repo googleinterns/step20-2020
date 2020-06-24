@@ -43,7 +43,6 @@ public class Recipe {
   public void addStep(int position, Step newStep) {
     if (position < 0) {
       System.err.println("Position " + position + " out of bounds, failed to add step [" + newStep + "]");
-      return;
     } else if (position >= steps.size()) {
       System.err.println("Position " + position + " out of bounds, appending step [" + newStep + "]");
       appendStep(newStep);
