@@ -37,4 +37,48 @@ public final class RecipeTest {
     Assert.assertEquals(expected, recipe);
   }
 
+  @Test
+  public void addStepOutOfBounds() {
+    List<Step> expectedSteps = new LinkedList<>(STEPS);
+    expectedSteps.add(new Step("butter the bread"));
+
+    Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
+    recipe.addStep(797234, new Step("butter the bread"));
+    Assert.assertEquals(expected, recipe);
+
+    recipe.addStep(-5, new Step("I'm outta bounds!"));
+    Assert.assertEquals(expected, recipe);
+  }
+
+  @Test
+  public void addIntermediateStep() {
+    List<Step> expectedSteps = new LinkedList<>(STEPS);
+    expectedSteps.add(1, new Step("Turn on the burner"));
+
+    Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
+    recipe.addStep(1, new Step("Turn on the burner"));
+    Assert.assertEquals(expected, recipe);
+  }
+
+  @Test
+  public void removeStep() {
+    List<Step> expectedSteps = new LinkedList<>(STEPS);
+    expectedSteps.remove(0);
+
+    Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
+    recipe.removeStep(0);
+    Assert.assertEquals(expected, recipe);
+  }
+
+  @Test
+  public void removeStepOutOfBounds() {
+    Recipe expected = new Recipe(NAME, DESCRIPTION, STEPS);
+
+    recipe.removeStep(-10);
+    Assert.assertEquals(expected, recipe);
+
+    recipe.removeStep(87232);
+    Assert.assertEquals(expected, recipe);
+  }
+
 }
