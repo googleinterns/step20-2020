@@ -25,8 +25,9 @@ public class Recipe {
       return;
     } else if (position >= steps.size()) {
       appendStep(newStep);
+    } else {
+      steps.add(position, newStep);
     }
-    steps.add(position, newStep);
   }
 
   public void setStep(int position, Step newStep) {
