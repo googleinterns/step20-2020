@@ -27,17 +27,16 @@ THE SOFTWARE.-->
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link rel="stylesheet" href="css/style.css"/>
-
     <title>shef</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="script.js"></script>
   </head>
 
-  <body class="page-container">
+  <body class="page-container" onload="loadComments()">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">shef</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon"></span>
       </button>
       
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -90,186 +89,164 @@ THE SOFTWARE.-->
     </nav>
 
     <div class="jumbotron text-center">
-        <img src="assets/images/strawberry_sc.jpg" class="feed-img-prof" alt="...">
+      <img src="assets/images/strawberry_sc.jpg" class="feed-img-prof" alt="...">
+      <div class="small-sep">
+        <h2>Strawberry Shortcake</h2>
+        <p>mbazolly</p>
         <div class="small-sep">
-            <h2>Strawberry Shortcake</h2>
-            <p>mbazolly</p>
-            <div class="small-sep">
-              <h3>#vegetarian, #dessert, #summer, #sweet, #american</h3>    
-            </div>
-            <div class="text-center small-sep">
-                <svg class="bi bi-credit-card bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
-                    <rect width="3" height="3" x="2" y="9" rx="1"/>
-                    <path d="M1 5h14v2H1z"/>
-                  </svg>
-                  <span class="icon-sep">8</span>
-                  <svg class="bi bi-clock bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
-                    <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
-                  </svg>
-                  <span class="icon-sep">45</span>
-                  <svg class="bi bi-heart bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                  </svg>     
-                  <span class="icon-sep">633</span>      
-            </div>
-            <div class="text-right">
-                <svg class="bi bi-truck bootstrap-icon icon-sep" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5v7h-1v-7a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5v1A1.5 1.5 0 0 1 0 10.5v-7zM4.5 11h6v1h-6v-1z"/>
-                    <path fill-rule="evenodd" d="M11 5h2.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5h-1v-1h1a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4.5h-1V5zm-8 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
-                    <path fill-rule="evenodd" d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
-                </svg>
-                <svg class="bi bi-forward bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M9.502 5.513a.144.144 0 0 0-.202.134V6.65a.5.5 0 0 1-.5.5H2.5v2.9h6.3a.5.5 0 0 1 .5.5v1.003c0 .108.11.176.202.134l3.984-2.933a.51.51 0 0 1 .042-.028.147.147 0 0 0 0-.252.51.51 0 0 1-.042-.028L9.502 5.513zM8.3 5.647a1.144 1.144 0 0 1 1.767-.96l3.994 2.94a1.147 1.147 0 0 1 0 1.946l-3.994 2.94a1.144 1.144 0 0 1-1.767-.96v-.503H2a.5.5 0 0 1-.5-.5v-3.9a.5.5 0 0 1 .5-.5h6.3v-.503z"/>
-                </svg>
-            </div>
-            <hr class="my-4">
-            <div class="text-left med-sep">
-                <div class="row">
-                    <div class="col-sm-2 col-md-2 col-lg-2">
-                        <h2>Description</h2>
-                    </div>
-                    <div class ="text-right">
-                        <svg class="bi bi-caret-down-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                        </svg>
-                    </div>
-                </div>
-                <hr class="my-4">
-            </div>
-            <div class="text-left med-sep">
-                <div class="row">
-                    <div class="col-sm-2 col-md-2 col-lg-2">
-                        <h2>Video</h2>
-                    </div>
-                    <div class ="text-right">
-                        <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                          </svg>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <iframe width="853" height="480" src="https://www.youtube.com/embed/aCUC5GVX1VI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <hr class="my-4">
-            </div>
-            <div class="text-left med-sep">
-                <div class="row">
-                    <div class="col-sm-2 col-md-2 col-lg-2">
-                        <h2>Ingredients</h2>
-                    </div>
-                    <div class ="text-right">
-                        <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                          </svg>
-                    </div>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Default checkbox
-                  </label>
-                </div>
-                <div class="form-check small-sep">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Default checkbox
-                  </label>
-                </div>
-                <div class="form-check small-sep">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Default checkbox
-                  </label>
-                </div>
-                <div class="form-check small-sep">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Default checkbox
-                  </label>
-                </div>
-                <div class="form-check small-sep">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Default checkbox
-                </div>
-                <div class="form-check small-sep">
-                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-                    <label class="form-check-label" for="defaultCheck1">
-                    Default checkbox
-                  </label>
-                </div>
-                <div class="small-sep">
-                </div>
-                <hr class="my-4">
-            </div>
-            <div class="text-left med-sep">
-                <div class="row">
-                    <div class="col-sm-2 col-md-2 col-lg-2">
-                        <h2>Equipment</h2>
-                    </div>
-                    <div class ="text-right">
-                        <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                          </svg>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <img src="assets/images/strawberry_sc_tools.png">
-                </div>
-                <hr class="my-4">
-            </div>
-            <div class="text-left med-sep">
-                <div class="row">
-                    <div class="col-sm-2 col-md-2 col-lg-2">
-                        <h2>Steps</h2>
-                    </div>
-                    <div class ="text-right">
-                        <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                          </svg>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-1 col-md-1 col-lg-1">
-                        <h3>1</h3>
-                    </div>
-                    <div class="col-sm-11 col-md-11 col-lg-11">
-                        <p>Place a rack in center of oven; preheat to 400°. Line a rimmed baking sheet with parchment paper. Whisk 2 cups flour, 1½ tsp. baking powder, ¼ tsp. baking soda, 4 tsp. sugar, and 1½ tsp. salt in a large bowl to combine.                        </p>
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <img src="assets/images/strawberry_sc.jpg" class="feed-img" alt="...">
-                </div>
-                <hr class="my-4">
-            </div>
-            <div class="text-left med-sep">
-                <div class="row">
-                    <div class="col-sm-2 col-md-2 col-lg-2">
-                        <h2>Comments</h2>
-                    </div>
-                    <div class ="text-right">
-                        <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-                          </svg>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <textarea class="form-control" id="commentInput" placeholder="Leave a comment..."></textarea>
-                </div>
-                <div class="small-sep">
-                    <p>morgansd • San Diego, CA • 6/11/20</p>
-                    <p>Absolute knockout. The sour cream folded into the whipped cream is a trick I will 100% steal for other recipes. Perfect amount of acidity throughout the whole thing. Unreal!!</p>
-                </div>
-                <hr class="my-4">
-                <div class="small-sep">
-                    <p>emilyc • Seattle, WA • 6/11/20</p>
-                    <p>Cakes came out too salty! And a bit dry. The cream tied in the entire dessert so will make again with more cream, less (no) salt, and less time in the oven.
-                    </p>
-                </div>
-            </div>
+          <h3>#vegetarian, #dessert, #summer, #sweet, #american</h3>    
         </div>
+        <div class="text-center small-sep">
+          <svg class="bi bi-credit-card bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+            <rect width="3" height="3" x="2" y="9" rx="1"/>
+            <path d="M1 5h14v2H1z"/>
+          </svg>
+          <span class="icon-sep">8</span>
+          <svg class="bi bi-clock bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+            <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+          </svg>
+          <span class="icon-sep">45</span>
+          <svg class="bi bi-heart bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+            </svg>     
+          <span class="icon-sep">633</span>      
+        </div>
+        <div class="text-right">
+          <svg class="bi bi-truck bootstrap-icon icon-sep" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5v7h-1v-7a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5v1A1.5 1.5 0 0 1 0 10.5v-7zM4.5 11h6v1h-6v-1z"/>
+            <path fill-rule="evenodd" d="M11 5h2.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5h-1v-1h1a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4.5h-1V5zm-8 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
+            <path fill-rule="evenodd" d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
+          </svg>
+          <svg class="bi bi-forward bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M9.502 5.513a.144.144 0 0 0-.202.134V6.65a.5.5 0 0 1-.5.5H2.5v2.9h6.3a.5.5 0 0 1 .5.5v1.003c0 .108.11.176.202.134l3.984-2.933a.51.51 0 0 1 .042-.028.147.147 0 0 0 0-.252.51.51 0 0 1-.042-.028L9.502 5.513zM8.3 5.647a1.144 1.144 0 0 1 1.767-.96l3.994 2.94a1.147 1.147 0 0 1 0 1.946l-3.994 2.94a1.144 1.144 0 0 1-1.767-.96v-.503H2a.5.5 0 0 1-.5-.5v-3.9a.5.5 0 0 1 .5-.5h6.3v-.503z"/>
+          </svg>
+        </div>
+        <hr class="my-4">
+        <div class="text-left med-sep">
+          <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+              <h2>Description</h2>
+            </div>
+            <div class ="text-right">
+              <svg class="bi bi-caret-down-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+              </svg>
+            </div>
+          </div>
+        <hr class="my-4">
+        </div>
+        <div class="text-left med-sep">
+          <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+              <h2>Video</h2>
+            </div>
+            <div class ="text-right">
+              <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="text-center">
+            <iframe width="853" height="480" src="https://www.youtube.com/embed/aCUC5GVX1VI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+          <hr class="my-4">
+        </div>
+        <div class="text-left med-sep">
+          <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+              <h2>Ingredients</h2>
+            </div>
+            <div class ="text-right">
+              <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+            <label class="form-check-label" for="defaultCheck1">
+            Default checkbox
+            </label>
+          </div>
+          <div class="form-check small-sep">
+            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+            <label class="form-check-label" for="defaultCheck1">
+            Default checkbox
+            </label>
+          </div>
+          <div class="form-check small-sep">
+            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+            <label class="form-check-label" for="defaultCheck1">
+            Default checkbox
+            </label>
+          </div>
+          <div class="small-sep">
+          </div>
+          <hr class="my-4">
+        </div>
+        <div class="text-left med-sep">
+          <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+              <h2>Equipment</h2>
+            </div>
+            <div class ="text-right">
+              <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="text-center">
+            <img src="assets/images/strawberry_sc_tools.png">
+          </div>
+          <hr class="my-4">
+        </div>
+        <div class="text-left med-sep">
+          <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+              <h2>Steps</h2>
+            </div>
+            <div class ="text-right">
+              <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-1 col-md-1 col-lg-1">
+              <h3>1</h3>
+            </div>
+            <div class="col-sm-11 col-md-11 col-lg-11">
+              <p>Place a rack in center of oven; preheat to 400°. Line a rimmed baking sheet with parchment paper. Whisk 2 cups flour, 1½ tsp. baking powder, ¼ tsp. baking soda, 4 tsp. sugar, and 1½ tsp. salt in a large bowl to combine.                        </p>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <img src="assets/images/strawberry_sc.jpg" class="feed-img" alt="...">
+          </div>
+          <hr class="my-4">
+        </div>
+        <div class="text-left med-sep">
+          <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+              <h2>Comments</h2>
+            </div>
+            <div class ="text-right">
+              <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+              </svg>
+            </div>
+          </div>
+
+          <form method="POST" action="/new-comment" class="form-group">
+            <textarea class="form-control" name="comment-input" placeholder="Leave a comment..."></textarea>
+            <br/>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+
+          <ul id="comment-list"></ul>
+        </div>
+      </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
