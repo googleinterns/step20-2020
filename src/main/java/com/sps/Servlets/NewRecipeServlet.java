@@ -63,65 +63,52 @@ public class NewRecipeServlet extends HttpServlet {
     String name = request.getParameter("name");
     searchStrings.add(name.toUpperCase());
     String description = request.getParameter("description");
-    EmbeddedEntity tags = getTags(request, searchStrings);
-    EmbeddedEntity ingredients = getIngredients(request, searchStrings);
-    EmbeddedEntity steps = getSteps(request);
+    EmbeddedEntity tags = getParameters(request, TAG, searchStrings);
+    EmbeddedEntity ingredients = getParameters(request, INGREDIENT, searchStrings);
+    EmbeddedEntity steps = getParameters(request, STEP, null);
 
     Entity recipe = new Entity("Recipe");
     recipe.setProperty("name", name);
     recipe.setProperty("description", description);
-    recipe.setProperty("tags", tags);
-    recipe.setProperty("ingredients", ingredients);
-    recipe.setProperty("steps", steps);
+    recipe.setIndexedProperty("tags", tags);
+    recipe.setIndexedProperty("ingredients", ingredients);
+    recipe.setIndexedProperty("steps", steps);
     recipe.setProperty("search-strings", searchStrings);
     datastore.put(recipe);
 
     response.sendRedirect("/edit-recipe.html");
   }
 
-  private EmbeddedEntity getTags(HttpServletRequest request, Set<String> searchStrings) {
-    EmbeddedEntity tags = new EmbeddedEntity();
-    int tagNum = 1;
+  /**
+   * Gets the parameters for fields that have different numbers of parameters from recipe to recipe.
+   * For example, one recipe may have 2 ingredients, while another may have 20.
+   * This method ensures that all tags, ingredients, and steps are recorded, no matter how many of each a recipe has.
+   */
+  private EmbeddedEntity getParameters(HttpServletRequest request, String type, Set<String> searchStrings) {
+    EmbeddedEntity parameters = new EmbeddedEntity();
+    int parameterNum = 1;
 
-    String parameterName = TAG + tagNum;
-    String tag = request.getParameter(TAG + tagNum);
-    while (tag != null) {
-      tags.setProperty(parameterName, tag);
-      String hashTag = "#" + tag.toUpperCase();
-      searchStrings.add(hashTag);
-      parameterName = TAG + (++tagNum);
-      tag = request.getParameter(parameterName);
+    String parameterName = type + parameterNum;
+    String parameter = request.getParameter(parameterName);
+    while (parameter != null) {
+      parameters.setProperty(parameterName, parameter);
+      addToSearchStrings(searchStrings, parameter, type);
+      parameterName = type + (++parameterNum);
+      parameter = request.getParameter(parameterName);
     }
-    return tags;
+    return parameters;
   }
 
-  private EmbeddedEntity getIngredients(HttpServletRequest request, Set<String> searchStrings) {
-    EmbeddedEntity ingredients = new EmbeddedEntity();
-    int ingredientNum = 1;
-
-    String parameterName = INGREDIENT + ingredientNum;
-    String ingredient = request.getParameter(INGREDIENT + ingredientNum);
-    while (ingredient != null) {
-      ingredients.setProperty(parameterName, ingredient);
-      searchStrings.add(ingredient.toUpperCase());
-      parameterName = INGREDIENT + (++ingredientNum);
-      ingredient = request.getParameter(parameterName);
+  /**
+   * Adds a formatted search string to the set of search strings.
+   */
+  private void addToSearchStrings(Set<String> searchStrings, String stringToAdd, String type) {
+    if (searchStrings == null) {
+      return;
     }
-    return ingredients;
-  }
-
-  private EmbeddedEntity getSteps(HttpServletRequest request) {
-    EmbeddedEntity steps = new EmbeddedEntity();
-    int stepNum = 1;
-
-    String parameterName = STEP + stepNum;
-    String step = request.getParameter(parameterName);
-    while (step != null) {
-      steps.setProperty(parameterName, step);
-      parameterName = STEP + (++stepNum);
-      step = request.getParameter(parameterName);
+    if (type.equals("tag")) {
+      stringToAdd = "#" + stringToAdd;
     }
-    return steps;
+    searchStrings.add(stringToAdd.toUpperCase());
   }
-
 }
