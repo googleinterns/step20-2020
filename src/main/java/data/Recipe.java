@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+package com.google.sps.data;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.*;
@@ -22,7 +24,16 @@ import java.util.Iterator;
  */
 public class Recipe {
 
+<<<<<<< HEAD
   private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+=======
+  protected String name;
+  protected String description;
+  protected List<String> tags;
+  protected List<String> ingredients;
+  protected List<Step> steps;
+  protected List<SpinOff> spinOffs;
+>>>>>>> add proper package statements and imports
 
   private String name;
   private String description;
@@ -39,12 +50,15 @@ public class Recipe {
     this.spinOffs = recipe.spinOffs;
   }
   
+
   /**
    * Default constructor called when creating a new recipe.
    */
-  public Recipe(String name, String description, List<Step> steps) {
+  public Recipe(String name, String description, List<String> tags, List<String> ingredients, List<Step> steps) {
     this.name = name;
     this.description = description;
+    this.tags = tags;
+    this.ingredients = ingredients;
     this.steps = steps;
     this.spinOffs = new LinkedList<>();
   }
