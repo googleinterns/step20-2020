@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Hello world!</title>
+  <link rel="icon" href="/assets/images/shef.png">
+</head>
+
+<body>
+  <h1>Edit Recipe!</h1>
+
+  <form action="/new-recipe" method="POST">
+    <h2>Name</h2>
+    <label for="name">What's your recipe called?</label><br/>
+    <textarea id="name" name="name" rows="1"></textarea><br/><br/>
+
+    <h2>Ingredients</h2>
+    <div id="steps">
+      <label for="ingredient1">Ingredient 1</label></br>
+      <textarea id="ingredient1" name="ingredient1" rows="1"></textarea></br></br>
+      <label for="ingredient2">Ingredient 2</label></br>
+      <textarea id="ingredient2" name="ingredient2" rows="1"></textarea></br></br>
+      <label for="ingredient3">Ingredient 3</label></br>
+      <textarea id="ingredient3" name="ingredient3" rows="1"></textarea></br></br>
+    </div>
+
+    <h2>Steps</h2>
+    <div id="steps">
+      <label for="step1">Step 1</label></br>
+      <textarea id="step1" name="step1" rows="1"></textarea></br></br>
+      <label for="step2">Step 2</label></br>
+      <textarea id="step2" name="step2" rows="1"></textarea></br></br>
+      <label for="step3">Step 3</label></br>
+      <textarea id="step3" name="step3" rows="1"></textarea></br></br>
+    </div>
+
+    <h3>Description</h3>
+    <label for="description">Give your recipe some more context.</label><br/>
+    <textarea id="description" name="description" rows="3"></textarea><br/><br/>
+
+    <input type="submit"/>
+  </form>
+
+</body>
+</html>
