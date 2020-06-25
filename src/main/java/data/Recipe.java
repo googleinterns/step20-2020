@@ -14,24 +14,29 @@
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 public class Recipe {
 
   protected String name;
   protected String description;
+  protected Set<String> ingredients;
   protected List<Step> steps;
   protected List<SpinOff> spinOffs;
 
   public Recipe(Recipe original) {
     this.name = original.name;
     this.description = original.description;
+    this.ingredients = original.ingredients;
     this.steps = original.steps;
     this.spinOffs = original.spinOffs;
   }
   
-  public Recipe(String name, String description, List<Step> steps) {
+  public Recipe(String name, String description, Set<String> ingredients, List<Step> steps) {
     this.name = name;
     this.description = description;
+    this.ingredients = ingredients;
     this.steps = steps;
     this.spinOffs = new LinkedList<>();
   }
