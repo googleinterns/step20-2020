@@ -26,8 +26,13 @@ import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.EntityNotFoundException;
-import java.util.Set;
+import com.google.gson.Gson;
+import java.util.Collection;
+import java.util.List;
 import java.util.HashSet;
+import java.util.ArrayList;
+import com.google.sps.data.Recipe;
+import com.google.sps.data.Step;
 
 @WebServlet("/new-recipe")
 public class NewRecipeServlet extends HttpServlet {
@@ -48,18 +53,21 @@ public class NewRecipeServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String keyString = request.getParameter("key");
-    Entity originalRecipe = null;
+    Entity recipeEntity = null;
     try {
-      originalRecipe = datastore.get(KeyFactory.stringToKey(keyString));
+      recipeEntity = datastore.get(KeyFactory.stringToKey(keyString));
     } catch (EntityNotFoundException e) {
       e.printStackTrace();
       return;
     }
+    Recipe original = entityToRecipe(recipeEntity);
+    response.setContentType("application/json;");
+    response.getWriter().println(convertToJsonUsingGson(original));  
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Set<String> searchStrings = new HashSet<>();
+    Collection<String> searchStrings = new HashSet<>();
     String name = request.getParameter("name");
     searchStrings.add(name.toUpperCase());
     String description = request.getParameter("description");
@@ -70,10 +78,10 @@ public class NewRecipeServlet extends HttpServlet {
     Entity recipe = new Entity("Recipe");
     recipe.setProperty("name", name);
     recipe.setProperty("description", description);
-    recipe.setIndexedProperty("tags", tags);
-    recipe.setIndexedProperty("ingredients", ingredients);
-    recipe.setIndexedProperty("steps", steps);
-    recipe.setProperty("search-strings", searchStrings);
+    recipe.setProperty("tags", tags);
+    recipe.setProperty("ingredients", ingredients);
+    recipe.setProperty("steps", steps);
+    recipe.setProperty("search-strings", new ArrayList<String>(searchStrings));
     datastore.put(recipe);
 
     response.sendRedirect("/edit-recipe.html");
@@ -84,7 +92,7 @@ public class NewRecipeServlet extends HttpServlet {
    * For example, one recipe may have 2 ingredients, while another may have 20.
    * This method ensures that all tags, ingredients, and steps are recorded, no matter how many of each a recipe has.
    */
-  private EmbeddedEntity getParameters(HttpServletRequest request, String type, Set<String> searchStrings) {
+  private EmbeddedEntity getParameters(HttpServletRequest request, String type, Collection<String> searchStrings) {
     EmbeddedEntity parameters = new EmbeddedEntity();
     int parameterNum = 1;
 
@@ -102,7 +110,7 @@ public class NewRecipeServlet extends HttpServlet {
   /**
    * Adds a formatted search string to the set of search strings.
    */
-  private void addToSearchStrings(Set<String> searchStrings, String stringToAdd, String type) {
+  private void addToSearchStrings(Collection<String> searchStrings, String stringToAdd, String type) {
     if (searchStrings == null) {
       return;
     }
@@ -110,5 +118,24 @@ public class NewRecipeServlet extends HttpServlet {
       stringToAdd = "#" + stringToAdd;
     }
     searchStrings.add(stringToAdd.toUpperCase());
+  }
+
+
+  private Recipe entityToRecipe(Entity recipeEntity) {
+    String name = (String) recipeEntity.getProperty("name");
+    String description = (String) recipeEntity.getProperty("description");
+    EmbeddedEntity tagsEntity = (EmbeddedEntity) recipeEntity.getProperty("tags");
+    EmbeddedEntity ingredientsEntity = (EmbeddedEntity) recipeEntity.getProperty("tags");
+    EmbeddedEntity stepsEntity = (EmbeddedEntity) recipeEntity.getProperty("tags");
+    ArrayList<String> tags = (ArrayList<String>) (List<?>) tagsEntity.getProperties().values();
+    ArrayList<String> ingredients = (ArrayList<String>) (List<?>) ingredientsEntity.getProperties().values();
+    ArrayList<Step> steps = (ArrayList<Step>) (List<?>) stepsEntity.getProperties().values();
+    return new Recipe(name, description, tags, ingredients, steps);
+  }
+
+  private String convertToJsonUsingGson(Recipe recipe) {
+    Gson gson = new Gson();
+    String json = gson.toJson(recipe);
+    return json;
   }
 }
