@@ -21,13 +21,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.HashSet;
+import com.google.sps.data.Recipe;
+import com.google.sps.data.Step;
 
 @RunWith(JUnit4.class)
 public final class RecipeTest {
 
   private static final String NAME = "Grilled Cheese";
   private static final String DESCRIPTION = "It's literally just melted cheese on bread";
-  private static final HashSet<String> INGREDIENTS = new HashSet<>();
+  private static final List<String> TAGS = new LinkedList<>();
+  private static final List<String> INGREDIENTS = new LinkedList<>();
   private static final List<Step> STEPS = Arrays.asList(
       new Step("Toast the bread for 2 minutes"),
       new Step("Melt the cheese"),
@@ -37,7 +40,7 @@ public final class RecipeTest {
 
   @Before
   public void setup() {
-    recipe = new Recipe(NAME, DESCRIPTION, INGREDIENTS, new LinkedList(STEPS));
+    recipe = new Recipe(NAME, DESCRIPTION, TAGS, INGREDIENTS, new LinkedList(STEPS));
   }
 
   @Test
@@ -45,7 +48,7 @@ public final class RecipeTest {
     List<Step> expectedSteps = new LinkedList<>(STEPS);
     expectedSteps.add(new Step("butter the bread"));
 
-    Recipe expected = new Recipe(NAME, DESCRIPTION, INGREDIENTS, expectedSteps);
+    Recipe expected = new Recipe(NAME, DESCRIPTION, TAGS, INGREDIENTS, expectedSteps);
     recipe.appendStep(new Step("butter the bread"));
 
     Assert.assertEquals(expected, recipe);
@@ -56,7 +59,7 @@ public final class RecipeTest {
     List<Step> expectedSteps = new LinkedList<>(STEPS);
     expectedSteps.add(new Step("butter the bread"));
 
-    Recipe expected = new Recipe(NAME, DESCRIPTION, INGREDIENTS, expectedSteps);
+    Recipe expected = new Recipe(NAME, DESCRIPTION, TAGS, INGREDIENTS, expectedSteps);
     recipe.addStep(797234, new Step("butter the bread"));
     Assert.assertEquals(expected, recipe);
 
@@ -69,7 +72,7 @@ public final class RecipeTest {
     List<Step> expectedSteps = new LinkedList<>(STEPS);
     expectedSteps.add(1, new Step("Turn on the burner"));
 
-    Recipe expected = new Recipe(NAME, DESCRIPTION, INGREDIENTS, expectedSteps);
+    Recipe expected = new Recipe(NAME, DESCRIPTION, TAGS, INGREDIENTS, expectedSteps);
     recipe.addStep(1, new Step("Turn on the burner"));
     Assert.assertEquals(expected, recipe);
   }
@@ -79,14 +82,14 @@ public final class RecipeTest {
     List<Step> expectedSteps = new LinkedList<>(STEPS);
     expectedSteps.remove(0);
 
-    Recipe expected = new Recipe(NAME, DESCRIPTION, INGREDIENTS, expectedSteps);
+    Recipe expected = new Recipe(NAME, DESCRIPTION, TAGS, INGREDIENTS, expectedSteps);
     recipe.removeStep(0);
     Assert.assertEquals(expected, recipe);
   }
 
   @Test
   public void removeStepOutOfBounds() {
-    Recipe expected = new Recipe(NAME, DESCRIPTION, INGREDIENTS, STEPS);
+    Recipe expected = new Recipe(NAME, DESCRIPTION, TAGS, INGREDIENTS, STEPS);
 
     recipe.removeStep(-10);
     Assert.assertEquals(expected, recipe);
