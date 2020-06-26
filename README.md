@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//Shef image source: https://i.kym-cdn.com/photos/images/newsfeed/001/696/371/637.png
+
 # Shef
 ## Recipe sharing made fun
 
