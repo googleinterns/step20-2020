@@ -19,3 +19,12 @@ function populateRecipeCreationForm(recipe) {
   populateFormComponent("ingredient", recipe.ingredients);
   populateFormComponent("step", recipe.steps);
 }
+
+function populateFormComponent(componentName, data) {
+  var componentNum = 1;
+  for (var i = 0; i < data.length; i++) {
+    var component = document.getElementById(componentName + componentNum++);
+    console.log(data[i]);
+    component.value = data[i];
+  }
+}
