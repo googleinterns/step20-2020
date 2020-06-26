@@ -53,6 +53,7 @@ public class NewRecipeServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String keyString = request.getParameter("key");
+    System.out.println(keyString);
     Entity recipeEntity = null;
     try {
       recipeEntity = datastore.get(KeyFactory.stringToKey(keyString));
@@ -100,7 +101,7 @@ public class NewRecipeServlet extends HttpServlet {
     String parameter = request.getParameter(parameterName);
     while (parameter != null) {
       parameters.setProperty(parameterName, parameter);
-      addToSearchStrings(searchStrings, parameter, type);
+      addToSearchStrings(searchStrings, parameter);
       parameterName = type + (++parameterNum);
       parameter = request.getParameter(parameterName);
     }
@@ -110,26 +111,22 @@ public class NewRecipeServlet extends HttpServlet {
   /**
    * Adds a formatted search string to the set of search strings.
    */
-  private void addToSearchStrings(Collection<String> searchStrings, String stringToAdd, String type) {
+  private void addToSearchStrings(Collection<String> searchStrings, String stringToAdd) {
     if (searchStrings == null) {
       return;
     }
-    if (type.equals("tag")) {
-      stringToAdd = "#" + stringToAdd;
-    }
     searchStrings.add(stringToAdd.toUpperCase());
   }
-
 
   private Recipe entityToRecipe(Entity recipeEntity) {
     String name = (String) recipeEntity.getProperty("name");
     String description = (String) recipeEntity.getProperty("description");
     EmbeddedEntity tagsEntity = (EmbeddedEntity) recipeEntity.getProperty("tags");
-    EmbeddedEntity ingredientsEntity = (EmbeddedEntity) recipeEntity.getProperty("tags");
-    EmbeddedEntity stepsEntity = (EmbeddedEntity) recipeEntity.getProperty("tags");
-    ArrayList<String> tags = (ArrayList<String>) (List<?>) tagsEntity.getProperties().values();
-    ArrayList<String> ingredients = (ArrayList<String>) (List<?>) ingredientsEntity.getProperties().values();
-    ArrayList<Step> steps = (ArrayList<Step>) (List<?>) stepsEntity.getProperties().values();
+    EmbeddedEntity ingredientsEntity = (EmbeddedEntity) recipeEntity.getProperty("ingredients");
+    EmbeddedEntity stepsEntity = (EmbeddedEntity) recipeEntity.getProperty("steps");
+    ArrayList<String> tags = (ArrayList<String>) (ArrayList<?>) new ArrayList<Object>(tagsEntity.getProperties().values());
+    ArrayList<String> ingredients = (ArrayList<String>) (ArrayList<?>) new ArrayList<Object>(ingredientsEntity.getProperties().values());
+    ArrayList<Step> steps = (ArrayList<Step>) (ArrayList<?>) new ArrayList<Object>(stepsEntity.getProperties().values());
     return new Recipe(name, description, tags, ingredients, steps);
   }
 
