@@ -53,7 +53,6 @@ public class NewRecipeServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String keyString = request.getParameter("key");
-    System.out.println(keyString);
     Entity recipeEntity = null;
     try {
       recipeEntity = datastore.get(KeyFactory.stringToKey(keyString));
