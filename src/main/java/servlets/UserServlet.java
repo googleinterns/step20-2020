@@ -17,8 +17,6 @@ package data;
 import data.User;
 import java.io.IOException;
 import com.google.gson.Gson;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -35,14 +33,14 @@ public final class UserServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the userID from the query string
-    long userId = request.getParameter("userID");
+    // Get the id from the query string
+    long id = request.getParameter("id");
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Entity userEntity = datastore.get(userID);
+    Entity userEntity = datastore.get(id);
     String email = userEntity.getProperty("email");
     String username = userEntity.getProperty("username");
-    User user = new User(userID, email, username);
+    User user = new User(id, email, username);
 
     // Convert to JSON and send it as the response.
     Gson gson = new Gson();
@@ -53,9 +51,20 @@ public final class UserServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequeest request, HttpServletResponse response) throws IOException {
-    UserService userService = UserServiceFactory.getUserService();
     
+    long id = request.getParameter("id");
+    String email = request.getParameter("email");
+    String username = request.getParameter("username");
 
+    // Create a new User entity with data from the request.
+    Entity userEntity = new Entity("User");
+    userEntity.setProperty("id", id);
+    userEntity.setProperty("email", email);
+    userEntity.setProperty("username", username);
+
+    // Store the User entity in Datastore.
+    DatastoreService datastore = new DataStoreServiceFactory.getDatastoreService();
+    datastore.put(userEntity);
   }
 
 }
