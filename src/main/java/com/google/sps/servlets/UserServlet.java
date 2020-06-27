@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package data;
+package com.google.sps.servlets;
 
 import data.User;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public final class UserServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the id from the query string
+    // Get the id from the query string.
     long id = request.getParameter("id");
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
@@ -50,8 +50,7 @@ public final class UserServlet extends HttpServlet {
   }
 
   @Override
-  public void doPost(HttpServletRequeest request, HttpServletResponse response) throws IOException {
-    
+  public void doPost(HttpServletRequeest request, HttpServletResponse response) throws IOException {   
     long id = request.getParameter("id");
     String email = request.getParameter("email");
     String username = request.getParameter("username");
@@ -66,5 +65,4 @@ public final class UserServlet extends HttpServlet {
     DatastoreService datastore = new DataStoreServiceFactory.getDatastoreService();
     datastore.put(userEntity);
   }
-
 }

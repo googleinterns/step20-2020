@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package data;
+package com.google.sps.data;
 
 import java.util.ArrayList;
 
 /** Class representing a user. */
 public class User {
 
+    // Contains the entity id from Datastore.
     private long id;
     private String email;
     private String username;
