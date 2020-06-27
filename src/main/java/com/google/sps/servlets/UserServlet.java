@@ -14,7 +14,7 @@
 
 package com.google.sps.servlets;
 
-import data.User;
+import com.google.sps.data.User;
 import java.io.IOException;
 import com.google.gson.Gson;
 import com.google.appengine.api.datastore.DatastoreService;
