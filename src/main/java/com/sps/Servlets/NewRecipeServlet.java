@@ -123,13 +123,14 @@ public class NewRecipeServlet extends HttpServlet {
   private Recipe entityToRecipe(Entity recipeEntity) {
     String name = (String) recipeEntity.getProperty("name");
     String description = (String) recipeEntity.getProperty("description");
-    LinkedList<String> tags = (LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("tags"));
-    LinkedList<String> ingredients = (LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("ingredients"));
-    LinkedList<Step> steps = (LinkedList<Step>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("steps"));
+    LinkedList<String> tags = (LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("tags"), TAG);
+    LinkedList<String> ingredients = (LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("ingredients"), INGREDIENT);
+    LinkedList<Step> steps = (LinkedList<Step>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("steps"), STEP);
     return new Recipe(name, description, tags, ingredients, steps);
   }
 
-  private LinkedList<Object> getDataAsList(Collection<EmbeddedEntity> properties, String type) {
+  private LinkedList<Object> getDataAsList(Object propertiesObject, String type) {
+    Collection<EmbeddedEntity> properties = (Collection<EmbeddedEntity>) propertiesObject;
     LinkedList<Object> dataAsList = new LinkedList<>();
     for (EmbeddedEntity property : properties) {
       dataAsList.add(property.getProperty(type));
