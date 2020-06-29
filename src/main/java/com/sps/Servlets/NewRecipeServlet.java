@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import com.google.sps.data.Recipe;
 import com.google.sps.data.Step;
 
@@ -53,7 +54,6 @@ public class NewRecipeServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String keyString = request.getParameter("key");
-    System.out.println(keyString);
     Entity recipeEntity = null;
     try {
       recipeEntity = datastore.get(KeyFactory.stringToKey(keyString));
@@ -72,9 +72,9 @@ public class NewRecipeServlet extends HttpServlet {
     String name = request.getParameter("name");
     searchStrings.add(name.toUpperCase());
     String description = request.getParameter("description");
-    EmbeddedEntity tags = getParameters(request, TAG, searchStrings);
-    EmbeddedEntity ingredients = getParameters(request, INGREDIENT, searchStrings);
-    EmbeddedEntity steps = getParameters(request, STEP, null);
+    Collection<EmbeddedEntity> tags = getParameters(request, TAG, searchStrings);
+    Collection<EmbeddedEntity> ingredients = getParameters(request, INGREDIENT, searchStrings);
+    Collection<EmbeddedEntity> steps = getParameters(request, STEP, null);
 
     Entity recipe = new Entity("Recipe");
     recipe.setProperty("name", name);
@@ -93,17 +93,19 @@ public class NewRecipeServlet extends HttpServlet {
    * For example, one recipe may have 2 ingredients, while another may have 20.
    * This method ensures that all tags, ingredients, and steps are recorded, no matter how many of each a recipe has.
    */
-  private EmbeddedEntity getParameters(HttpServletRequest request, String type, Collection<String> searchStrings) {
-    EmbeddedEntity parameters = new EmbeddedEntity();
+  private Collection<EmbeddedEntity> getParameters(HttpServletRequest request, String type, Collection<String> searchStrings) {
+    Collection<EmbeddedEntity> parameters = new LinkedList<>();
     int parameterNum = 1;
 
     String parameterName = type + parameterNum;
     String parameter = request.getParameter(parameterName);
     while (parameter != null) {
-      parameters.setProperty(parameterName, parameter);
+      EmbeddedEntity parameterEntity = new EmbeddedEntity();
+      parameterEntity.setProperty(type, parameter);
       addToSearchStrings(searchStrings, parameter);
       parameterName = type + (++parameterNum);
       parameter = request.getParameter(parameterName);
+      parameters.add(parameterEntity);
     }
     return parameters;
   }
@@ -121,13 +123,18 @@ public class NewRecipeServlet extends HttpServlet {
   private Recipe entityToRecipe(Entity recipeEntity) {
     String name = (String) recipeEntity.getProperty("name");
     String description = (String) recipeEntity.getProperty("description");
-    EmbeddedEntity tagsEntity = (EmbeddedEntity) recipeEntity.getProperty("tags");
-    EmbeddedEntity ingredientsEntity = (EmbeddedEntity) recipeEntity.getProperty("ingredients");
-    EmbeddedEntity stepsEntity = (EmbeddedEntity) recipeEntity.getProperty("steps");
-    ArrayList<String> tags = (ArrayList<String>) (ArrayList<?>) new ArrayList<Object>(tagsEntity.getProperties().values());
-    ArrayList<String> ingredients = (ArrayList<String>) (ArrayList<?>) new ArrayList<Object>(ingredientsEntity.getProperties().values());
-    ArrayList<Step> steps = (ArrayList<Step>) (ArrayList<?>) new ArrayList<Object>(stepsEntity.getProperties().values());
+    LinkedList<String> tags = (LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("tags"));
+    LinkedList<String> ingredients = (LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("ingredients"));
+    LinkedList<Step> steps = (LinkedList<Step>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("steps"));
     return new Recipe(name, description, tags, ingredients, steps);
+  }
+
+  private LinkedList<Object> getDataAsList(Collection<EmbeddedEntity> properties, String type) {
+    LinkedList<Object> dataAsList = new LinkedList<>();
+    for (EmbeddedEntity property : properties) {
+      dataAsList.add(property.getProperty(type));
+    }
+    return dataAsList;
   }
 
   private String convertToJsonUsingGson(Recipe recipe) {
