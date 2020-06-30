@@ -66,8 +66,8 @@ public class Recipe {
     if (position == steps.size()) {
       appendStep(newStep);
     } else if (!isValidStepPosition(position)) {
-      handleStepException("Position " + position + "is out of bounds [0, " + (steps.size() - 1) + "]. " +
-          "Failed to add step " + newStep + ".");
+      handleStepException("Position " + position + " is out of bounds [0, " + (steps.size() - 1) + "]. " +
+          "Failed to add step \"" + newStep + "\".");
     } else {
       steps.add(position, newStep);
     }
@@ -81,8 +81,8 @@ public class Recipe {
    */
   public void setStep(int position, Step newStep) throws IndexOutOfBoundsException {
     if (!isValidStepPosition(position)) {
-      handleStepException("Position " + position + "is out of bounds [0, " + (steps.size() - 1) + "]. " +
-          "Failed to set step " + newStep + ".");
+      handleStepException("Position " + position + " is out of bounds [0, " + (steps.size() - 1) + "]. " +
+          "Failed to set step \"" + newStep + "\".");
       return;
     }
     steps.set(position, newStep);
@@ -95,7 +95,7 @@ public class Recipe {
    */
   public void removeStep(int position) throws IndexOutOfBoundsException {
     if (!isValidStepPosition(position)) {
-      handleStepException("Position " + position + "is out of bounds [0, " + (steps.size() - 1) + "]. " +
+      handleStepException("Position " + position + " is out of bounds [0, " + (steps.size() - 1) + "]. " +
           "Failed to remove step.");
       return;
     }
