@@ -26,7 +26,7 @@ public class Recipe {
 
   protected String name;
   protected String description;
-  protected List<Step> steps;
+  private List<Step> steps;
   protected List<SpinOff> spinOffs;
 
   /**
