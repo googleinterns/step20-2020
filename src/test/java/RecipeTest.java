@@ -50,19 +50,6 @@ public final class RecipeTest {
   }
 
   @Test
-  public void addStepOutOfBounds() {
-    List<Step> expectedSteps = new LinkedList<>(STEPS);
-    expectedSteps.add(new Step("butter the bread"));
-
-    Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
-    recipe.addStep(797234, new Step("butter the bread"));
-    Assert.assertEquals(expected, recipe);
-
-    recipe.addStep(-5, new Step("I'm outta bounds!"));
-    Assert.assertEquals(expected, recipe);
-  }
-
-  @Test
   public void addIntermediateStep() {
     List<Step> expectedSteps = new LinkedList<>(STEPS);
     expectedSteps.add(1, new Step("Turn on the burner"));
@@ -82,15 +69,35 @@ public final class RecipeTest {
     Assert.assertEquals(expected, recipe);
   }
 
-  @Test
-  public void removeStepOutOfBounds() {
-    Recipe expected = new Recipe(NAME, DESCRIPTION, STEPS);
-
-    recipe.removeStep(-10);
-    Assert.assertEquals(expected, recipe);
-
-    recipe.removeStep(87232);
-    Assert.assertEquals(expected, recipe);
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void addStepFailureTooHigh() {
+    recipe.addStep(99, new Step("never added"));
   }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void addStepFailureTooLow() {
+    recipe.addStep(-1, new Step("never added"));
+  }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void setStepFailureTooHigh() {
+    recipe.setStep(5, new Step("never set"));
+  }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void setStepFailureTooLow() {
+    recipe.setStep(-1, new Step("never set"));
+  }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void removeStepFailureTooHigh() {
+    recipe.removeStep(99);
+  }
+
+  @Test(expected = IndexOutOfBoundsException.class)
+  public void removeStepFailureTooLow() {
+    recipe.removeStep(-10);
+  }
+
 
 }
