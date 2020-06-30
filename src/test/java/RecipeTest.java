@@ -152,7 +152,7 @@ public final class RecipeTest {
         new Step("Put the cheese in the bread")
     );
 
-    Recipe expected = new Recipe(NAME, DESCRIPTION, TAGS, INGREDIENTS, STEPS);
+    Recipe expected = new Recipe(NAME, DESCRIPTION, TAGS, INGREDIENTS, expectedSteps);
     recipe.removeStep(1);
     Assert.assertEquals(expected, recipe);
   }
@@ -206,7 +206,7 @@ public final class RecipeTest {
     expected += "\nSteps:\n";
     expected += "\tA step\n";
 
-    Recipe testRecipe = new Recipe("NAME", "DESC", Arrays.asList(new Step("A step")));
+    Recipe testRecipe = new Recipe("NAME", "DESC", TAGS, INGREDIENTS, Arrays.asList(new Step("A step")));
     Assert.assertEquals(expected, testRecipe.toString());
   }
 }

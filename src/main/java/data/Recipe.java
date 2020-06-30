@@ -24,19 +24,12 @@ import java.util.Iterator;
  */
 public class Recipe {
 
-<<<<<<< HEAD
   private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-=======
-  protected String name;
-  protected String description;
-  protected List<String> tags;
-  protected List<String> ingredients;
-  protected List<Step> steps;
-  protected List<SpinOff> spinOffs;
->>>>>>> add proper package statements and imports
-
+  
   private String name;
   private String description;
+  private List<String> tags;
+  private List<String> ingredients;
   private List<Step> steps;
   private List<SpinOff> spinOffs;
 
