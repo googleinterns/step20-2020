@@ -24,10 +24,10 @@ public class Recipe {
 
   private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
-  protected String name;
-  protected String description;
+  private String name;
+  private String description;
   private List<Step> steps;
-  protected List<SpinOff> spinOffs;
+  private List<SpinOff> spinOffs;
 
   /**
    * Copy constructor called when creating spin-offs.
