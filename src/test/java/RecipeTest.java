@@ -50,9 +50,27 @@ public final class RecipeTest {
   }
 
   @Test
+  public void addBeginningStep() {
+    List<Step> expectedSteps = Arrays.asList(
+        new Step("Index 0!"),
+        new Step("Toast the bread for 2 minutes"),
+        new Step("Melt the cheese"),
+        new Step("Put the cheese in the bread")
+    );
+
+    Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
+    recipe.addStep(0, new Step("Index 0!"));
+    Assert.assertEquals(expected, recipe);
+  }
+
+  @Test
   public void addIntermediateStep() {
-    List<Step> expectedSteps = new LinkedList<>(STEPS);
-    expectedSteps.add(1, new Step("Turn on the burner"));
+    List<Step> expectedSteps = Arrays.asList(
+        new Step("Toast the bread for 2 minutes"),
+        new Step("Turn on the burner"),
+        new Step("Melt the cheese"),
+        new Step("Put the cheese in the bread")
+    );
 
     Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
     recipe.addStep(1, new Step("Turn on the burner"));
@@ -60,12 +78,91 @@ public final class RecipeTest {
   }
 
   @Test
-  public void removeStep() {
-    List<Step> expectedSteps = new LinkedList<>(STEPS);
-    expectedSteps.remove(0);
+  public void addEndStep() {
+    List<Step> expectedSteps = Arrays.asList(
+        new Step("Toast the bread for 2 minutes"),
+        new Step("Melt the cheese"),
+        new Step("Put the cheese in the bread"),
+        new Step("Index 3!")
+    );
+
+    Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
+    recipe.addStep(3, new Step("Index 3!"));
+    Assert.assertEquals(expected, recipe);
+  }
+
+  @Test
+  public void setBeginningStep() {
+    List<Step> expectedSteps = Arrays.asList(
+        new Step("New first step"),
+        new Step("Melt the cheese"),
+        new Step("Put the cheese in the bread")
+    );
+
+    Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
+    recipe.setStep(0, new Step("New first step"));
+    Assert.assertEquals(expected, recipe);
+  }
+
+  @Test
+  public void setIntermediateStep() {
+    List<Step> expectedSteps = Arrays.asList(
+        new Step("Toast the bread for 2 minutes"),
+        new Step("New middle step"),
+        new Step("Put the cheese in the bread")
+    );
+
+    Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
+    recipe.setStep(1, new Step("New middle step"));
+    Assert.assertEquals(expected, recipe);
+  }
+
+  @Test
+  public void setEndStep() {
+    List<Step> expectedSteps = Arrays.asList(
+        new Step("Toast the bread for 2 minutes"),
+        new Step("Melt the cheese"),
+        new Step("New last step")
+    );
+
+    Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
+    recipe.setStep(2, new Step("New last step"));
+    Assert.assertEquals(expected, recipe);
+  }
+
+  @Test
+  public void removeBeginningStep() {
+    List<Step> expectedSteps = Arrays.asList(
+        new Step("Melt the cheese"),
+        new Step("Put the cheese in the bread")
+    );
 
     Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
     recipe.removeStep(0);
+    Assert.assertEquals(expected, recipe);
+  }
+
+  @Test
+  public void removeIntermediateStep() {
+    List<Step> expectedSteps = Arrays.asList(
+        new Step("Toast the bread for 2 minutes"),
+        new Step("Put the cheese in the bread")
+    );
+
+    Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
+    recipe.removeStep(1);
+    Assert.assertEquals(expected, recipe);
+  }
+
+  @Test
+  public void removeEndStep() {
+    List<Step> expectedSteps = Arrays.asList(
+        new Step("Toast the bread for 2 minutes"),
+        new Step("Melt the cheese")
+    );
+
+    Recipe expected = new Recipe(NAME, DESCRIPTION, expectedSteps);
+    recipe.removeStep(2);
     Assert.assertEquals(expected, recipe);
   }
 
@@ -99,5 +196,14 @@ public final class RecipeTest {
     recipe.removeStep(-10);
   }
 
+  @Test 
+  public void toStringTest() {
+    String expected = "\nName: NAME";
+    expected += "\nDescription: DESC";
+    expected += "\nSteps:\n";
+    expected += "\tA step\n";
 
+    Recipe testRecipe = new Recipe("NAME", "DESC", Arrays.asList(new Step("A step")));
+    Assert.assertEquals(expected, testRecipe.toString());
+  }
 }

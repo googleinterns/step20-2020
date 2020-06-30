@@ -114,7 +114,7 @@ public class Recipe {
     str += String.format("\nDescription: %s", description);
     str += "\nSteps:\n";
     for (Step step : steps) {
-      str += String.format("%s-20\n", step.getInstruction());
+      str += String.format("\t%s\n", step.getInstruction());
     }
     return str;
   }
