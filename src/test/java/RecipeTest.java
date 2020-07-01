@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.Arrays;
 import java.util.HashSet;
 import com.google.sps.data.Recipe;
+import com.google.sps.data.SpinOff;
 import com.google.sps.data.Step;
 
 @RunWith(JUnit4.class)
