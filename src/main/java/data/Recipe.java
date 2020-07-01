@@ -56,9 +56,67 @@ public class Recipe {
     this.spinOffs = new LinkedList<>();
   }
 
-  /**
-   * Appends a new step to a recipe's list of steps.
-   */
+  /** Gets the recipe's name. */
+  public String getName() {
+    return name;
+  }
+
+  /** Sets the recipe's name. */
+  public void setName(String newName) {
+    name = newName;
+  }
+
+  /** Gets the recipe's description. */
+  public String getDescription() {
+    return description;
+  }
+
+  /** Sets the recipe's description. */
+  public void setDescription(String newDescription) {
+    description = newDescription;
+  }
+
+  /** Gets the recipe's tags. */
+  public List<String> getTags() {
+    return tags;
+  }
+
+  /** Gets the recipe's ingredients. */
+  public List<String> getIngredients() {
+    return ingredients;
+  }
+
+  /** Adds a tag to the recipe. */
+  public void addTag(String tag) {
+    tags.add(tag);
+  }
+
+  /** Adds an ingredient to the recipe. */
+  public void addIngredient(String ingredient) {
+    ingredients.add(ingredient);
+  }
+
+  /** Adds a spin-off to the recipe. */
+  public void addSpinOff(SpinOff spinOff) {
+    spinOffs.add(spinOff);
+  }
+
+  /** Removes a tag from the recipe. */
+  public void removeTag(String tag) {
+    tags.remove(tag);
+  }
+
+  /** Removes an ingredient from the recipe. */
+  public void removeIngredient(String ingredient) {
+    ingredients.remove(ingredient);
+  }
+
+  /** Removes a spin-off from the recipe. */
+  public void removeSpinOff(SpinOff spinOff) {
+    spinoffs.remove(spinOff);
+  }
+
+  /** Appends a new step to a recipe's list of steps. */
   public void appendStep(Step newStep) {
     steps.add(newStep);
   }
@@ -130,11 +188,6 @@ public class Recipe {
   @Override
   public boolean equals(Object other) {
     return other instanceof Recipe && equals(this, (Recipe) other);
-  }
-
-  /** Adds a spin-off to the recipe's list of spin-offs. */
-  protected void addSpinOff(SpinOff spinOff) {
-    spinOffs.add(spinOff);
   }
 
   /**
