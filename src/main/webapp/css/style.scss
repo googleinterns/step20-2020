@@ -66,7 +66,7 @@
 
 .feed-img-bag {
   @include centerCrop();
-	@include bagFeedPost();
+  @include bagFeedPost();
 }
 
 .feed-img-container-bag {
@@ -97,8 +97,8 @@
 }
 
 .feed-img-prof {
-	@include centerCrop();
-	@include profileFeedPost();
+  @include centerCrop();
+  @include profileFeedPost();
 }
 
 .feed-img-container-prof {
@@ -129,8 +129,8 @@
 }
 
 .feed-img {
-	@include centerCrop();
-	@include feedPost();
+  @include centerCrop();
+  @include feedPost();
 }
 
 .feed-img-container {
@@ -197,14 +197,14 @@
 }
 
 .jumbotron-short {
-	background-color: #ffffff;
+  background-color: #ffffff;
   border-radius: .3rem;
   width:20vw;
 }
 
 @media (min-width:576px) {
-	.jumbotron-short {
-		padding: 4rem 2rem
+  .jumbotron-short {
+    padding: 4rem 2rem
 	}
 }
 
@@ -216,8 +216,8 @@
 }
 
 @media (min-width:576px) {
-	.jumbotron-header {
-		padding: 4rem 2rem
+  .jumbotron-header {
+    padding: 4rem 2rem
 	}
 }
 
