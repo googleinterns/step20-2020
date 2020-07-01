@@ -16,6 +16,8 @@ package com.google.sps.data;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.logging.*;
 import java.util.Iterator;
 
@@ -28,32 +30,33 @@ public class Recipe {
   
   private String name;
   private String description;
-  private List<String> tags;
-  private List<String> ingredients;
+  private Set<String> tags;
+  private Set<String> ingredients;
   private List<Step> steps;
-  private List<SpinOff> spinOffs;
+  private Set<SpinOff> spinOffs;
 
   /**
    * Copy constructor called when creating spin-offs.
    */
   public Recipe(Recipe recipe) {
     this.name = recipe.name;
+    this.tags = recipe.tags;
+    this.ingredients = recipe.ingredients;
     this.description = recipe.description;
     this.steps = recipe.steps;
     this.spinOffs = recipe.spinOffs;
   }
-  
 
-  /**
-   * Default constructor called when creating a new recipe.
-   */
-  public Recipe(String name, String description, List<String> tags, List<String> ingredients, List<Step> steps) {
+  /** Default constructor called when creating a new recipe. */
+  public Recipe(String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps) {
     this.name = name;
+    this.tags = tags;
+    this.ingredients = ingredients;
     this.description = description;
     this.tags = tags;
     this.ingredients = ingredients;
     this.steps = steps;
-    this.spinOffs = new LinkedList<>();
+    this.spinOffs = new HashSet<>();
   }
 
   /** Gets the recipe's name. */
@@ -77,12 +80,12 @@ public class Recipe {
   }
 
   /** Gets the recipe's tags. */
-  public List<String> getTags() {
+  public Set<String> getTags() {
     return tags;
   }
 
   /** Gets the recipe's ingredients. */
-  public List<String> getIngredients() {
+  public Set<String> getIngredients() {
     return ingredients;
   }
 
