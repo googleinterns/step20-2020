@@ -1,0 +1,17 @@
+
+parameter-field {
+  display: flex;
+  width: 40%;
+}
+
+.parameter-label {
+  width: 100%;
+}
+
+.parameter-textarea {
+  width: 70%;
+}
+
+.parameter-button: {
+  width: 30%;
+}
