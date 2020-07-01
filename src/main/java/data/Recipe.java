@@ -89,6 +89,11 @@ public class Recipe {
     return ingredients;
   }
 
+  /** Gets the recipe's spin-offs. */
+  public Set<SpinOff> getSpinOffs() {
+    return spinOffs;
+  }
+
   /** Adds a tag to the recipe. */
   public void addTag(String tag) {
     tags.add(tag);
@@ -116,7 +121,7 @@ public class Recipe {
 
   /** Removes a spin-off from the recipe. */
   public void removeSpinOff(SpinOff spinOff) {
-    spinoffs.remove(spinOff);
+    spinOffs.remove(spinOff);
   }
 
   /** Appends a new step to a recipe's list of steps. */
