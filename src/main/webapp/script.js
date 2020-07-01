@@ -1,35 +1,41 @@
 class ParameterField extends HTMLElement {
   constructor() {
     super();
-    const br = document.createElement('br');
-    var wrapper = document.createElement('span');
-    wrapper.class = "parameter-field";
 
+    const shadow = this.attachShadow({mode: 'open'});
+    const label = document.createElement('label');
+    const textArea = document.createElement('textarea');
+    const button = document.createElement('button');
+
+    label.className = 'parameter-label';
+    textArea.className = 'parameter-textarea';
+    button.className = 'parameter-button';
+
+    shadow.appendChild(label);
+    shadow.appendChild(textArea);
+    shadow.appendChild(button);
+  }
+
+  connectedCallback() {
     var name = this.getAttribute('name');
     var index = this.getAttribute('index');
     var paramName = name.toLowerCase() + index;
-    
-    var label = document.createElement('label');
+
+    var label = this.shadowRoot.querySelector('.parameter-label');
     label.innerText = name + " " + index;
     label.for = paramName;
 
-    var textArea = document.createElement('textarea');
+    var textArea = this.shadowRoot.querySelector('.parameter-textarea');
     textArea.id = paramName;
     textArea.name = paramName;
     textArea.rows = "1";
 
-    var button = document.createElement('button');
+    var button = this.shadowRoot.querySelector('.parameter-button');
     button.onclick = "addParameterField(" + name + ", " + (index + 1) + ")";
     button.innerText = "Add " + name;
-
-    wrapper.appendChild(label);
-    wrapper.appendChild(br);
-    wrapper.appendChild(textArea);
-    wrapper.appendChild(button);
-    wrapper.appendChild(br);
-    wrapper.appendChild(br);
   }
 }
+customElements.define('parameter-field', ParameterField);
 
 function getOriginalRecipe() {
   const key = document.getElementById("key").value;
