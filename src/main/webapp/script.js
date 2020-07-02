@@ -1,4 +1,9 @@
 class ParameterField extends HTMLElement {
+
+  static get observedAttributes() {
+    return ['index'];
+  }
+
   constructor() {
     super();
 
@@ -16,32 +21,41 @@ class ParameterField extends HTMLElement {
     shadow.appendChild(button);
   }
 
-  connectedCallback() {
+  attributeChangedCallback(name, newValue, oldValue) {
     var name = this.getAttribute('name');
     var index = this.getAttribute('index');
     var paramName = name.toLowerCase() + index;
 
     var label = this.shadowRoot.querySelector('.parameter-label');
-    label.innerText = name + " " + index;
+    label.innerText = name + " " + (parseInt(index) + 1);
     label.for = paramName;
 
     var textArea = this.shadowRoot.querySelector('.parameter-textarea');
     textArea.id = paramName;
     textArea.name = paramName;
+    console.log(textArea.name);
     textArea.rows = "1";
 
     var button = this.shadowRoot.querySelector('.parameter-button');
-    button.onclick = "addParameterField(" + name + ", " + (index + 1) + ")";
+    button.id = name;
+    button.onclick = event => addParameterField(event);
     button.innerText = "Add " + name;
   }
 }
 customElements.define('parameter-field', ParameterField);
 
+function addParameterField(event, name, index) {
+  const container = document.getElementById(event.target.id + 's');
+  var newField = document.createElement('parameter-field');
+  newField.setAttribute('name', event.target.id);
+  newField.setAttribute('index', container.childNodes.length - 2);
+  container.appendChild(newField);
+}
+
 function getOriginalRecipe() {
   const key = document.getElementById("key").value;
   if (key !== "") {
     fetch("/new-recipe?key=" + key).then(response => response.json()).then((recipe) => {
-      console.log(recipe);
       populateRecipeCreationForm(recipe);
     });
   }
@@ -63,7 +77,6 @@ function populateFormComponent(componentName, data) {
   var componentNum = 1;
   for (var i = 0; i < data.length; i++) {
     var component = document.getElementById(componentName + componentNum++);
-    console.log(data[i]);
     component.value = data[i];
   }
 }
