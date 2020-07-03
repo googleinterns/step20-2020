@@ -20,7 +20,6 @@ class ParameterInput extends HTMLElement {
     this.label.innerText = this.name + " " + (this.index + 1);
     this.label.for = paramName;
 
-    this.textArea.id = paramName;
     this.textArea.name = paramName;
     this.textArea.rows = "1";
 
@@ -31,15 +30,21 @@ class ParameterInput extends HTMLElement {
     this.field = document.getElementById(this.name + 's');
     this.field.appendChild(this.container);
   }
+
+  set text(value) {
+    this.textArea.value = value;
+  }
 }
 customElements.define('parameter-input', ParameterInput);
 
 function addParameterInput(name, index) {
   const container = document.getElementById(name + 's');
-  var newField = document.createElement('parameter-input');
-  newField.setAttribute('name', name);
-  newField.setAttribute('index', index);
-  container.appendChild(newField);
+  var newParameter = document.createElement('parameter-input');
+  newParameter.setAttribute('name', name);
+  newParameter.setAttribute('index', index);
+  newParameter.setAttribute('id', name + index);
+  container.appendChild(newParameter);
+  return newParameter;
 }
 
 function getOriginalRecipe() {
@@ -56,18 +61,22 @@ function populateRecipeCreationForm(recipe) {
   name.value = recipe.name;
 
   var description = document.getElementById("description");
-  description.value = recipe.name;
+  description.value = recipe.description;
 
-  populateFormComponent("tag", recipe.tags);
-  populateFormComponent("ingredient", recipe.ingredients);
-  populateFormComponent("step", recipe.steps);
+  populateFormField("Tag", recipe.tags);
+  populateFormField("Ingredient", recipe.ingredients);
+  populateFormField("Step", recipe.steps);
 }
 
-function populateFormComponent(componentName, data) {
+function populateFormField(fieldName, data) {
   console.log(data);
-  var componentNum = 1;
   for (var i = 0; i < data.length; i++) {
-    var component = document.getElementById(componentName + componentNum++);
-    component.value = data[i];
+    var parameter = document.getElementById(fieldName + i);
+    if (parameter !== null) {
+      parameter.text = data[i];
+    } else {
+      var newParameter = addParameterInput(fieldName, i);
+      newParameter.text = data[i];
+    }
   }
 }
