@@ -1,54 +1,44 @@
-class ParameterField extends HTMLElement {
-
-  static get observedAttributes() {
-    return ['index'];
-  }
+class ParameterInput extends HTMLElement {
 
   constructor() {
     super();
-
-    const shadow = this.attachShadow({mode: 'open'});
-    const label = document.createElement('label');
-    const textArea = document.createElement('textarea');
-    const button = document.createElement('button');
-
-    label.className = 'parameter-label';
-    textArea.className = 'parameter-textarea';
-    button.className = 'parameter-button';
-
-    shadow.appendChild(label);
-    shadow.appendChild(textArea);
-    shadow.appendChild(button);
   }
 
-  attributeChangedCallback(name, newValue, oldValue) {
-    var name = this.getAttribute('name');
-    var index = this.getAttribute('index');
+  connectedCallback() {
+    const name = this.getAttribute('name');
+    const index = parseInt(this.getAttribute('index'));
     var paramName = name.toLowerCase() + index;
 
-    var label = this.shadowRoot.querySelector('.parameter-label');
-    label.innerText = name + " " + (parseInt(index) + 1);
+    const field = document.getElementById(name + 's');
+    const container = document.createElement('div');
+
+    var label = document.createElement('label');;
+    label.innerText = name + " " + (index + 1);
     label.for = paramName;
 
-    var textArea = this.shadowRoot.querySelector('.parameter-textarea');
+    var textArea = document.createElement('textarea');
     textArea.id = paramName;
     textArea.name = paramName;
-    console.log(textArea.name);
     textArea.rows = "1";
 
-    var button = this.shadowRoot.querySelector('.parameter-button');
-    button.id = name;
-    button.onclick = event => addParameterField(event);
+    var button = document.createElement('button');
+    button.type = "button";
+    button.onclick = event => addParameterInput(name, index + 1);
     button.innerText = "Add " + name;
+
+    container.appendChild(label);
+    container.appendChild(textArea);
+    container.appendChild(button);
+    field.appendChild(container);
   }
 }
-customElements.define('parameter-field', ParameterField);
+customElements.define('parameter-input', ParameterInput);
 
-function addParameterField(event, name, index) {
-  const container = document.getElementById(event.target.id + 's');
-  var newField = document.createElement('parameter-field');
-  newField.setAttribute('name', event.target.id);
-  newField.setAttribute('index', container.childNodes.length - 2);
+function addParameterInput(name, index) {
+  const container = document.getElementById(name + 's');
+  var newField = document.createElement('parameter-input');
+  newField.setAttribute('name', name);
+  newField.setAttribute('index', index);
   container.appendChild(newField);
 }
 
@@ -74,6 +64,7 @@ function populateRecipeCreationForm(recipe) {
 }
 
 function populateFormComponent(componentName, data) {
+  console.log(data);
   var componentNum = 1;
   for (var i = 0; i < data.length; i++) {
     var component = document.getElementById(componentName + componentNum++);
