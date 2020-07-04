@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 import java.util.Collection;
 import java.util.List;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import com.google.sps.data.Recipe;
@@ -121,8 +122,8 @@ public class NewRecipeServlet extends HttpServlet {
   private Recipe entityToRecipe(Entity recipeEntity) {
     String name = (String) recipeEntity.getProperty("name");
     String description = (String) recipeEntity.getProperty("description");
-    HashSet<String> tags = new HashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("tags"), TAG));
-    HashSet<String> ingredients = new HashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("ingredients"), INGREDIENT));
+    LinkedHashSet<String> tags = new LinkedHashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("tags"), TAG));
+    LinkedHashSet<String> ingredients = new LinkedHashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("ingredients"), INGREDIENT));
     LinkedList<Step> steps = (LinkedList<Step>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("steps"), STEP);
     return new Recipe(name, description, tags, ingredients, steps);
   }
