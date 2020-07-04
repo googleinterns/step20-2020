@@ -4,12 +4,14 @@ class ParameterInput extends HTMLElement {
     super();
     this.label = document.createElement('label');
     this.textArea = document.createElement('textarea');
-    this.button = document.createElement('button');
+    this.addButton = document.createElement('button');
+    this.deleteButton = document.createElement('button');
     this.container = document.createElement('div');
 
     this.container.appendChild(this.label);
     this.container.appendChild(this.textArea);
-    this.container.appendChild(this.button);
+    this.container.appendChild(this.addButton);
+    this.container.appendChild(this.deleteButton);
   }
 
   connectedCallback() {
@@ -18,8 +20,10 @@ class ParameterInput extends HTMLElement {
     this.parent = this.name + 's';
 
     this.textArea.rows = '1';
-    this.button.type = 'button';
-    this.button.innerText = 'Add ' + this.name;
+    this.addButton.type = 'button';
+    this.addButton.innerText = 'Add ' + this.name;
+    this.deleteButton.type = 'button';
+    this.deleteButton.innerText = 'Delete ' + this.name;
     this.setIndexAttributes();
 
     this.appendChild(this.container);
@@ -34,10 +38,16 @@ class ParameterInput extends HTMLElement {
 
     this.textArea.name = paramName;
 
-    this.button.onclick = event => {
-      console.log('new parameter will have index ' + (this.index+1));
+    this.addButton.onclick = event => {
       var newParameter = createParameterInput(this.name, this.index + 1);
       insertParameterInput(this, newParameter);
+    }
+
+    this.deleteButton.onclick = event => {
+      const fieldName = this.field;
+      const startIndex = this.index;
+      this.remove();
+      updateIndeces(fieldName, startIndex);
     }
   }
 
@@ -72,7 +82,6 @@ function createParameterInput(name, index) {
   newParameter.setAttribute('name', name);
   newParameter.setAttribute('index', index);
   newParameter.setAttribute('id', name + index);
-  console.log(newParameter.position);
   return newParameter;
 }
 
@@ -91,11 +100,6 @@ function updateIndeces(fieldName, startIndex) {
   for (var i = startIndex; i < parameters.length; i++) {
     parameters[i].position = i;
     parameters[i].setIndexAttributes();
-  }
-  for (var i = 0; i < parameters.length; i++) {
-    console.log('parameter label: ' + parameters[i].label.innerText);
-    console.log('parameter textarea name: ' + parameters[i].textArea.name);
-    console.log('parameter id: ' + parameters[i].id);
   }
 }
 
@@ -121,7 +125,6 @@ function populateRecipeCreationForm(recipe) {
 }
 
 function populateFormField(fieldName, data) {
-  console.log(data);
   for (var i = 0; i < data.length; i++) {
     var parameter = document.getElementById(fieldName + i);
     if (parameter !== null) {
