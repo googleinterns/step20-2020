@@ -95,6 +95,11 @@ function appendParameterInput(fieldName, parameterInput) {
   field.appendChild(parameterInput);
 }
 
+function appendParameterInput(fieldName) {
+  const field = document.getElementById(fieldName);
+  field.appendChild(createParameterInput(fieldName.slice(0, -1), field.children.length));
+}
+
 function updateIndeces(fieldName, startIndex) {
   var parameters = document.getElementById(fieldName).children;
   for (var i = startIndex; i < parameters.length; i++) {
