@@ -91,6 +91,7 @@ public class NewRecipeServlet extends HttpServlet {
   /**
    * Gets the parameters for fields that have different numbers of parameters from recipe to recipe.
    * This method ensures that all tags, ingredients, and steps are recorded, no matter how many of each a recipe has.
+   * @return A Collection of EmbeddedEntities, where each EmbeddedEntity holds one parameter.
    */
   private Collection<EmbeddedEntity> getParameters(HttpServletRequest request, String field, Collection<String> searchStrings) {
     Collection<EmbeddedEntity> parameters = new LinkedList<>();
