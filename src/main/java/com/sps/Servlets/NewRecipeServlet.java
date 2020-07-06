@@ -92,10 +92,10 @@ public class NewRecipeServlet extends HttpServlet {
    * Gets the parameters for fields that have different numbers of parameters from recipe to recipe.
    * This method ensures that all tags, ingredients, and steps are recorded, no matter how many of each a recipe has.
    */
-  private Collection<EmbeddedEntity> getParameters(HttpServletRequest request, String type, Collection<String> searchStrings) {
+  private Collection<EmbeddedEntity> getParameters(HttpServletRequest request, String field, Collection<String> searchStrings) {
     Collection<EmbeddedEntity> parameters = new LinkedList<>();
     int parameterNum = 0;
-    String parameterName = type + parameterNum;
+    String parameterName = field + parameterNum;
     String parameter = request.getParameter(parameterName);
 
     // In the HTML form, parameters are named as [field name][index], ie step0.
@@ -103,10 +103,10 @@ public class NewRecipeServlet extends HttpServlet {
     while (parameter != null) {
       addToSearchStrings(searchStrings, parameter);
       EmbeddedEntity parameterEntity = new EmbeddedEntity();
-      parameterEntity.setProperty(type, parameter);
+      parameterEntity.setProperty(field, parameter);
       parameters.add(parameterEntity);
 
-      parameterName = type + (++parameterNum);
+      parameterName = field + (++parameterNum);
       parameter = request.getParameter(parameterName);
     }
     return parameters;
@@ -131,11 +131,11 @@ public class NewRecipeServlet extends HttpServlet {
   }
 
   /** Gets a list of Recipe parameters from a Datastore property. */
-  private Collection<Object> getDataAsList(Object propertiesObject, String type) {
+  private Collection<Object> getDataAsList(Object propertiesObject, String field) {
     Collection<EmbeddedEntity> properties = (Collection<EmbeddedEntity>) propertiesObject;
     Collection<Object> dataAsList = new LinkedList<>();
     for (EmbeddedEntity property : properties) {
-      dataAsList.add(property.getProperty(type));
+      dataAsList.add(property.getProperty(field));
     }
     return dataAsList;
   }
