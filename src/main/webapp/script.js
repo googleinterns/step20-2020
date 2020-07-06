@@ -78,7 +78,6 @@ class ParameterInput extends HTMLElement {
 
   /** Sets the text in a ParameterInput's text area. */
   set text(value) {
-    console.log('setting to ' + value);
     this.textArea.value = value;
   }
 

@@ -142,7 +142,6 @@ public class NewRecipeServlet extends HttpServlet {
 
   private String convertToJsonUsingGson(Recipe recipe) {
     Gson gson = new Gson();
-    String json = gson.toJson(recipe);
-    return json;
+    return gson.toJson(recipe);
   }
 }
