@@ -75,6 +75,7 @@ public class NewRecipeServlet extends HttpServlet {
     Collection<EmbeddedEntity> tags = getParameters(request, TAG, searchStrings);
     Collection<EmbeddedEntity> ingredients = getParameters(request, INGREDIENT, searchStrings);
     Collection<EmbeddedEntity> steps = getParameters(request, STEP, null);
+    long timestamp = System.currentTimeMillis();
 
     Entity recipe = new Entity("Recipe");
     recipe.setProperty("name", name);
@@ -83,6 +84,7 @@ public class NewRecipeServlet extends HttpServlet {
     recipe.setProperty("ingredients", ingredients);
     recipe.setProperty("steps", steps);
     recipe.setProperty("search-strings", new ArrayList<String>(searchStrings));
+    recipe.setProperty("timestamp", timestamp);
     datastore.put(recipe);
 
     response.sendRedirect("/edit-recipe.html");
@@ -128,7 +130,8 @@ public class NewRecipeServlet extends HttpServlet {
     LinkedHashSet<String> tags = new LinkedHashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("tags"), TAG));
     LinkedHashSet<String> ingredients = new LinkedHashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("ingredients"), INGREDIENT));
     LinkedList<Step> steps = (LinkedList<Step>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("steps"), STEP);
-    return new Recipe(name, description, tags, ingredients, steps);
+    long timestamp = (long) recipeEntity.getProperty("timestamp");
+    return new Recipe(name, description, tags, ingredients, steps, timestamp);
   }
 
   /** Gets a list of Recipe parameters from a Datastore property. */

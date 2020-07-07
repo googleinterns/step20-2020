@@ -34,6 +34,7 @@ public class Recipe {
   private Set<String> ingredients;
   private List<Step> steps;
   private Set<SpinOff> spinOffs;
+  private long timestamp;
 
   /**
    * Copy constructor called when creating spin-offs.
@@ -48,7 +49,7 @@ public class Recipe {
   }
 
   /** Default constructor called when creating a new recipe. */
-  public Recipe(String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps) {
+  public Recipe(String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
     this.name = name;
     this.tags = tags;
     this.ingredients = ingredients;
@@ -56,6 +57,7 @@ public class Recipe {
     this.tags = tags;
     this.ingredients = ingredients;
     this.steps = steps;
+    this.timestamp = timestamp;
     this.spinOffs = new HashSet<>();
   }
 
