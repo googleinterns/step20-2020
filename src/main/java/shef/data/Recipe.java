@@ -14,12 +14,15 @@
 
 package shef.data;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.logging.*;
 import java.util.Iterator;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EmbeddedEntity;
 
 /**
  * Stores a recipe's data.
@@ -59,6 +62,18 @@ public class Recipe {
     this.steps = steps;
     this.timestamp = timestamp;
     this.spinOffs = new HashSet<>();
+  }
+
+  /** Creates a Recipe from a Datastore entity. */
+  public Recipe(Entity recipeEntity) {
+    // NOTE: when this is merged, remember to delete the corresponding methods in NewRecipeServlet.java
+    // They'll be left for now so that the servlet is still functional, but should eventually be replaced with this method.
+    this.name = (String) recipeEntity.getProperty("name");
+    this.description = (String) recipeEntity.getProperty("description");
+    this.tags = getTagsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("tags"));
+    this.ingredients = getIngredientsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("ingredients"));
+    this.steps = getStepsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("steps"));
+    this.timestamp = (long) recipeEntity.getProperty("timestamp");
   }
 
   /** Gets the recipe's name. */
@@ -207,6 +222,33 @@ public class Recipe {
    */
   protected boolean isValidStepPosition(int position) {
     return position >= 0 && position < steps.size();
+  }
+
+  /** Returns the tags of an EmbeddedEntity as a Set. */
+  private Set<String> getTagsFromEntity(Collection<EmbeddedEntity> entityTags) {
+    Set<String> tagsSet = new HashSet<>();
+    for (EmbeddedEntity tag : entityTags) {
+      tagsSet.add((String) tag.getProperty("tag"));
+    }
+    return tagsSet;
+  }
+
+  /** Returns the ingredients of an EmbeddedEntity as a Set. */
+  private Set<String> getIngredientsFromEntity(Collection<EmbeddedEntity> entityIngredients) {
+    Set<String> ingredientsSet = new HashSet<>();
+    for (EmbeddedEntity ingredient : entityIngredients) {
+      ingredientsSet.add((String) ingredient.getProperty("ingredient"));
+    }
+    return ingredientsSet;
+  }
+
+  /** Returns the steps of an EmbeddedEntity as a List. */
+  private List<Step> getStepsFromEntity(Collection<EmbeddedEntity> entitySteps) {
+    List<String> stepsList = new LinkedList<>();
+    for (EmbeddedEntity step : entitySteps) {
+      stepsList.add(new Step((String) step.getProperty("step")));
+    }
+    return stepsList;
   }
 
   private void handleStepException(String exceptionText) throws IndexOutOfBoundsException {
