@@ -12,10 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+package com.google.sps.data;
+
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.logging.*;
 import java.util.Iterator;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EmbeddedEntity;
 
 /**
  * Stores a recipe's data.
@@ -23,35 +30,118 @@ import java.util.Iterator;
 public class Recipe {
 
   private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-
+  
   private String name;
   private String description;
+  private Set<String> tags;
+  private Set<String> ingredients;
   private List<Step> steps;
-  private List<SpinOff> spinOffs;
+  private Set<SpinOff> spinOffs;
+  private long timestamp;
 
   /**
    * Copy constructor called when creating spin-offs.
    */
   public Recipe(Recipe recipe) {
     this.name = recipe.name;
+    this.tags = recipe.tags;
+    this.ingredients = recipe.ingredients;
     this.description = recipe.description;
     this.steps = recipe.steps;
     this.spinOffs = recipe.spinOffs;
   }
-  
-  /**
-   * Default constructor called when creating a new recipe.
-   */
-  public Recipe(String name, String description, List<Step> steps) {
+
+  /** Default constructor called when creating a new recipe. */
+  public Recipe(String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
     this.name = name;
+    this.tags = tags;
+    this.ingredients = ingredients;
     this.description = description;
+    this.tags = tags;
+    this.ingredients = ingredients;
     this.steps = steps;
-    this.spinOffs = new LinkedList<>();
+    this.timestamp = timestamp;
+    this.spinOffs = new HashSet<>();
   }
 
-  /**
-   * Appends a new step to a recipe's list of steps.
-   */
+  /** Creates a Recipe from a Datastore entity. */
+  public Recipe(Entity recipeEntity) {
+    // NOTE: when this is merged, remember to delete the corresponding methods in NewRecipeServlet.java
+    // They'll be left for now so that the servlet is still functional, but should eventually be replaced with this method.
+    this.name = (String) recipeEntity.getProperty("name");
+    this.description = (String) recipeEntity.getProperty("description");
+    this.tags = getTagsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("tags"));
+    this.ingredients = getIngredientsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("ingredients"));
+    this.steps = getStepsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("steps"));
+    this.timestamp = (long) recipeEntity.getProperty("timestamp");
+  }
+
+  /** Gets the recipe's name. */
+  public String getName() {
+    return name;
+  }
+
+  /** Sets the recipe's name. */
+  public void setName(String newName) {
+    name = newName;
+  }
+
+  /** Gets the recipe's description. */
+  public String getDescription() {
+    return description;
+  }
+
+  /** Sets the recipe's description. */
+  public void setDescription(String newDescription) {
+    description = newDescription;
+  }
+
+  /** Gets the recipe's tags. */
+  public Set<String> getTags() {
+    return tags;
+  }
+
+  /** Gets the recipe's ingredients. */
+  public Set<String> getIngredients() {
+    return ingredients;
+  }
+
+  /** Gets the recipe's spin-offs. */
+  public Set<SpinOff> getSpinOffs() {
+    return spinOffs;
+  }
+
+  /** Adds a tag to the recipe. */
+  public void addTag(String tag) {
+    tags.add(tag);
+  }
+
+  /** Adds an ingredient to the recipe. */
+  public void addIngredient(String ingredient) {
+    ingredients.add(ingredient);
+  }
+
+  /** Adds a spin-off to the recipe. */
+  public void addSpinOff(SpinOff spinOff) {
+    spinOffs.add(spinOff);
+  }
+
+  /** Removes a tag from the recipe. */
+  public void removeTag(String tag) {
+    tags.remove(tag);
+  }
+
+  /** Removes an ingredient from the recipe. */
+  public void removeIngredient(String ingredient) {
+    ingredients.remove(ingredient);
+  }
+
+  /** Removes a spin-off from the recipe. */
+  public void removeSpinOff(SpinOff spinOff) {
+    spinOffs.remove(spinOff);
+  }
+
+  /** Appends a new step to a recipe's list of steps. */
   public void appendStep(Step newStep) {
     steps.add(newStep);
   }
@@ -125,11 +215,6 @@ public class Recipe {
     return other instanceof Recipe && equals(this, (Recipe) other);
   }
 
-  /** Adds a spin-off to the recipe's list of spin-offs. */
-  protected void addSpinOff(SpinOff spinOff) {
-    spinOffs.add(spinOff);
-  }
-
   /**
    * Checks if a position is valid within the recipe's list of steps.
    * @param position The position to check.
@@ -137,6 +222,33 @@ public class Recipe {
    */
   protected boolean isValidStepPosition(int position) {
     return position >= 0 && position < steps.size();
+  }
+
+  /** Returns the tags of an EmbeddedEntity as a Set. */
+  private Set<String> getTagsFromEntity(Collection<EmbeddedEntity> entityTags) {
+    Set<String> tagsSet = new HashSet<>();
+    for (EmbeddedEntity tag : entityTags) {
+      tagsSet.add((String) tag.getProperty("tag"));
+    }
+    return tagsSet;
+  }
+
+  /** Returns the ingredients of an EmbeddedEntity as a Set. */
+  private Set<String> getIngredientsFromEntity(Collection<EmbeddedEntity> entityIngredients) {
+    Set<String> ingredientsSet = new HashSet<>();
+    for (EmbeddedEntity ingredient : entityIngredients) {
+      ingredientsSet.add((String) ingredient.getProperty("ingredient"));
+    }
+    return ingredientsSet;
+  }
+
+  /** Returns the steps of an EmbeddedEntity as a List. */
+  private List<Step> getStepsFromEntity(Collection<EmbeddedEntity> entitySteps) {
+    List<String> stepsList = new LinkedList<>();
+    for (EmbeddedEntity step : entitySteps) {
+      stepsList.add(new Step((String) step.getProperty("step")));
+    }
+    return stepsList;
   }
 
   private void handleStepException(String exceptionText) throws IndexOutOfBoundsException {
