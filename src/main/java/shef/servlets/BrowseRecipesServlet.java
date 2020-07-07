@@ -34,6 +34,7 @@ public class BrowseRecipesServlet extends HttpServlet  {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+    PreparedQuery recipes = datastore.prepare(new query("Recipe"));
+    response.getWriter().println(convertToJsonUsingGson(commentsList));
   }
 }
