@@ -21,8 +21,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import shef.data.Recipe;
 
-@WebServlet("browse-recipes")
+@WebServlet("/browse-recipes")
 public class BrowseRecipesServlet extends HttpServlet  {
 
   private DatastoreService datastore;
@@ -34,7 +38,9 @@ public class BrowseRecipesServlet extends HttpServlet  {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    PreparedQuery recipes = datastore.prepare(new query("Recipe"));
-    response.getWriter().println(convertToJsonUsingGson(commentsList));
+    PreparedQuery recipeEntities = datastore.prepare(new Query("Recipe"));
+    for (Entity recipeEntity : recipeEntities.asIterable()) {
+      Recipe recipe = new Recipe(recipeEntity);
+    }
   }
 }
