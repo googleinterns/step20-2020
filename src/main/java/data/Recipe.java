@@ -197,7 +197,7 @@ public class Recipe {
 
   /** Returns the steps of an EmbeddedEntity as a List. */
   private List<Step> getStepsFromEntity(Collection<EmbeddedEntity> entitySteps) {
-    List<String> stepsList = new LinkedList<>();
+    List<Step> stepsList = new LinkedList<>();
     for (EmbeddedEntity step : entitySteps) {
       stepsList.add(new Step((String) step.getProperty("step")));
     }
