@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlets;
+package shef.servlets;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -33,8 +33,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import com.google.sps.data.Recipe;
-import com.google.sps.data.Step;
+import shef.data.Recipe;
+import shef.data.Step;
 
 @WebServlet("/new-recipe")
 public class NewRecipeServlet extends HttpServlet {
