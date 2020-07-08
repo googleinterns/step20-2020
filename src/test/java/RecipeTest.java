@@ -20,6 +20,10 @@ import org.junit.Test;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Arrays;
+import java.util.HashSet;
+import shef.data.Recipe;
+import shef.data.SpinOff;
+import shef.data.Step;
 
 @RunWith(JUnit4.class)
 public final class RecipeTest {

@@ -14,14 +14,6 @@
 
 package shef.data;
 
-public class SpinOff extends Recipe {
-
-  private Recipe original;
-
-  public SpinOff(Recipe original) {
-    super(original);
-    this.original = original;
-    original.addSpinOff(this);
-  }
-
+public interface RecipeFilter {
+  
 }
