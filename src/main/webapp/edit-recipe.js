@@ -173,14 +173,24 @@ function populateRecipeCreationForm(recipe) {
 
 /** Populates the ParamterInputs in a field with a parent recipe's data. */
 function populateFormField(fieldName, data) {
+  console.log(data);
   for (var i = 0; i < data.length; i++) {
     var parameter = document.getElementById(fieldName + i);
     if (parameter !== null) {
-      parameter.text = data[i];
+      parameter.text = getText(data[i]);
     } else {
       var newParameter = createParameterInput(fieldName, i);
-      newParameter.text = data[i];
+      newParameter.text = getText(data[i]);
       appendParameterInput(fieldName + 's', newParameter);
     }
+  }
+}
+
+/** Gets the text of a tag, ingredient, or step. */
+function getText(data) {
+  if (typeof data == 'string') {
+    return data;
+  } else {
+    return data.instruction;
   }
 }
