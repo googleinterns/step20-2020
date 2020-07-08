@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlets;
+package shef.servlets;
 
-import com.google.sps.data.User;
+import shef.data.User;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;

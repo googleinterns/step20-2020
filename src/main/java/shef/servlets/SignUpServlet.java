@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlets;
+package shef.servlets;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -22,25 +22,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns a sign-in or sign-out URL. */
-@WebServlet("/sign-in")
-public class SignInServlet extends HttpServlet {
+/** Servlet that returns a sign-up URL for the sign-up page. */
+@WebServlet("/sign-up")
+public class SignUpServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
     UserService userService = UserServiceFactory.getUserService();
-    String json;
+    String urlToRedirectTo = "/account-creation-test.html";
+    String signUpUrl = userService.createLoginURL(urlToRedirectTo);
 
-    if (userService.isUserLoggedIn()) {
-      String signOutUrl = userService.createLogoutURL("/sign-in-test.html");
-      json = "{ \"status\": true, \"url\": \"" + signOutUrl + "\" }";
-    } else {
-      String signInUrl = userService.createLoginURL("/sign-in-validity-check");
-      json = "{ \"status\": false, \"url\": \"" + signInUrl + "\" }";
+    response.setContentType("text/html");
+    response.getWriter().println(signUpUrl);
     }
-
-    response.setContentType("application/json");
-    response.getWriter().println(json);
   }
-}
