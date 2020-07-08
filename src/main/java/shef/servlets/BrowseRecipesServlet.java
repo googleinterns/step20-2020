@@ -24,7 +24,10 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.gson.Gson;
 import shef.data.Recipe;
+import java.util.List;
+import java.util.LinkedList;
 
 @WebServlet("/browse-recipes")
 public class BrowseRecipesServlet extends HttpServlet  {
@@ -39,8 +42,13 @@ public class BrowseRecipesServlet extends HttpServlet  {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     PreparedQuery recipeEntities = datastore.prepare(new Query("Recipe"));
+    List<Recipe> recipes = new LinkedList<>();
+
     for (Entity recipeEntity : recipeEntities.asIterable()) {
-      Recipe recipe = new Recipe(recipeEntity);
+      recipes.add(new Recipe(recipeEntity));
     }
+
+    response.setContentType("application/json;");
+    response.getWriter().println(new Gson().toJson(recipes));
   }
 }
