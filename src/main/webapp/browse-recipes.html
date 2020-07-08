@@ -4,10 +4,15 @@
   <meta charset="UTF-8">
   <title>Edit Recipe</title>
   <link rel="stylesheet" href="">
-  <script type="text/javascript" src=""></script>
+  <script type="text/javascript" src="browse-recipes.js"></script>
 </head>
 
 <body>
+  <h1>Browse Recipes</h1>
+  <button onclick="getRecipes('foryou')">For You</button>
+  <button onclick="getRecipes('trending')">Trending</button>
 
+  <div id="results">
+  </div>
 </body>
 </html>
