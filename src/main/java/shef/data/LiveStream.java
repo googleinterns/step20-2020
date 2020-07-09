@@ -18,8 +18,8 @@ import java.util.Date;
  
 /** A YouTube live stream.*/
 public class LiveStream {
-  long userId;
-  long recipeKey;
+  String userId;
+  String recipeKey;
   String link;
   Date startTime;
   Date endTime;
@@ -30,7 +30,7 @@ public class LiveStream {
   * @param recipeKey Unique key of the associated recipe.
   * @param link Link to the live stream.
   */
-  public LiveStream(long userId, long recipeKey, String link) {
+  public LiveStream(String userId, String recipeKey, String link) {
     this.userId = userId;
     this.recipeKey = recipeKey;
     this.link = link;
