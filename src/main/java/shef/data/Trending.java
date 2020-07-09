@@ -14,6 +14,30 @@
 
 package shef.data;
 
+import javax.servlet.http.HttpServletRequest;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.PreparedQuery;
+
 public class Trending implements RecipeFilter {
+
+  public Trending(HttpServletRequest request) {
+
+  }
+
+  public Filter getFilter() {
+    return new FilterPredicate("name", FilterOperator.EQUAL, "test");
+  }
+
+  public Filter addFilter(Filter filters) {
+    return null;
+  }
+
+  public PreparedQuery getData(Query query) {
+    return null;
+  }
   
 }
