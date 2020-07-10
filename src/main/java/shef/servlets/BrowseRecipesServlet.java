@@ -41,7 +41,17 @@ public class BrowseRecipesServlet extends HttpServlet  {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    PreparedQuery recipeEntities = datastore.prepare(new Query("Recipe"));
+
+    String algorithm = request.getParameter("algorithm");
+    RecipeFilter filter = null;
+    if (algorithm.equals("foryou")) {
+      filter = new ForYou(request);
+    } else if (algorithm.equals("trending")) {
+      filter = new Trending(request);
+    }
+
+    Query query = new Query("Recipe");
+    PreparedQuery recipeEntities = filter.getResults(query);
     List<Recipe> recipes = new LinkedList<>();
 
     for (Entity recipeEntity : recipeEntities.asIterable()) {

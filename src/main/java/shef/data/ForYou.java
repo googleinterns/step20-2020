@@ -14,13 +14,21 @@
 
 package shef.data;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import javax.servlet.http.HttpServletRequest;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.PreparedQuery;
+
 public class ForYou implements RecipeFilter {
 
   private DatastoreService datastore;
   private static final List<String> TEMP_PREFERENCES = new ArrayList<>(Arrays.asList("SPICY", "CHICKEN", "CHOCOLATE"));
   private Set<Filter> filters;
 
-  public ForYou(HttpServletRequest request) {
+  public ForYou() {
     datastore = DatastoreServiceFactory.getDatastoreService();
     filters = new HashSet<>();
   }
