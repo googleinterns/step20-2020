@@ -42,6 +42,8 @@ function getId() {
 
 /** Gets the ID of the YouTube video that the user inputs. */
 function storeLiveStreamInfo() {
+  const recipeSelection = document.getElementById('recipe-selection');
+  const recipeKey = recipeSelection.options[recipeSelection.selectedIndex].text;
   const liveStreamLink = document.getElementById('live-stream-link').value;
   return false;
 }
@@ -739,6 +741,10 @@ function execute(videoId) {
       .then(function(response) {
               // Handle results here (response.result has the parsed body).
               console.log("Response", response);
+              console.log(response.result);
+              console.log(response.result.items);
+              console.log(response.result.items[0].liveStreamingDetails.scheduledStartTime);
+              console.log(response.result.items[0].liveStreamingDetails.scheduledEndTime);
             },
             function(err) { console.error("Execute error", err); });
 }
