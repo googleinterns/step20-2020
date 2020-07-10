@@ -14,6 +14,45 @@
 
 package shef.data;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import javax.servlet.http.HttpServletRequest;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.PreparedQuery;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
+
 public class ForYou implements RecipeFilter {
-  
+
+  private DatastoreService datastore;
+  private static final List<String> TEMP_PREFERENCES = new ArrayList<>(Arrays.asList("SPICY", "CHICKEN", "CHOCOLATE"));
+  private Set<Filter> filters;
+
+  public ForYou(HttpServletRequest request) {
+    datastore = DatastoreServiceFactory.getDatastoreService();
+    filters = new HashSet<>();
+  }
+
+  public PreparedQuery getResults(Query query) {
+    filters.add(new FilterPredicate("search-strings", FilterOperator.IN, TEMP_PREFERENCES));
+    filters.add(new FilterPredicate("likes", FilterOperator.GREATER_THAN_OR_EQUAL, 50));
+    query.setFilter(new CompositeFilter(CompositeFilterOperator.OR, filters));
+    return datastore.prepare(query);
+  }
+
+  public Filter addFilter(Filter filters) {
+    return null;
+  }
+
+  public PreparedQuery getData(Query query) {
+    return null;
+  }
 }
