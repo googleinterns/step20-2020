@@ -52,7 +52,7 @@ public class BrowseRecipesServlet extends HttpServlet  {
 
     Query query = new Query("Recipe");
     query.setFilter(filter.getFilter());
-    PreparedQuery recipeEntities = datastore.prepare(query);
+    PreparedQuery recipeEntities = datastore.prepare(query).addSort("likes", SortDirection.DESCENDING);
     List<Recipe> recipes = new LinkedList<>();
 
     for (Entity recipeEntity : recipeEntities.asIterable()) {
