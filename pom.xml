@@ -3,8 +3,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.google.sps</groupId>
-  <artifactId>portfolio</artifactId>
+  <groupId>shef</groupId>
+  <artifactId>shef</artifactId>
   <version>1</version>
   <packaging>war</packaging>
 
@@ -17,7 +17,6 @@
   </properties>
 
   <dependencies>
-
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
@@ -43,7 +42,6 @@
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
-    
   </dependencies>
 
   <build>

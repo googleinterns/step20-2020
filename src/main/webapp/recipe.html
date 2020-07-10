@@ -27,9 +27,7 @@ THE SOFTWARE.-->
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <link rel="stylesheet" href="css/style.css"/>
-
     <title>shef</title>
   </head>
 
@@ -37,9 +35,9 @@ THE SOFTWARE.-->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">shef</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon"></span>
       </button>
-      
+
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
@@ -250,19 +248,14 @@ THE SOFTWARE.-->
               </svg>
             </div>
           </div>
-          <div class="form-group">
-            <textarea class="form-control" id="commentInput" placeholder="Leave a comment..."></textarea>
-          </div>
-          <div class="small-sep">
-            <p>morgansd • San Diego, CA • 6/11/20</p>
-            <p>Absolute knockout. The sour cream folded into the whipped cream is a trick I will 100% steal for other recipes. Perfect amount of acidity throughout the whole thing. Unreal!!</p>
-          </div>
-          <hr class="my-4">
-          <div class="small-sep">
-            <p>emilyc • Seattle, WA • 6/11/20</p>
-            <p>Cakes came out too salty! And a bit dry. The cream tied in the entire dessert so will make again with more cream, less (no) salt, and less time in the oven.
-            </p>
-          </div>
+
+          <form method="POST" action="/new-comment">
+            <input type="text" name="comment-input"/>
+            <br/>
+            <button>Submit</button>
+          </form>
+
+          <ul id="comment-list"></ul>
         </div>
       </div>
     </div>
