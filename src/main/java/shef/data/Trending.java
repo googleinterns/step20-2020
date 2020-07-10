@@ -14,6 +14,35 @@
 
 package shef.data;
 
+import javax.servlet.http.HttpServletRequest;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.PreparedQuery;
+
 public class Trending implements RecipeFilter {
-  
+
+  private DatastoreService datastore;
+  private static final int MIN_LIKES = 10;
+
+  public Trending(HttpServletRequest request) {
+    datastore = DatastoreServiceFactory.getDatastoreService();
+  }
+
+  public PreparedQuery getResults(Query query) {
+    query.setFilter(new FilterPredicate("likes", FilterOperator.GREATER_THAN_OR_EQUAL, MIN_LIKES));
+    return datastore.prepare(query);
+  }
+
+  public Filter addFilter(Filter filters) {
+    return null;
+  }
+
+  public PreparedQuery getData(Query query) {
+    return null;
+  }  
 }

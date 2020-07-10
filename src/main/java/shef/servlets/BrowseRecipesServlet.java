@@ -17,5 +17,33 @@ package shef.servlets;
 import javax.servlet.http.HttpServlet;
 
 public class BrowseRecipesServlet extends HttpServlet  {
-  
+
+  private DatastoreService datastore;
+
+  @Override
+  public void init() {
+    datastore = DatastoreServiceFactory.getDatastoreService();
+  }
+
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String algorithm = request.getParameter("algorithm");
+    RecipeFilter filter = null;
+    if (algorithm.equals("foryou")) {
+      filter = new ForYou(request);
+    } else if (algorithm.equals("trending")) {
+      filter = new Trending(request);
+    }
+
+    Query query = new Query("Recipe");
+    PreparedQuery recipeEntities = filter.getResults(query);
+    List<Recipe> recipes = new LinkedList<>();
+
+    for (Entity recipeEntity : recipeEntities.asIterable()) {
+      recipes.add(new Recipe(recipeEntity));
+    }
+
+    response.setContentType("application/json;");
+    response.getWriter().println(new Gson().toJson(recipes));
+  }
 }
