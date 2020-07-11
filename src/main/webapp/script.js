@@ -34,18 +34,17 @@ function createCommentElement(comment) {
   return commentElement;
 }
 
-/** Gets the ID of the YouTube video that the user inputs. */
-function getId() {
-  const liveStreamLink = document.getElementById('live-stream-link').value;
-  return getIdFromUrl(liveStreamLink);
-}
-
-/** Gets the ID of the YouTube video that the user inputs. */
-function storeLiveStreamInfo() {
-  const recipeSelection = document.getElementById('recipe-selection');
-  const recipeKey = recipeSelection.options[recipeSelection.selectedIndex].text;
-  const liveStreamLink = document.getElementById('live-stream-link').value;
-  return false;
+/** Fetches results from the server and adds them to the DOM. */
+function getResults(param) {
+  var userQuery = getURLParamVal(param);
+  // Search string is in all caps, so the userQuery should also be in all caps for querying purposes.
+  fetch('/results?user-query=' + userQuery.toUpperCase()).then(response => response.json()).then((results) => {
+    const resultListElement = document.getElementById('result-list');
+    results.forEach((result) => {
+      console.log("Result found!");
+      resultListElement.appendChild(createResultElement(result));
+    })
+  });
 }
 
 /** Gets the ID of a YouTube video from its URL.
@@ -55,7 +54,21 @@ function getIdFromUrl(url) {
   return url.substring(url.lastIndexOf('=') + 1);
 }
 
-/** Videos: List Retrieval */
+/** Gets the ID of the YouTube video that the user inputs. */
+function getId() {
+  const liveStreamLink = document.getElementById('live-stream-link').value;
+  return getIdFromUrl(liveStreamLink);
+}
+
+/** Gets the ID of the YouTube video that the user inputs. */
+function storeLiveStreamInfo(schedStartTime, schedEndTime) {
+  const recipeSelection = document.getElementById('recipe-selection');
+  const recipeKey = recipeSelection.options[recipeSelection.selectedIndex].text;
+  const liveStreamLink = document.getElementById('live-stream-link').value;
+  fetch('/new-live-stream?recipe-key=' + recipeKey + '&live-stream-link=' + liveStreamLink + '&sched-start-time=' + schedStartTime + '&sched-end-time=' + schedEndTime);
+}
+
+/** Videos: List JSON Response Retrieval */
 // https://apis.google.com/js/api.js
 var gapi = window.gapi = window.gapi || {};
 gapi._bs = new Date().getTime();
@@ -740,11 +753,9 @@ function execute(videoId) {
   })
       .then(function(response) {
               // Handle results here (response.result has the parsed body).
-              console.log("Response", response);
-              console.log(response.result);
-              console.log(response.result.items);
-              console.log(response.result.items[0].liveStreamingDetails.scheduledStartTime);
-              console.log(response.result.items[0].liveStreamingDetails.scheduledEndTime);
+              const schedStartTime = response.result.items[0].liveStreamingDetails.scheduledStartTime;
+              const schedEndTime = response.result.items[0].liveStreamingDetails.scheduledEndTime;
+              storeLiveStreamInfo(schedStartTime, schedEndTime)
             },
             function(err) { console.error("Execute error", err); });
 }
