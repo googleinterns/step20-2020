@@ -5,10 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="css/style.css"/>
     <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <title>shef</title>
   </head>
  
   <body>
+    <!--Nav bar-->
+    <div id="nav-placeholder">
+    </div>
+    <script>
+      $(function(){
+        $("#nav-placeholder").load("nav.html");
+      });
+    </script>
+
     <button onclick="authenticate().then(loadClient)">Authorize</button>
     <form method="POST" action="/new-live-stream" class="form-group">
       <h4>1.</h4>
