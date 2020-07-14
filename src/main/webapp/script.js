@@ -27,10 +27,10 @@ function createCommentElement(comment) {
   const commentElement = document.createElement('li');
   commentElement.className = 'comment';
 
-  const userComment = document.createElement('span');
-  userComment.innerText = comment.comment;
+  const spanElement = document.createElement('span');
+  spanElement.innerText = comment.comment;
 
-  commentElement.appendChild(userComment);
+  commentElement.appendChild(spanElement);
   return commentElement;
 }
 
@@ -60,14 +60,14 @@ function loadLiveStreams() {
 
 /** Creates an element that represents a live stream. */
 function createLiveStreamElement(liveStream) {
-  const livestreamElement = document.createElement('li');
-  livestreamElement.className = 'live-stream';
+  const liveStreamElement = document.createElement('li');
+  liveStreamElement.className = 'live-stream';
 
-  const ls = document.createElement('span');
-  ls.innerText = liveStream.liveStreamKey;
+  const spanElement = document.createElement('span');
+  spanElement.innerText = liveStream.liveStreamKey;
 
-  livestreamElement.appendChild(ls);
-  return livestreamElement;
+  liveStreamElement.appendChild(spanElement);
+  return liveStreamElement;
 }
 
 /** Gets the ID of a YouTube video from its URL.
