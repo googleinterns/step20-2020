@@ -18,6 +18,7 @@ import shef.data.UserComment;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -43,7 +44,7 @@ public class DisplayLiveStreamsServlet extends HttpServlet {
 
     List<LiveStream> liveStreams = new LinkedList<>();
     for (Entity entity : results.asIterable()) {
-      String keyString = (String) entity.getKey();
+      String keyString = (String) KeyFactory.keyToString(entity.getKey());
       String recipeKey = (String) entity.getProperty("recipe-key");
       String link = (String) entity.getProperty("live-stream-link");
       String schedStartTime = (String) entity.getProperty("sched-start-time");
