@@ -36,13 +36,15 @@ public class NewLiveStreamServlet extends HttpServlet {
     String link = request.getParameter("live-stream-link");
     String schedStartTime = request.getParameter("sched-start-time");
     String schedEndTime = request.getParameter("sched-end-time");
+    long timestamp = System.currentTimeMillis();
 
     Entity liveStreamEntity = new Entity("LiveStream");
     liveStreamEntity.setProperty("recipe-key", recipeKey);
     liveStreamEntity.setProperty("link", link);
     liveStreamEntity.setProperty("sched-start-time", schedStartTime);
     liveStreamEntity.setProperty("sched-end-time", schedEndTime);
-
+    liveStreamEntity.setProperty("timestamp", timestamp);
+    
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(liveStreamEntity);
 
