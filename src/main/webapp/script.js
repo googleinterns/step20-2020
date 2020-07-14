@@ -47,6 +47,29 @@ function getResults(param) {
   });
 }
 
+/** Fetches live streams from the server and adds them to the DOM. */
+function loadLiveStreams() {
+  fetch('/display-livestreams').then(response => response.json()).then((livestreams) => {
+    const liveStreamListElement = document.getElementById('livestream-list');
+    livestreams.forEach((livestream) => {
+      console.log("Livestream acquired: " + livestream);
+      liveStreamListElement.appendChild(createLiveStreamElement(livestream));
+    })
+  });
+}
+
+/** Creates an element that represents a live stream. */
+function createLiveStreamElement(liveStream) {
+  const livestreamElement = document.createElement('li');
+  livestreamElement.className = 'live-stream';
+
+  const ls = document.createElement('span');
+  ls.innerText = liveStream.liveStreamKey;
+
+  livestreamElement.appendChild(ls);
+  return livestreamElement;
+}
+
 /** Gets the ID of a YouTube video from its URL.
     Will work only for a URL of a certain format
     (i.e. youtube.com/watch?v=). */
