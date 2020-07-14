@@ -32,21 +32,10 @@ public class NewLiveStreamServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // TODO: Switch to getParameterMap
-    String recipeKey = request.getParameter("recipe-key");
-    String link = request.getParameter("live-stream-link");
-    String schedStartTime = request.getParameter("sched-start-time");
-    String schedEndTime = request.getParameter("sched-end-time");
-    String duration = request.getParameter("duration");
-    long timestamp = System.currentTimeMillis();
-
     Entity liveStreamEntity = new Entity("LiveStream");
-    liveStreamEntity.setProperty("recipe-key", recipeKey);
-    liveStreamEntity.setProperty("link", link);
-    liveStreamEntity.setProperty("sched-start-time", schedStartTime);
-    liveStreamEntity.setProperty("sched-end-time", schedEndTime);
-    liveStreamEntity.setProperty("duration", duration);
-    liveStreamEntity.setProperty("timestamp", timestamp);
+    for (String param : request.getParameterMap().keySet()) {
+      liveStreamEntity.setProperty(param, (String) request.getParameterMap().get(param)[0]);
+    }
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(liveStreamEntity);

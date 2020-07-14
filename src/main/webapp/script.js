@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/** Fetches tasks from the server and adds them to the DOM. */
+/** Fetches comments from the server and adds them to the DOM. */
 function loadComments() {
   fetch('/display-comments').then(response => response.json()).then((comments) => {
     const commentListElement = document.getElementById('comment-list');
@@ -22,7 +22,7 @@ function loadComments() {
   });
 }
 
-/** Creates an element that represents a comment. */
+/** Creates a list element that represents a comment. */
 function createCommentElement(comment) {
   const commentElement = document.createElement('li');
   commentElement.className = 'comment';
@@ -58,7 +58,7 @@ function loadLiveStreams() {
   });
 }
 
-/** Creates an element that represents a live stream. */
+/** Creates a list element that represents a live stream. */
 function createLiveStreamElement(liveStream) {
   const liveStreamElement = document.createElement('li');
   liveStreamElement.className = 'live-stream';
@@ -124,8 +124,7 @@ gapi._bs = new Date().getTime();
         this.f = a
     };
     (new n).a("");
-    /*
-     gapi.loader.OBJECT_CREATE_TEST_OVERRIDE &&*/
+    /* gapi.loader.OBJECT_CREATE_TEST_OVERRIDE && */
     var q = window,
         v = document,
         aa = q.location,
