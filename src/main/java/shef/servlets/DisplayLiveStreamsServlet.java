@@ -14,7 +14,7 @@
 
 package shef.servlets;
 
-import shef.data.UserComment;
+import shef.data.LiveStream;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -49,8 +49,9 @@ public class DisplayLiveStreamsServlet extends HttpServlet {
       String link = (String) entity.getProperty("live-stream-link");
       String schedStartTime = (String) entity.getProperty("sched-start-time");
       String schedEndTime = (String) entity.getProperty("sched-end-time");
+      String duration = (String) entity.getProperty("duration");
 
-      LiveStream liveStream = new LiveStream(keyString, recipeKey, link, schedStartTime, schedEndTime);
+      LiveStream liveStream = new LiveStream(keyString, recipeKey, link, schedStartTime, schedEndTime, duration);
       liveStreams.add(liveStream);
     }
 

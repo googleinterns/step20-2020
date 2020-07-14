@@ -22,27 +22,21 @@ public class LiveStream {
   String liveStreamKey;
   String recipeKey;
   String link;
-  Date startTime;
-  Date endTime;
-  long duration;
+  String startTime;
+  String endTime;
+  String duration;
 
  /**
   * @param liveStreamKey Unique key of the livestream.
   * @param recipeKey Unique key of the associated recipe.
   * @param link Link to the live stream.
   */
-  public LiveStream(String liveStreamKey, String recipeKey, String link, String startTime, String endTime) {
+  public LiveStream(String liveStreamKey, String recipeKey, String link, String startTime, String endTime, String duration) {
     this.liveStreamKey = liveStreamKey;
     this.recipeKey = recipeKey;
     this.link = link;
-    this.startTime = strToDate(startTime);
-    this.endTime = strToDate(endTime);
-    this.duration = durationFromDates(this.startTime, this.endTime);
-  }
-
-  public Date strToDate(String dateStr) {
-  }
-
-  public long durationFromDates(Date startTime, Date endTime) {
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.duration = duration;
   }
 }   

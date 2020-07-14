@@ -61,11 +61,11 @@ function getId() {
 }
 
 /** Gets the ID of the YouTube video that the user inputs. */
-function storeLiveStreamInfo(schedStartTime, schedEndTime) {
+function storeLiveStreamInfo(schedStartTime, schedEndTime, duration) {
   const recipeSelection = document.getElementById('recipe-selection');
   const recipeKey = recipeSelection.options[recipeSelection.selectedIndex].text;
   const liveStreamLink = document.getElementById('live-stream-link').value;
-  fetch('/new-live-stream?recipe-key=' + recipeKey + '&live-stream-link=' + liveStreamLink + '&sched-start-time=' + schedStartTime + '&sched-end-time=' + schedEndTime);
+  fetch('/new-live-stream?recipe-key=' + recipeKey + '&live-stream-link=' + liveStreamLink + '&sched-start-time=' + schedStartTime + '&sched-end-time=' + schedEndTime + '&duration=' + duration);
 }
 
 /** Videos: List JSON Response Retrieval */
@@ -745,7 +745,8 @@ function loadClient() {
 function execute(videoId) {
   return gapi.client.youtube.videos.list({
     "part": [
-      "liveStreamingDetails"
+      "liveStreamingDetails",
+      "contentDetails"
     ],
     "id": [
       videoId
@@ -755,7 +756,8 @@ function execute(videoId) {
               // Handle results here (response.result has the parsed body).
               const schedStartTime = response.result.items[0].liveStreamingDetails.scheduledStartTime;
               const schedEndTime = response.result.items[0].liveStreamingDetails.scheduledEndTime;
-              storeLiveStreamInfo(schedStartTime, schedEndTime)
+              const duration = response.result.items[0].contentDetails.duration;
+              storeLiveStreamInfo(schedStartTime, schedEndTime, duration)
             },
             function(err) { console.error("Execute error", err); });
 }
