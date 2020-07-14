@@ -12,21 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-public class Step {
+package shef.data;
 
-  private String instruction;
+public class SpinOff extends Recipe {
 
-  public Step(String instruction) {
-    this.instruction = instruction;
-  }
+  private Recipe original;
 
-  public String getInstruction() {
-    return instruction;
-  }
-
-  @Override
-  public String toString() {
-    return instruction;
+  public SpinOff(Recipe original) {
+    super(original);
+    this.original = original;
+    original.addSpinOff(this);
   }
 
 }
