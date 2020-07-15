@@ -16,8 +16,6 @@ package shef.data;
 
 import java.util.Observable;
 
-public class MessageUpdate extends Observable {
-
 /**
  * Handles incoming messages and distributes them to waiting MessagePromises. 
  * The methods are synchronized to allow only one thread to modify and send a message at a time.
