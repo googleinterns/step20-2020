@@ -16,6 +16,34 @@ package shef.data;
 
 import java.util.Observable;
 
+/** Handles incoming messages and distributes them to waiting clients. */
 public class MessageUpdate extends Observable {
+
+  private String message;
+
+  public MessageUpdate() {
+    this.message = null;
+  }
+
+  /** 
+   * Sends the message to waiting observers via notifyObservers().
+   * The MessageUpdate is also marked as changed, and is unable to accept new messages until the change is cleared. 
+   */
+  public void sendMessage() {
+    setChanged();
+    notifyObservers(message);
+  }
+
+  /**
+   * If the MessageUpdate has not changed, set the message.
+   * This is to ensure that all messages are sent, even if they're sent at the same time.
+   */
+  public boolean setMessage(String message) {
+    if (hasChanged()) {
+      return false;
+    }
+    this.message = message;
+    return true;
+  }
 
 }
