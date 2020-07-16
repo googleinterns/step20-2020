@@ -66,8 +66,6 @@ public class Recipe {
 
   /** Creates a Recipe from a Datastore entity. */
   public Recipe(Entity recipeEntity) {
-    // NOTE: when this is merged, remember to delete the corresponding methods in NewRecipeServlet.java
-    // They'll be left for now so that the servlet is still functional, but should eventually be replaced with this method.
     this.name = (String) recipeEntity.getProperty("name");
     this.description = (String) recipeEntity.getProperty("description");
     this.tags = getTagsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("tags"));
