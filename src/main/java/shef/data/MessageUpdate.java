@@ -16,6 +16,7 @@ package shef.data;
 
 import java.util.Observable;
 
+/** Handles incoming messages and distributes them to waiting MessagePromises. */
 public class MessageUpdate extends Observable {
 
 }
