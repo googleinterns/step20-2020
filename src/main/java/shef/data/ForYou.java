@@ -14,6 +14,28 @@
 
 package shef.data;
 
+import javax.servlet.http.HttpServletRequest;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.PreparedQuery;
+
 public class ForYou implements RecipeFilter {
+
+  public ForYou(HttpServletRequest request) {
+
+  }
+
+  public Filter getFilter() {
+    return null;
+  }
+
+  public Filter addFilter(Filter filters) {
+    return null;
+  }
+
+  public PreparedQuery getData(Query query) {
+    return null;
+  }
   
 }

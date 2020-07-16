@@ -1,6 +1,6 @@
 function getRecipes(algorithm) {
   const results = document.getElementById('results');
-
+  results.innerHTML = '';
   fetch('/get-browsing-recipes?algorithm=' + algorithm).then(response => response.json()).then((recipes) => {
     for (var i = 0; i < recipes.length; i++) {
       results.appendChild(createRecipeForBrowsing(recipes[i]));

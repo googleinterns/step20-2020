@@ -24,8 +24,12 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gson.Gson;
 import shef.data.Recipe;
+import shef.data.RecipeFilter;
+import shef.data.Trending;
+import shef.data.ForYou;
 import java.util.List;
 import java.util.LinkedList;
 
@@ -42,7 +46,16 @@ public class BrowseRecipesServlet extends HttpServlet  {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String algorithm = request.getParameter("algorithm");
-    PreparedQuery recipeEntities = datastore.prepare(new Query("Recipe"));
+    RecipeFilter filter = null;
+    if (algorithm.equals("foryou")) {
+      filter = new ForYou(request);
+    } else if (algorithm.equals("trending")) {
+      filter = new Trending(request);
+    }
+
+    Query query = new Query("Recipe");
+    query.setFilter(filter.getFilter());
+    PreparedQuery recipeEntities = datastore.prepare(query).addSort("likes", SortDirection.DESCENDING);
     List<Recipe> recipes = new LinkedList<>();
 
     for (Entity recipeEntity : recipeEntities.asIterable()) {
