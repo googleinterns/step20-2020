@@ -14,8 +14,55 @@
 
 package shef.servlets;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.gson.Gson;
+import shef.data.Recipe;
+import shef.data.RecipeFilter;
+import shef.data.Trending;
+import shef.data.ForYou;
+import java.util.List;
+import java.util.LinkedList;
 
+@WebServlet("/get-browsing-recipes")
 public class BrowseRecipesServlet extends HttpServlet  {
-  
+
+  private DatastoreService datastore;
+
+  @Override
+  public void init() {
+    datastore = DatastoreServiceFactory.getDatastoreService();
+  }
+
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String algorithm = request.getParameter("algorithm");
+    RecipeFilter filter = null;
+    if (algorithm.equals("foryou")) {
+      filter = new ForYou(request);
+    } else if (algorithm.equals("trending")) {
+      filter = new Trending(request);
+    }
+
+    Query query = new Query("Recipe");
+    query.setFilter(filter.getFilter());
+    PreparedQuery recipeEntities = datastore.prepare(query).addSort("likes", SortDirection.DESCENDING);
+    List<Recipe> recipes = new LinkedList<>();
+
+    for (Entity recipeEntity : recipeEntities.asIterable()) {
+      recipes.add(new Recipe(recipeEntity));
+    }
+
+    response.setContentType("application/json;");
+    response.getWriter().println(new Gson().toJson(recipes));
+  }
 }

@@ -14,6 +14,17 @@
 
 package shef.data;
 
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.PreparedQuery;
+
 public interface RecipeFilter {
+
+  public Filter getFilter();
+
+  public Filter addFilter(Filter filters);
+
+  public PreparedQuery getData(Query query);
   
 }
