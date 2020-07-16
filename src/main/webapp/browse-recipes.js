@@ -1,4 +1,3 @@
-
 function getRecipes(algorithm) {
   const results = document.getElementById('results');
   results.innerHTML = '';

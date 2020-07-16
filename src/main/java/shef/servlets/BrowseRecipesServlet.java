@@ -14,6 +14,7 @@
 
 package shef.servlets;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,6 +33,7 @@ import shef.data.ForYou;
 import java.util.List;
 import java.util.LinkedList;
 
+@WebServlet("/get-browsing-recipes")
 public class BrowseRecipesServlet extends HttpServlet  {
 
   private DatastoreService datastore;
