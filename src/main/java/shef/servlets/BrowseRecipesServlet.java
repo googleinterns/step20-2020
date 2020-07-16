@@ -14,7 +14,20 @@
 
 package shef.servlets;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.gson.Gson;
+import shef.data.Recipe;
+import java.util.List;
+import java.util.LinkedList;
 
 @WebServlet("/get-browsing-recipes")
 public class BrowseRecipesServlet extends HttpServlet  {
@@ -38,6 +51,5 @@ public class BrowseRecipesServlet extends HttpServlet  {
 
     response.setContentType("application/json;");
     response.getWriter().println(new Gson().toJson(recipes));
-
   }
 }
