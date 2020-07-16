@@ -49,7 +49,8 @@ public class GroupchatServlet extends HttpServlet {
       return;
     }
 
-    ArrayList<String> messages = (ArrayList<String>) groupchatEntity.getProperty("messages");
+    Object messageObject = groupchatEntity.getProperty("messages");
+    ArrayList<String> messages = messageObject != null ? (ArrayList<String>) messageObject : new ArrayList<>();
     response.setContentType("application/json;");
     Gson gson = new Gson();
     response.getWriter().println(gson.toJson(messages));
