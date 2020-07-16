@@ -29,7 +29,7 @@ import shef.data.Recipe;
 import java.util.List;
 import java.util.LinkedList;
 
-@WebServlet("/browse-recipes")
+@WebServlet("/get-browsing-recipes")
 public class BrowseRecipesServlet extends HttpServlet  {
 
   private DatastoreService datastore;
@@ -41,6 +41,7 @@ public class BrowseRecipesServlet extends HttpServlet  {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String algorithm = request.getParameter("algorithm");
     PreparedQuery recipeEntities = datastore.prepare(new Query("Recipe"));
     List<Recipe> recipes = new LinkedList<>();
 
