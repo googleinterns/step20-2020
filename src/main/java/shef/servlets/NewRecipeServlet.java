@@ -60,7 +60,7 @@ public class NewRecipeServlet extends HttpServlet {
       e.printStackTrace();
       return;
     }
-    Recipe original = entityToRecipe(recipeEntity);
+    Recipe original = new Recipe(recipeEntity);
     response.setContentType("application/json;");
     response.getWriter().println(convertToJsonUsingGson(original));  
   }
@@ -123,27 +123,6 @@ public class NewRecipeServlet extends HttpServlet {
       return;
     }
     searchStrings.add(stringToAdd.toUpperCase());
-  }
-
-  /** Converts a Datastore entity into a Recipe. */
-  private Recipe entityToRecipe(Entity recipeEntity) {
-    String name = (String) recipeEntity.getProperty("name");
-    String description = (String) recipeEntity.getProperty("description");
-    LinkedHashSet<String> tags = new LinkedHashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("tags"), TAG));
-    LinkedHashSet<String> ingredients = new LinkedHashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("ingredients"), INGREDIENT));
-    LinkedList<Step> steps = (LinkedList<Step>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("steps"), STEP);
-    long timestamp = (long) recipeEntity.getProperty("timestamp");
-    return new Recipe(name, description, tags, ingredients, steps, timestamp);
-  }
-
-  /** Gets a list of Recipe parameters from a Datastore property. */
-  private Collection<Object> getDataAsList(Object propertiesObject, String field) {
-    Collection<EmbeddedEntity> properties = (Collection<EmbeddedEntity>) propertiesObject;
-    Collection<Object> dataAsList = new LinkedList<>();
-    for (EmbeddedEntity property : properties) {
-      dataAsList.add(property.getProperty(field));
-    }
-    return dataAsList;
   }
 
   private String convertToJsonUsingGson(Recipe recipe) {
