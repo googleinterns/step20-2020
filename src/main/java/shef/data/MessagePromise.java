@@ -40,7 +40,7 @@ public class MessagePromise implements Observer {
    * This method waits until it receives a new message from MessageUpdate.
    * It then unblocks, and returns the message to the servlet.
    */
-  synchronized public String getNextMessage() {
+  public synchronized String getNextMessage() {
     // Ensure that the thread waits until an update is detected.
     while (!updated) {
       try {
@@ -56,7 +56,7 @@ public class MessagePromise implements Observer {
 
   /** Receives a new message and then wakes the waiting thread with notify(). */
   @Override
-  synchronized public void update(Observable messageUpdate, Object message) {
+  public synchronized void update(Observable messageUpdate, Object message) {
     this.message = (String) message;
     this.updated = true;
     notify();
