@@ -16,7 +16,12 @@ package shef.data;
 
 import java.util.Observable;
 
-/** Handles incoming messages and distributes them to waiting clients. */
+/**
+ * Handles incoming messages and distributes them to waiting MessagePromises. 
+ * The methods are synchronized to allow only one thread to modify and send a message at a time.
+ * This prevents race conditions where two users post a new message simultaneously, which could allow
+ *     a message to be changed and lost before it is sent.
+ */
 public class MessageUpdate extends Observable {
 
   private String message;
@@ -25,25 +30,15 @@ public class MessageUpdate extends Observable {
     this.message = null;
   }
 
-  /** 
-   * Sends the message to waiting observers via notifyObservers().
-   * The MessageUpdate is also marked as changed, and is unable to accept new messages until the change is cleared. 
-   */
-  public void sendMessage() {
-    setChanged();
+  /** Sends the message to waiting observers via notifyObservers(). */
+  public synchronized void sendMessage() {
     notifyObservers(message);
   }
 
-  /**
-   * If the MessageUpdate has not changed, set the message.
-   * This is to ensure that all messages are sent, even if they're sent at the same time.
-   */
-  public boolean setMessage(String message) {
-    if (hasChanged()) {
-      return false;
-    }
+  /** Set the message and mark the MessageUpdate as changed. */
+  public synchronized void setMessage(String message) {
     this.message = message;
-    return true;
+    setChanged();
   }
 
 }
