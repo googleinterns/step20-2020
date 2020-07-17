@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>shef</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="script.js"></script>
+  </head>
+ 
+  <body>
+    <form method="POST" action="/new-recipe" class="form-group">
+      <textarea class="form-control" name="name-input" placeholder="Recipe name..."></textarea>
+      <br/>
+      <textarea class="form-control" name="ingred-input-1" placeholder="Ingredient 1..."></textarea>
+      <br/>
+      <textarea class="form-control" name="ingred-input-2" placeholder="Ingredient 2..."></textarea>
+      <br/>
+      <textarea class="form-control" name="tag-input-1" placeholder="Tag 1..."></textarea>
+      <br/>
+      <textarea class="form-control" name="tag-input-2" placeholder="Tag 2..."></textarea>
+      <br/>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <ul id="recipe-list"></ul>
+  </body>
+</html>

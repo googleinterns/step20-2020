@@ -11484,4 +11484,15 @@ p {
 .display-4 {
   font-weight: bold;
 }
+
+.share-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.profile-pic {
+  width: 100px;
+  height: 100px;
+}
+
 /*# sourceMappingURL=style.css.map */
