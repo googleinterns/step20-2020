@@ -40,7 +40,13 @@ public class NewMessageServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    MessagePromise newMessagePromise = new MessagePromise();
 
+    // Blocks until the next message is received.
+    String newMessage = newMessagePromise.getNextMessage();
+
+    response.setContentType("text/html");
+    response.getWriter().println(newMessage);
   }
 
   @Override
@@ -56,7 +62,7 @@ public class NewMessageServlet extends HttpServlet {
     group.addMessage(message);
     group.update();
 
-    // Send message to waiting MessagePromises.
+    // Send new message to waiting MessagePromises.
     messageUpdate.setMessage(message);
     messageUpdate.sendMessage();
 
