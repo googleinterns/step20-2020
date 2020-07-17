@@ -41,7 +41,6 @@ function getResults(param) {
   fetch('/results?user-query=' + userQuery.toUpperCase()).then(response => response.json()).then((results) => {
     const resultListElement = document.getElementById('result-list');
     results.forEach((result) => {
-      console.log("Result found!");
       resultListElement.appendChild(createResultElement(result));
     })
   });
@@ -52,7 +51,6 @@ function loadLiveStreams() {
   fetch('/display-livestreams').then(response => response.json()).then((livestreams) => {
     const liveStreamListElement = document.getElementById('livestream-list');
     livestreams.forEach((livestream) => {
-      console.log("Livestream acquired: " + livestream);
       liveStreamListElement.appendChild(createLiveStreamElement(livestream));
     })
   });
