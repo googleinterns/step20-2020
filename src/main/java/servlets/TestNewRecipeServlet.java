@@ -11,11 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-package shef.servlets;
-
-import java.util.Date;
-import java.text.SimpleDateFormat;
+ 
+package com.google.sps.servlets;
+ 
+import java.util.ArrayList;
+import java.util.List;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -24,35 +24,34 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+ 
 /** Servlet responsible for creating new comments. */
-@WebServlet("/new-comment")
-public class NewCommentServlet extends HttpServlet {
-
+@WebServlet("/new-recipe")
+public class TestNewRecipeServlet extends HttpServlet {
+ 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String comment = request.getParameter("comment-input");
+    List<String> searchStrings = new ArrayList<String>();
+    String name = request.getParameter("name-input").toUpperCase();
+    String ingred1 = request.getParameter("ingred-input-1").toUpperCase();
+    String ingred2 = request.getParameter("ingred-input-2").toUpperCase();
+    String tag1 = request.getParameter("tag-input-1").toUpperCase();
+    String tag2 = request.getParameter("tag-input-2").toUpperCase();
+    searchStrings.add(name);
+    searchStrings.add(ingred1);
+    searchStrings.add(ingred2);
+    searchStrings.add(tag1);
+    searchStrings.add(tag2);
+ 
     long timestamp = System.currentTimeMillis();
-    String MMDDYYYY = timestampToMMDDYYYY(timestamp);
-
-    Entity userCommentEntity = new Entity("UserComment");
-    userCommentEntity.setProperty("username", "mcardenas");
-    userCommentEntity.setProperty("location", "Seattle, WA");
-    userCommentEntity.setProperty("comment", comment);
-    userCommentEntity.setProperty("timestamp", timestamp);
-    userCommentEntity.setProperty("MMDDYYYY", MMDDYYYY);
-
+ 
+    Entity recipeEntity = new Entity("Recipe");
+    recipeEntity.setProperty("search-strings", searchStrings);
+    recipeEntity.setProperty("timestamp", timestamp);
+ 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(userCommentEntity);
-
-    response.sendRedirect("/recipe.html");
-  }
-
- /**
-  * @param timestamp Time in milliseconds.
-  * @return Input timestamp in MM/DD/YYYY format.
-  */
-  private String timestampToMMDDYYYY(long timestamp) {
-    return new SimpleDateFormat("MM/dd/yyyy").format(new Date(timestamp));
+    datastore.put(recipeEntity);
+ 
+    response.sendRedirect("/recipe-test.html");
   }
 }
