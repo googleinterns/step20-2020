@@ -12,6 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/*
+ * The following source informed the architecture of this servlet and its functional components:
+ * https://docstore.mik.ua/orelly/java-ent/servlet/ch10_03.htm
+ */
+
 package shef.servlets;
 
 import com.google.appengine.api.datastore.DatastoreService;
@@ -26,6 +31,10 @@ import shef.data.MessageUpdate;
 import shef.data.MessagePromise;
 import shef.data.Groupchat;
 
+/**
+ * This servlet handles new messages, allowing for clients to see them as they're sent in real time.
+ * A client sends in new messages with doPost(), and doGet() distributes them to all other active clients.
+ */
 @WebServlet("/new-message")
 public class NewMessageServlet extends HttpServlet {
 
@@ -38,6 +47,11 @@ public class NewMessageServlet extends HttpServlet {
     datastore = DatastoreServiceFactory.getDatastoreService();
   }
   
+  /**
+   * Waits for incoming messages using MessagePromises.
+   * Each GET request instantiates a MessagePromise, which blocks until a new message is received.
+   * The MessagePromise then unblocks and allows the GET request to respond with the new message.
+   */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     MessagePromise newMessagePromise = new MessagePromise();
@@ -49,6 +63,11 @@ public class NewMessageServlet extends HttpServlet {
     response.getWriter().println(newMessage);
   }
 
+  /**
+   * Posts new messages to Datastore and distributes them to active clients using MessageUpdates.
+   * The message is first added to the groupchat in Datastore, and then distributed to the waiting MessagePromises.
+   * Empty messages are ignored.
+   */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String message = request.getParameter("message");
@@ -68,5 +87,4 @@ public class NewMessageServlet extends HttpServlet {
 
     response.setStatus(response.SC_NO_CONTENT);
   }
-
 }
