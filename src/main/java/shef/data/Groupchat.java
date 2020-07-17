@@ -20,29 +20,38 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import java.util.ArrayList;
 
 public class Groupchat {
 
   private ArrayList<String> messages;
+  private DatastoreService datastore;
+  private Entity entity;
 
   public Groupchat(String key) {
-    Entity entity = null;
+    this.datastore = DatastoreServiceFactory.getDatastoreService();
+    this.entity = null;
     try {
-      entity = datastore.get(KeyFactory.stringToKey(key));
+      this.entity = datastore.get(KeyFactory.stringToKey(key));
     } catch (EntityNotFoundException e) {
       e.printStackTrace();
       return;
     }
-    this(entity);
-  }
 
-  public Groupchat(Entity entity) {
-    Object messageObject = entity.getProperty("messages");
-    ArrayList<String> messages = messageObject != null ? (ArrayList<String>) messageObject : new ArrayList<>();
+    Object messageObject = this.entity.getProperty("messages");
+    this.messages = messageObject != null ? (ArrayList<String>) messageObject : new ArrayList<>();
   }
 
   public ArrayList<String> getMessages() {
     return messages;
   }
 
+  public void addMessage(String message) {
+    messages.add(message);
+    entity.setProperty("messages", messages);
+  }
+
+  public void update() {
+    datastore.put(entity);
+  }
 }
