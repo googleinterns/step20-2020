@@ -827,7 +827,13 @@ function authenticate() {
   return gapi.auth2.getAuthInstance()
       .signIn({scope: "https://www.googleapis.com/auth/youtube.readonly"})
       .then(function() { console.log("Sign-in successful"); },
-            function(err) { console.error("Error signing in", err); });
+            function(err) { console.error("Error signing in", err); })
+      .then(unhideLivestreamCreation());
+}
+
+function unhideLivestreamCreation() {
+  var livestreamCreation = document.getElementById("livestream-creation");
+  livestreamCreation.style.display = "block";
 }
 
 function loadClient() {
