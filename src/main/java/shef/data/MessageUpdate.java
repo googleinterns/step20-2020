@@ -18,4 +18,28 @@ import java.util.Observable;
 
 public class MessageUpdate extends Observable {
 
+/**
+ * Handles incoming messages and distributes them to waiting MessagePromises. 
+ * The methods are synchronized to allow only one thread to modify and send a message at a time.
+ * This prevents race conditions where two users post a new message simultaneously, which could allow
+ *     a message to be changed and lost before it is sent.
+ */
+public class MessageUpdate extends Observable {
+
+  private String message;
+
+  public MessageUpdate() {
+    this.message = null;
+  }
+
+  /** Sends the message to waiting observers via notifyObservers(). */
+  public synchronized void sendMessage() {
+    notifyObservers(message);
+  }
+
+  /** Set the message and mark the MessageUpdate as changed. */
+  public synchronized void setMessage(String message) {
+    this.message = message;
+    setChanged();
+  }
 }
