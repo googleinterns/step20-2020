@@ -43,7 +43,21 @@ public class NewMessageServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    
+    String message = request.getParameter("message");
+    if (message.equals("")) {
+      return;
+    }
+
+    String keyString = request.getParameter("key");
+    Entity groupchatEntity = null;
+    try {
+      groupchatEntity = datastore.get(KeyFactory.stringToKey(keyString));
+    } catch (EntityNotFoundException e) {
+      e.printStackTrace();
+      return;
+    }
+    Object messageObject = groupchatEntity.getProperty("messages");
+    ArrayList<String> messages = messageObject != null ? (ArrayList<String>) messageObject : new ArrayList<>();
   }
 
 }
