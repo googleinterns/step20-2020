@@ -22,23 +22,27 @@ import com.google.appengine.api.datastore.Query.CompositeFilter;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.PreparedQuery;
 
+/** Defines the For You algorithm, which shows users recipes unique to their preferences. */
 public class ForYou implements RecipeFilter {
 
   private DatastoreService datastore;
 
-  public ForYou(HttpServletRequest request) {
+  public ForYou() {
     datastore = DatastoreServiceFactory.getDatastoreService();
   }
 
+  /** Returns a query with recipes unique to the user. */
   public PreparedQuery getResults(Query query) {
-    return null;
+    throw new UnsupportedOperationException();
   }
 
-  public Filter addFilter(Filter filters) {
-    return null;
+  /** Helper method that adds a filter to the composite filter. */
+  public Filter addFilter(CompositeFilter filters) {
+    throw new UnsupportedOperationException();
   }
 
+  /** Retrieves additional data from Datastore to be used in the filter. */
   public PreparedQuery getData(Query query) {
-    return null;
+    throw new UnsupportedOperationException();
   }  
 }
