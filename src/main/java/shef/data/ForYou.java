@@ -41,6 +41,10 @@ public class ForYou implements RecipeFilter {
     filters = new HashSet<>();
   }
 
+  /** 
+   * Returns recipes that match the responses to the user's preference quiz. 
+   * For now, returns recipes that match SPICY, CHICKEN, and CHOCOLATE, or that have more than 50 likes.
+   * This is just a hard-coded example, and will change. */
   public PreparedQuery getResults(Query query) {
     filters.add(new FilterPredicate("search-strings", FilterOperator.IN, TEMP_PREFERENCES));
     filters.add(new FilterPredicate("likes", FilterOperator.GREATER_THAN_OR_EQUAL, 50));
