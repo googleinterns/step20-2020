@@ -54,7 +54,8 @@ function loadGroupchat() {
       alert('Error: Groupchat does not exist');
       window.location.href = 'index.html';
     }).then((messages) => {
-      document.getElementById('messages').innerHTML = '';
+      var messageContainer = document.getElementById('messages');
+      messageContainer.innerHTML = '';
       document.getElementById('groupchat-key').value = key;
       for (var i = 0; i < messages.length; i++) {
         const message = document.createElement('p');

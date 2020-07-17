@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import shef.data.MessageUpdate;
+import shef.data.MessagePromise;
+import shef.data.Groupchat;
 
 @WebServlet("/new-message")
 public class NewMessageServlet extends HttpServlet {
@@ -48,16 +50,12 @@ public class NewMessageServlet extends HttpServlet {
       return;
     }
 
-    String keyString = request.getParameter("key");
-    Entity groupchatEntity = null;
-    try {
-      groupchatEntity = datastore.get(KeyFactory.stringToKey(keyString));
-    } catch (EntityNotFoundException e) {
-      e.printStackTrace();
-      return;
-    }
-    Object messageObject = groupchatEntity.getProperty("messages");
-    ArrayList<String> messages = messageObject != null ? (ArrayList<String>) messageObject : new ArrayList<>();
+    String keyString = request.getParameter("groupchat-key");
+    Groupchat group = new Groupchat(keyString);
+    group.addMessage(message);
+    group.update();
+
+    response.setStatus(response.SC_NO_CONTENT);
   }
 
 }
