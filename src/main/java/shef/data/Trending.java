@@ -24,25 +24,32 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.PreparedQuery;
 
+/** 
+ * Returns recipes that are currently popular.
+ * The recipes returned are the same for all users.
+ */
 public class Trending implements RecipeFilter {
 
   private DatastoreService datastore;
   private static final int MIN_LIKES = 10;
 
-  public Trending(HttpServletRequest request) {
+  public Trending() {
     datastore = DatastoreServiceFactory.getDatastoreService();
   }
 
+  /** Returns a query with the most popular recipes. */
   public PreparedQuery getResults(Query query) {
     query.setFilter(new FilterPredicate("likes", FilterOperator.GREATER_THAN_OR_EQUAL, MIN_LIKES));
     return datastore.prepare(query);
   }
 
-  public Filter addFilter(Filter filters) {
-    return null;
+  /** Helper method that adds a filter to the composite filter. */
+  public Filter addFilter(CompositeFilter filters) {
+    throw new UnsupportedOperationException();
   }
 
+  /** Retrieves additional data from Datastore to be used in the filter. */
   public PreparedQuery getData(Query query) {
-    return null;
+    throw new UnsupportedOperationException();
   }  
 }
