@@ -50,10 +50,15 @@ public class NewMessageServlet extends HttpServlet {
       return;
     }
 
+    // Upload new message to Datastore.
     String keyString = request.getParameter("groupchat-key");
     Groupchat group = new Groupchat(keyString);
     group.addMessage(message);
     group.update();
+
+    // Send message to waiting MessagePromises.
+    messageUpdate.setMessage(message);
+    messageUpdate.sendMessage();
 
     response.setStatus(response.SC_NO_CONTENT);
   }
