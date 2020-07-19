@@ -33,6 +33,9 @@ public class NewLiveStreamServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Entity liveStreamEntity = new Entity("LiveStream");
+    if (request.getParameterMap().get("duration")[0].equals("P0D")) {
+      throw new IllegalArgumentException("Live stream start or end time is missing or invalid.");
+    }
     for (String param : request.getParameterMap().keySet()) {
       liveStreamEntity.setProperty(param, (String) request.getParameterMap().get(param)[0]);
     }

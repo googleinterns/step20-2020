@@ -863,10 +863,18 @@ function execute(videoId) {
   })
       .then(function(response) {
               // Handle results here (response.result has the parsed body).
+              try {
               const schedStartTime = response.result.items[0].liveStreamingDetails.scheduledStartTime;
               const schedEndTime = response.result.items[0].liveStreamingDetails.scheduledEndTime;
               const duration = response.result.items[0].contentDetails.duration;
               storeLiveStreamInfo(schedStartTime, schedEndTime, duration)
+              document.getElementById("invalid-link-err").innerHTML = "";
+              document.getElementById("published-msg").innerHTML = "<p>Live stream successfully registered! Please check the 'You' tab under live streams to see if it has been published.*</p>";
+              document.getElementById("published-msg").innerHTML += "<p>*If the live stream start or end time is found to be invalid, it will not be published, and will not appear in the 'You' tab or elsewhere on Shef.</p>"
+              } catch (err) {
+                document.getElementById("invalid-link-err").innerHTML = "<p>Please enter a link to a valid livestream event.</p>";
+                document.getElementById("published-msg").innerHTML = "";
+              }
             },
             function(err) { console.error("Execute error", err); });
 }
