@@ -31,13 +31,15 @@ public class MessageUpdate extends Observable {
   }
 
   /** Sends the message to waiting observers via notifyObservers(). */
-  public synchronized void sendMessage() {
+  public void sendMessage() {
     notifyObservers(message);
   }
 
   /** Set the message and mark the MessageUpdate as changed. */
-  public synchronized void setMessage(String message) {
-    this.message = message;
+  public void setMessage(String message) {
+    System.out.println("setting MessageUpdate: " + message);
+    this.message = message; 
     setChanged();
+    System.out.println("Observers: " + countObservers());
   }
 }

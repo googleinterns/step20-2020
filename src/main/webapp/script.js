@@ -54,18 +54,40 @@ function loadGroupchat() {
       alert('Error: Groupchat does not exist');
       window.location.href = 'index.html';
     }).then((messages) => {
-      var messageContainer = document.getElementById('messages');
-      messageContainer.innerHTML = '';
+      document.getElementById('messages').innerHTML = '';
       document.getElementById('groupchat-key').value = key;
       for (var i = 0; i < messages.length; i++) {
-        const message = document.createElement('p');
-        message.innerText = messages[i];
-        messageContainer.appendChild(message);
+        addMessage(messages[i]);
       }
+      setTimeout(getNextMessage(), 100);
   });
+}
+
+function getNextMessage() {
+  console.log('getting a new message');
+  const request = new Request("/new-message", {method: 'GET'})
+  console.log("Request: " + request);
+  fetch(request)
+    .then(response => {
+      console.log("In response => response.text() block")
+      return response.text()
+    }, err => alert('servlet error ' + err))
+    .then(message => {
+      console.log('got message ' + message);
+      addMessage(message);
+      getNextMessage();
+    }, err => alert('text() error ' + err));
+  console.log("outside of fetch block");
 }
 
 function redirectToGroupchat(keyParameter) {
   const key = keyParameter ? keyParameter : document.getElementById('groupchat-key').value;
   window.location.href = "/groupchat.html?key=" + key;
+}
+
+function addMessage(message) {
+  var messagesContainer = document.getElementById('messages');
+  const messageElement = document.createElement('p');
+  messageElement.innerText = message;
+  messagesContainer.appendChild(messageElement);
 }

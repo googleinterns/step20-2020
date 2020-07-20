@@ -29,6 +29,7 @@ public class MessagePromise implements Observer {
   private MessageUpdate messageUpdate;
 
   public MessagePromise(MessageUpdate messageUpdate) {
+    System.out.println("creating new MessagePromise");
     this.message = null;
     this.updated = false;
     this.messageUpdate = messageUpdate;
@@ -44,7 +45,10 @@ public class MessagePromise implements Observer {
     // Ensure that the thread waits until an update is detected.
     while (!updated) {
       try {
+        String name = Thread.currentThread().getName();
+        System.out.println(name + ": before wait()");
         wait();
+        System.out.println(name + ":after wait()");
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -60,5 +64,6 @@ public class MessagePromise implements Observer {
     this.message = (String) message;
     this.updated = true;
     notify();
+    System.out.println("MessagePromise updated");
   }
 }
