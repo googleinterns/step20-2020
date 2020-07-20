@@ -883,6 +883,112 @@ gapi.load("client:auth2", function() {
   gapi.auth2.init({client_id: "583465356044-j1fls4tnrtpmf24ojrkjmqm4ldvckn4p.apps.googleusercontent.com"});
 });
 
+/** Calendar */
+// Client ID and API key from the Developer Console
+var CLIENT_ID = '583465356044-j1fls4tnrtpmf24ojrkjmqm4ldvckn4p.apps.googleusercontent.com';
+var API_KEY = 'AIzaSyCoTpMozat1rLnBqHPzd2GN4e5NE3al5w8';
+
+// Array of API discovery doc URLs for APIs used by the quickstart
+var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+
+// Authorization scopes required by the API; multiple scopes can be
+// included, separated by spaces.
+var SCOPES = "https://www.googleapis.com/auth/calendar";
+
+/**
+  *  On load, called to load the auth2 library and API client library.
+  */
+function handleClientLoad() {
+  gapi.load('client:auth2', initClient());
+}
+
+/**
+  *  Initializes the API client library and sets up sign-in state
+  *  listeners.
+  */
+function initClient() {
+  console.log("Initializing client!");
+  gapi.client.init({
+    apiKey: API_KEY,
+    clientId: CLIENT_ID,
+    discoveryDocs: DISCOVERY_DOCS,
+    scope: SCOPES
+  });
+}
+
+/**
+  *  Sign in the user upon button click.
+  */
+function handleAuthClick(event) {
+  var authorizeButton = document.getElementById('authorize_button');
+  var signoutButton = document.getElementById('signout_button');
+  var eventButton = document.getElementById('event_button');
+  gapi.auth2.getAuthInstance().signIn();
+  authorizeButton.style.display = 'none';
+  eventButton.style.display = 'block';
+  signoutButton.style.display = 'block';
+}
+
+/**
+  *  Sign out the user upon button click.
+  */
+function handleSignoutClick(event) {
+  var authorizeButton = document.getElementById('authorize_button');
+  var signoutButton = document.getElementById('signout_button');
+  var eventButton = document.getElementById('event_button');
+  gapi.auth2.getAuthInstance().signOut();
+  authorizeButton.style.display = 'block';
+  eventButton.style.display = 'none';
+  signoutButton.style.display = 'none';
+}
+
+/**
+  * Append a pre element to the body containing the given message
+  * as its text node. Used to display the results of the API call.
+  *
+  * @param {string} message Text to be placed in pre element.
+  */
+function appendPre(message) {
+  var pre = document.getElementById('content');
+  var textContent = document.createTextNode(message + '\n');
+  pre.appendChild(textContent);
+}
+
+function addEvent(){
+  var event = {
+    'summary': 'Google I/O 2015',
+    'location': '800 Howard St., San Francisco, CA 94103',
+    'description': 'A chance to hear more about Google\'s developer products.',
+    'start': {
+      'dateTime': '2020-07-21T09:00:00-07:00',
+      'timeZone': 'America/Los_Angeles'
+    },
+    'end': {
+      'dateTime': '2020-07-21T17:00:00-07:00',
+      'timeZone': 'America/Los_Angeles'
+    },
+    'recurrence': [
+      'RRULE:FREQ=DAILY;COUNT=2'
+    ],
+    'reminders': {
+      'useDefault': false,
+      'overrides': [
+        {'method': 'email', 'minutes': 24 * 60},
+        {'method': 'popup', 'minutes': 10}
+      ]
+    }
+  };
+
+  var request = gapi.client.calendar.events.insert({
+    'calendarId': 'primary',
+    'resource': event
+  });
+
+  request.execute(function(event) {
+    appendPre('Event created: ' + event.htmlLink);
+  });
+}
+
 // Sets up the navbar for any page.
 function navBarSetup() {
   fetch('/sign-in').then(response => response.json()).then(info => {
