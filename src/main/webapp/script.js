@@ -124,24 +124,46 @@ function getResults(param) {
 
 /** Fetches live streams from the server and adds them to the DOM. */
 function loadLiveStreams() {
-  fetch('/display-livestreams').then(response => response.json()).then((livestreams) => {
-    const liveStreamListElement = document.getElementById('livestream-list');
-    livestreams.forEach((livestream) => {
-      liveStreamListElement.appendChild(createLiveStreamElement(livestream));
+  var vars = {};
+  let liveStreamCount = 0;
+  let rowCount = 0;
+  fetch('/display-livestreams').then(response => response.json()).then((liveStreams) => {
+    const liveStreamGrid = document.getElementById('live-stream-grid');
+    liveStreams.forEach((liveStream) => {
+      if (liveStreamCount % 3 == 0) {
+        if (liveStreamCount != 0) {
+          liveStreamGrid.appendChild(vars['liveStreamRow' + rowCount]);
+        }
+        rowCount++;
+        vars['liveStreamRow' + rowCount] = document.createElement('div');
+        vars['liveStreamRow' + rowCount].className = "row";
+      }
+      vars['liveStreamRow' + rowCount].appendChild(createLiveStreamElement(liveStream));
+      liveStreamCount++;
     })
   });
 }
 
-/** Creates a list element that represents a live stream. */
+/** Creates an element that represents a live stream. */
 function createLiveStreamElement(liveStream) {
-  const liveStreamElement = document.createElement('li');
-  liveStreamElement.className = 'live-stream';
+  const liveStreamItem = document.createElement('div');
+  liveStreamItem.className = 'col feed-img-container';
+  liveStreamItem.innerHTML += "<img src=" + "https://tinyurl.com/y8eph3n6" + ">";
 
-  const spanElement = document.createElement('span');
-  spanElement.innerText = liveStream.liveStreamKey;
+  const overlay = document.createElement('div');
+  overlay.className = "overlay";
 
-  liveStreamElement.appendChild(spanElement);
-  return liveStreamElement;
+  const unorderedList = document.createElement('ul');
+  unorderedList.className = "list-unstyled";
+
+  const listElement = document.createElement('li');
+  listElement.className = "list-space";
+  listElement.innerText= liveStream.liveStreamKey;
+  
+  unorderedList.appendChild(listElement);
+  overlay.appendChild(unorderedList);
+  liveStreamItem.appendChild(overlay);
+  return liveStreamItem;
 }
 
 /** Gets the ID of a YouTube video from its URL.
