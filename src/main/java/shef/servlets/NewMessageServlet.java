@@ -54,6 +54,7 @@ public class NewMessageServlet extends HttpServlet {
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    System.out.println(Thread.currentThread().getName() + ": GET request made for next mesasge");
     MessagePromise newMessagePromise = new MessagePromise(messageUpdate);
 
     // Blocks until the next message is received.
@@ -86,5 +87,23 @@ public class NewMessageServlet extends HttpServlet {
     messageUpdate.sendMessage();
 
     response.setStatus(response.SC_NO_CONTENT);
+  }
+
+  @Override
+  public void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    System.out.println("NEW REQUEST: " + request.getMethod() + " " + request.getRequestURL());
+    if (request.getMethod().equals("ET")) {
+      System.out.println("FOUND ET");
+      doGet(request, response);
+    } else if (request.getMethod().equals("OST")) {
+      System.out.println("FOUND OST");
+      response.sendError(response.SC_BAD_REQUEST);
+    } else {
+      try {
+        super.service(request, response);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 }
