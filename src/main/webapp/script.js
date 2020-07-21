@@ -40,7 +40,7 @@ function addParagraph(content) {
 }
 
 function newGroupchat() {
-  const request = new Request("/load-groupchat", {method: 'POST'});
+  var request = new Request("/load-groupchat", {method: 'POST'});
   fetch(request).then(response => response.text()).then((key) => {
     redirectToGroupchat(key);
   });
@@ -49,9 +49,9 @@ function newGroupchat() {
 function loadGroupchat() {
   const urlParams = new URLSearchParams(window.location.search);
   const key = urlParams.get('key');
-  fetch('/load-groupchat?key=' + key).then(response => response.json())
-    .catch(error => {
-      alert('Error: Groupchat does not exist');
+  fetch('/load-groupchat?key=' + key)
+    .then(response => response.json(), error => {
+      alert('Error: Groupchat does not exist ' + error);
       window.location.href = 'index.html';
     }).then((messages) => {
       document.getElementById('messages').innerHTML = '';
@@ -59,25 +59,35 @@ function loadGroupchat() {
       for (var i = 0; i < messages.length; i++) {
         addMessage(messages[i]);
       }
-      setTimeout(getNextMessage(), 100);
+      getNextMessage();
   });
+}
+
+function postNextMessage() {
+  const message = document.getElementById('message-input').value;
+  const groupKey = document.getElementById('groupchat-key').value;
+  var request = new Request('/new-message?message=' + message + '&groupchat-key=' + groupKey, {method: 'POST'});
+  fetch(request)
+    .then(v => console.log('POST success'), v => console.log('POST failure'));
 }
 
 function getNextMessage() {
   console.log('getting a new message');
-  const request = new Request("/new-message", {method: 'GET'})
+  var request = new Request("/new-message", {method: 'GET'})
   console.log("Request: " + request);
   fetch(request)
     .then(response => {
-      console.log("In response => response.text() block")
-      return response.text()
-    }, err => alert('servlet error ' + err))
+      console.log("In response => response.text() block");
+      return response.text();
+    }, error => {
+      console.log('SERVER ERROR: ' + error);
+      //getNextMessage();
+    })
     .then(message => {
       console.log('got message ' + message);
       addMessage(message);
       getNextMessage();
     }, err => alert('text() error ' + err));
-  console.log("outside of fetch block");
 }
 
 function redirectToGroupchat(keyParameter) {

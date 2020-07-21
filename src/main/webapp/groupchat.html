@@ -5,18 +5,18 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>shef</title>
-    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="script.js" onload="loadGroupchat()"></script>
   </head>
 
-  <body onload="loadGroupchat()">
+  <body>
     <h1>Groupchat</h1>
     <div id="messages"></div>
 
-    <form action="/new-message" method="POST" style="position: absolute; bottom: 10px; width: 100%">
+    <form onsubmit="postNextMessage();return false" style="position: absolute; bottom: 10px; width: 100%">
       <label for="message-input">Type a message:</label></br>
       <textarea id="message-input" name="message" rows="5" style="width: 99%"></textarea>
-      <input type="hidden" name="groupchat-key" id="groupchat-key"></input>
-      <input type="submit"></input>
+      <input type="hidden" name="groupchat-key" id="groupchat-key"/>
+      <input type="submit"/>
     </form>
   </body>
 </html>
