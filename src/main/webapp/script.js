@@ -124,21 +124,23 @@ function getResults(param) {
 
 /** Fetches live streams from the server and adds them to the DOM. */
 function loadLiveStreams() {
-  var vars = {};
+  // rowVars used to dynamically name divs of class row.
+  var rowVars = {};
   let liveStreamCount = 0;
   let rowCount = 0;
   fetch('/display-livestreams').then(response => response.json()).then((liveStreams) => {
     const liveStreamGrid = document.getElementById('live-stream-grid');
     liveStreams.forEach((liveStream) => {
+      // Every three live streams, create a new row.
       if (liveStreamCount % 3 == 0) {
         if (liveStreamCount != 0) {
-          liveStreamGrid.appendChild(vars['liveStreamRow' + rowCount]);
+          liveStreamGrid.appendChild(rowVars['liveStreamRow' + rowCount]);
         }
         rowCount++;
-        vars['liveStreamRow' + rowCount] = document.createElement('div');
-        vars['liveStreamRow' + rowCount].className = "row";
+        rowVars['liveStreamRow' + rowCount] = document.createElement('div');
+        rowVars['liveStreamRow' + rowCount].className = "row";
       }
-      vars['liveStreamRow' + rowCount].appendChild(createLiveStreamElement(liveStream));
+      rowVars['liveStreamRow' + rowCount].appendChild(createLiveStreamElement(liveStream));
       liveStreamCount++;
     })
   });
