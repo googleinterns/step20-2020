@@ -75,6 +75,7 @@ public class NewRecipeServlet extends HttpServlet {
     Collection<EmbeddedEntity> tags = getParameters(request, TAG, searchStrings);
     Collection<EmbeddedEntity> ingredients = getParameters(request, INGREDIENT, searchStrings);
     Collection<EmbeddedEntity> steps = getParameters(request, STEP, null);
+    int likes = Integer.parseInt(request.getParameter("likes"));
     long timestamp = System.currentTimeMillis();
 
     Entity recipe = new Entity("Recipe");
@@ -85,6 +86,7 @@ public class NewRecipeServlet extends HttpServlet {
     recipe.setProperty("steps", steps);
     recipe.setProperty("search-strings", new ArrayList<String>(searchStrings));
     recipe.setProperty("timestamp", timestamp);
+    recipe.setProperty("likes", likes);
     datastore.put(recipe);
 
     response.sendRedirect("/edit-recipe.html");
