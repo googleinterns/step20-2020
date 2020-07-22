@@ -74,7 +74,6 @@ function postNextMessage() {
 function getNextMessage() {
   console.log('getting a new message');
   var request = new Request("/new-message", {method: 'GET'})
-  console.log("Request: " + request);
   fetch(request)
     .then(response => {
       console.log("In response => response.text() block");
@@ -84,7 +83,7 @@ function getNextMessage() {
       //getNextMessage();
     })
     .then(message => {
-      console.log('got message ' + message);
+      console.log('got message "' + message + '"');
       addMessage(message);
       getNextMessage();
     }, err => alert('text() error ' + err));
