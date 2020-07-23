@@ -20,7 +20,7 @@ public interface RecipeFilter {
   public PreparedQuery getResults(Query query);
 
   /** Helper method that adds a filter to the composite filter. */
-  public Filter addFilter(Filter filters);
+  public Filter addFilter(CompositeFilter filters);
 
   /** Retrieves additional data from Datastore to be used in the filter. */
   public PreparedQuery getData(Query query);

@@ -45,9 +45,9 @@ public class BrowseRecipesServlet extends HttpServlet  {
     String algorithm = request.getParameter("algorithm");
     RecipeFilter filter = null;
     if (algorithm.equals("foryou")) {
-      filter = new ForYou(request);
+      filter = new ForYou();
     } else if (algorithm.equals("trending")) {
-      filter = new Trending(request);
+      filter = new Trending();
     }
 
     Query query = new Query("Recipe");
