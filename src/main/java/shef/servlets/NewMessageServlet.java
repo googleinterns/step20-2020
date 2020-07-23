@@ -31,6 +31,9 @@ import shef.data.MessageUpdate;
 import shef.data.MessagePromise;
 import shef.data.Groupchat;
 
+import java.util.*;
+import java.text.SimpleDateFormat;
+
 /**
  * This servlet handles new messages, allowing for clients to see them as they're sent in real time.
  * A client sends in new messages with doPost(), and doGet() distributes them to all other active clients.
@@ -40,11 +43,14 @@ public class NewMessageServlet extends HttpServlet {
 
   private MessageUpdate messageUpdate;
   private DatastoreService datastore;
+  private SimpleDateFormat df;
 
   @Override
   public void init() {
     messageUpdate = new MessageUpdate();
     datastore = DatastoreServiceFactory.getDatastoreService();
+    df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    df.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
   }
   
   /**
@@ -54,7 +60,7 @@ public class NewMessageServlet extends HttpServlet {
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.println(Thread.currentThread().getName() + ": GET request made for next mesasge");
+    System.out.println(Thread.currentThread().getName() + ": GET request made for next message");
     MessagePromise newMessagePromise = new MessagePromise(messageUpdate);
 
     // Blocks until the next message is received.
@@ -89,9 +95,10 @@ public class NewMessageServlet extends HttpServlet {
     response.setStatus(response.SC_NO_CONTENT);
   }
 
-  @Override
+  @Override  
   public void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.println("NEW REQUEST: " + request.getMethod() + " " + request.getRequestURL());
+    String time = df.format(new Date(System.currentTimeMillis()));
+    System.out.println(time + " NEW REQUEST: " + request.getMethod() + " " + request.getRequestURL());
     if (request.getMethod().equals("ET")) {
       System.out.println("FOUND ET");
       doGet(request, response);

@@ -68,25 +68,32 @@ function postNextMessage() {
   const groupKey = document.getElementById('groupchat-key').value;
   var request = new Request('/new-message?message=' + message + '&groupchat-key=' + groupKey, {method: 'POST'});
   fetch(request)
-    .then(v => console.log('POST success'), v => console.log('POST failure'));
+    .then(() => {
+      console.log('POST success');
+      document.getElementById('message-input').value = '';
+      }, () => console.log('POST failure'));
 }
 
 function getNextMessage() {
   console.log('getting a new message');
   var request = new Request("/new-message", {method: 'GET'})
+  console.log('sending request ' + request.url + ' ' + request.method);
   fetch(request)
     .then(response => {
-      console.log("In response => response.text() block");
-      return response.text();
-    }, error => {
-      console.log('SERVER ERROR: ' + error);
-      //getNextMessage();
+      if (response.ok) {
+        console.log("Received response " + response);
+        return response.text();
+      } else {
+        throw new Error('Servlet closed');
+      }
     })
     .then(message => {
-      console.log('got message "' + message + '"');
+      console.log('Got message "' + message + '"');
       addMessage(message);
+      console.log('recursively calling getNextMessage()')
       getNextMessage();
-    }, err => alert('text() error ' + err));
+    })
+    .catch(err => console.log(err));
 }
 
 function redirectToGroupchat(keyParameter) {
