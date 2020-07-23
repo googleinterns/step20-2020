@@ -19,8 +19,16 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import javax.servlet.http.HttpServletRequest;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.PreparedQuery;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Arrays;
 
 /** Defines the For You algorithm, which shows users recipes unique to their preferences. */
 public class ForYou implements RecipeFilter {

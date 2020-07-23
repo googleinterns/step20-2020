@@ -17,6 +17,8 @@ package shef.data;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.logging.*;
 import java.util.Iterator;
 import com.google.appengine.api.datastore.Entity;
@@ -31,8 +33,11 @@ public class Recipe {
 
   private String name;
   private String description;
+  private Set<String> tags;
+  private Set<String> ingredients;
   private List<Step> steps;
-  private List<SpinOff> spinOffs;
+  private long timestamp;
+  private Set<SpinOff> spinOffs;
 
   /**
    * Copy constructor called when creating spin-offs.
@@ -40,14 +45,16 @@ public class Recipe {
   public Recipe(Recipe recipe) {
     this.name = recipe.name;
     this.description = recipe.description;
-    this.steps = recipe.steps;
-    this.spinOffs = recipe.spinOffs;
+    this.tags = new HashSet<>(recipe.tags);
+    this.ingredients = new HashSet<>(recipe.ingredients);
+    this.steps = new LinkedList<>(recipe.steps);
+    this.spinOffs = new HashSet<>();
   }
   
   /**
    * Default constructor called when creating a new recipe.
    */
-  public Recipe(String name, String description, List<Step> steps) {
+  public Recipe(String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
     this.name = name;
     this.description = description;
     this.steps = steps;

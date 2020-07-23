@@ -26,6 +26,9 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 import shef.data.Recipe;
+import shef.data.RecipeFilter;
+import shef.data.ForYou;
+import shef.data.Trending;
 import java.util.List;
 import java.util.LinkedList;
 
