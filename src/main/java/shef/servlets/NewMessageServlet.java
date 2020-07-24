@@ -22,9 +22,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import shef.data.MessageUpdate;
 
 @WebServlet("/new-message")
 public class NewMessageServlet extends HttpServlet {
+
+  private MessageUpdate messageUpdate;
+  private DatastoreService datastore;
+
+  @Override
+  public void init() {
+    messageUpdate = new MessageUpdate();
+    datastore = DatastoreServiceFactory.getDatastoreService();
+  }
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
