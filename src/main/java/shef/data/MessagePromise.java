@@ -16,11 +16,49 @@ package shef.data;
 
 import java.util.Observer;
 import java.util.Observable;
+import shef.data.MessageUpdate;
 
+/** 
+ * Returns new messages to GET requests, blocking until they are received from the MessageUpdate. 
+ * Each MessagePromise is used to get one message. 
+ */
 public class MessagePromise implements Observer {
 
-  public void update(Observable messageUpdate, Object newMessage) {
-    
+  private String message;
+  private boolean updated;
+  private MessageUpdate messageUpdate;
+
+  public MessagePromise(MessageUpdate messageUpdate) {
+    this.message = null;
+    this.updated = false;
+    this.messageUpdate = messageUpdate;
+    this.messageUpdate.addObserver(this);
   }
 
+  /**
+   * Gets the next message from the MessageUpdate.
+   * This method waits until it receives a new message from MessageUpdate.
+   * It then unblocks, and returns the message to the servlet.
+   */
+  public synchronized String getNextMessage() {
+    // Ensure that the thread waits until an update is detected.
+    while (!updated) {
+      try {
+        wait();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
+    messageUpdate.deleteObserver(this);
+    return message;
+  }
+
+  /** Receives a new message and then wakes the waiting thread with notify(). */
+  @Override
+  public synchronized void update(Observable messageUpdate, Object message) {
+    this.message = (String) message;
+    this.updated = true;
+    notify();
+  }
 }
