@@ -844,10 +844,16 @@ function hideAuthButton() {
 }
 
 function loadClient() {
-  gapi.client.setApiKey("AIzaSyCoTpMozat1rLnBqHPzd2GN4e5NE3al5w8");
+  fetch('assets/files/api_key.json').then(response => {
+    return response.json();
+  }).then(data => {
+  gapi.client.setApiKey(data.API_KEY);
   return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
       .then(function() { console.log("GAPI client loaded for API"); },
             function(err) { console.error("Error loading GAPI client for API", err); });
+  }).catch(error => {
+    console.log(error);
+  });
 }
 
 // Make sure the client is loaded and sign-in is complete before calling this method.
@@ -880,7 +886,13 @@ function execute(videoId) {
 }
 
 gapi.load("client:auth2", function() {
-  gapi.auth2.init({client_id: "583465356044-j1fls4tnrtpmf24ojrkjmqm4ldvckn4p.apps.googleusercontent.com"});
+  fetch('assets/files/api_key.json').then(response => {
+    return response.json();
+  }).then(data => {
+  gapi.auth2.init({client_id: data.CLIENT_ID});
+  }).catch(error => {
+    console.log(error);
+  });
 });
 
 // Sets up the navbar for any page.

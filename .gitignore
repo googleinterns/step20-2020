@@ -1,2 +1,5 @@
 target/
 .idea
+.gitattributes
+.gradle/
+./assets/files/api_key.json
