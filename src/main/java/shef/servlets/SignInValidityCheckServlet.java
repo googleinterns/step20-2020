@@ -48,7 +48,7 @@ public class SignInValidityCheckServlet extends HttpServlet {
         response.sendRedirect("/index.html");
       } catch(EntityNotFoundException e) {
         // Forcibly log out the user.
-        String signOutUrl = userService.createLogoutURL("/signin-0.html?status=fail");
+        String signOutUrl = userService.createLogoutURL("/sign-in.html?status=fail");
         response.sendRedirect(signOutUrl);        
       }
     }

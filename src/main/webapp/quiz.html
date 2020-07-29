@@ -1,0 +1,207 @@
+<!--The MIT License (MIT)
+
+Copyright (c) 2011-2018 Twitter, Inc.
+Copyright (c) 2011-2018 The Bootstrap Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <link rel="stylesheet" href="css/style.css"/>
+
+    <title>shef</title>
+  </head>
+
+  <body class="page-container" onload="protectPage(); navBarSetup();">
+    <!--Nav bar-->
+    <div id="nav-placeholder"></div>
+    <script>
+      $(function(){
+        $("#nav-placeholder").load("nav.html");
+      });
+    </script>
+
+    <img src="assets/images/gift.svg" class="large-img" alt="">
+
+    <div class="jumbotron">
+        <h1 class="display-4">Divulge your life aspirations.</h1>
+        <p class="lead">Just kidding! These next questions will help us curate recipes for you.</p>
+        <div class="med-sep">
+            <form method="POST" action="/preferences">
+                <div class ="question">
+                    <p class="q"> 1. Which of these terms best describe you?</p>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="student">
+                        <label class="form-check-label" for="inlineCheckbox1">Student</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox2" value="influencer">
+                        <label class="form-check-label" for="inlineCheckbox2">Influencer</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox3" value="parent">
+                        <label class="form-check-label" for="inlineCheckbox3">Parent</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox4" value="adventurous">
+                        <label class="form-check-label" for="inlineCheckbox4">Adventurous Eater</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox5" value="picky">
+                        <label class="form-check-label" for="inlineCheckbox5">Picky Eater</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox6" value="sweets-lover">
+                        <label class="form-check-label" for="inlineCheckbox6">Sweets-Lover</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox7" value="newbie">
+                        <label class="form-check-label" for="inlineCheckbox7">Newbie Cook</label>
+                    </div>
+                </div>
+                <div class="question">
+                    <p class="q"> 2. What dietary requirements do you have?</p>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="vegetarian">
+                        <label class="form-check-label" for="inlineCheckbox1">Vegetarian</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox2" value="pescetarian">
+                        <label class="form-check-label" for="inlineCheckbox2">Pescetarian</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox3" value="vegan">
+                        <label class="form-check-label" for="inlineCheckbox3">Vegan</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox4" value="gluten-free">
+                        <label class="form-check-label" for="inlineCheckbox4">Gluten-Free</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox5" value="kosher">
+                        <label class="form-check-label" for="inlineCheckbox5">Kosher</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox6" value="halal">
+                        <label class="form-check-label" for="inlineCheckbox6">Halal</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox7" value="no-dairy">
+                        <label class="form-check-label" for="inlineCheckbox7">No Dairy</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox8" value="no-shellfish">
+                        <label class="form-check-label" for="inlineCheckbox8">No Shellfish</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox9" value="no-seafood">
+                        <label class="form-check-label" for="inlineCheckbox9">No Seafood</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox10" value="no-soy">
+                        <label class="form-check-label" for="inlineCheckbox10">No Soy</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox11" value="no-eggs">
+                        <label class="form-check-label" for="inlineCheckbox11">No Eggs</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox12" value="no-alcohol">
+                        <label class="form-check-label" for="inlineCheckbox12">No Alcohol</label>
+                    </div>
+                </div>
+                <div class ="question">
+                    <p class="q"> 3. What are your favorite types of cuisine?</p>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="african">
+                        <label class="form-check-label" for="inlineCheckbox1">African</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox2" value="american">
+                        <label class="form-check-label" for="inlineCheckbox2">American</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox3" value="asian">
+                        <label class="form-check-label" for="inlineCheckbox3">Asian</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox4" value="caribbean">
+                        <label class="form-check-label" for="inlineCheckbox4">Caribbean</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox5" value="eastern-european">
+                        <label class="form-check-label" for="inlineCheckbox5">Eastern European</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox6" value="western-european">
+                        <label class="form-check-label" for="inlineCheckbox6">Western European</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox7" value="latin-american">
+                        <label class="form-check-label" for="inlineCheckbox7">Latin American</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox8" value="mediterranean">
+                        <label class="form-check-label" for="inlineCheckbox8">Mediterranean</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox9" value="middle-eastern">
+                        <label class="form-check-label" for="inlineCheckbox9">Middle-Eastern</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox10" value="south-asian">
+                        <label class="form-check-label" for="inlineCheckbox10">South Asian</label>
+                    </div>
+                </div>
+                <div class ="question">
+                  <p class="q"> 4. What are your general tastes?</p>
+                    <div class="form-check form-check-inline">
+                      <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox1" value="spicy">
+                      <label class="form-check-label" for="inlineCheckbox1">Spicy</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox2" value="sweet">
+                        <label class="form-check-label" for="inlineCheckbox2">Sweet</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox3" value="salty">
+                        <label class="form-check-label" for="inlineCheckbox3">Salty</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input name="choice" class="form-check-input" type="checkbox" id="inlineCheckbox4" value="crispy">
+                        <label class="form-check-label" for="inlineCheckbox4">Crispy</label>
+                    </div>
+                </div>
+            <button type="submit" class="btn btn-primary">Onwards!</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- First Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>

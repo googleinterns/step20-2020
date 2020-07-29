@@ -16,44 +16,132 @@ package shef.data;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.logging.*;
 import java.util.Iterator;
 
-/**
- * Stores a recipe's data.
- */
+/** Stores a recipe's data. */
 public class Recipe {
 
   private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-
+  
+  private String key;
   private String name;
   private String description;
+  private Set<String> tags;
+  private Set<String> ingredients;
   private List<Step> steps;
-  private List<SpinOff> spinOffs;
+  private Set<SpinOff> spinOffs;
+  private long timestamp;
 
   /**
    * Copy constructor called when creating spin-offs.
    */
   public Recipe(Recipe recipe) {
     this.name = recipe.name;
+    this.tags = recipe.tags;
+    this.ingredients = recipe.ingredients;
     this.description = recipe.description;
-    this.steps = recipe.steps;
-    this.spinOffs = recipe.spinOffs;
-  }
-  
-  /**
-   * Default constructor called when creating a new recipe.
-   */
-  public Recipe(String name, String description, List<Step> steps) {
-    this.name = name;
-    this.description = description;
-    this.steps = steps;
-    this.spinOffs = new LinkedList<>();
+    this.tags = new HashSet<String>(recipe.tags);
+    this.ingredients = new HashSet<String>(recipe.ingredients);
+    this.steps = new LinkedList<Step>(recipe.steps);
+    this.spinOffs = new HashSet<SpinOff>();
   }
 
-  /**
-   * Appends a new step to a recipe's list of steps.
-   */
+  /** Default constructor called when creating a new recipe. */
+  public Recipe(String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
+    this.name = name;
+    this.tags = tags;
+    this.ingredients = ingredients;
+    this.description = description;
+    this.tags = tags;
+    this.ingredients = ingredients;
+    this.steps = steps;
+    this.timestamp = timestamp;
+    this.spinOffs = new HashSet<>();
+  }
+
+  /** Constructor called when creating a recipe to display on the recipe feed. */
+  public Recipe(String key, String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
+    this.key = key;
+    this.name = name;
+    this.tags = tags;
+    this.ingredients = ingredients;
+    this.description = description;
+    this.tags = tags;
+    this.ingredients = ingredients;
+    this.steps = steps;
+    this.timestamp = timestamp;
+    this.spinOffs = new HashSet<>();
+  }
+
+  /** Gets the recipe's name. */
+  public String getName() {
+    return name;
+  }
+
+  /** Sets the recipe's name. */
+  public void setName(String newName) {
+    name = newName;
+  }
+
+  /** Gets the recipe's description. */
+  public String getDescription() {
+    return description;
+  }
+
+  /** Sets the recipe's description. */
+  public void setDescription(String newDescription) {
+    description = newDescription;
+  }
+
+  /** Gets the recipe's tags. */
+  public Set<String> getTags() {
+    return tags;
+  }
+
+  /** Gets the recipe's ingredients. */
+  public Set<String> getIngredients() {
+    return ingredients;
+  }
+
+  /** Gets the recipe's spin-offs. */
+  public Set<SpinOff> getSpinOffs() {
+    return spinOffs;
+  }
+
+  /** Adds a tag to the recipe. */
+  public void addTag(String tag) {
+    tags.add(tag);
+  }
+
+  /** Adds an ingredient to the recipe. */
+  public void addIngredient(String ingredient) {
+    ingredients.add(ingredient);
+  }
+
+  /** Adds a spin-off to the recipe. */
+  public void addSpinOff(SpinOff spinOff) {
+    spinOffs.add(spinOff);
+  }
+
+  /** Removes a tag from the recipe. */
+  public void removeTag(String tag) {
+    tags.remove(tag);
+  }
+
+  /** Removes an ingredient from the recipe. */
+  public void removeIngredient(String ingredient) {
+    ingredients.remove(ingredient);
+  }
+
+  /** Removes a spin-off from the recipe. */
+  public void removeSpinOff(SpinOff spinOff) {
+    spinOffs.remove(spinOff);
+  }
+
+  /** Appends a new step to a recipe's list of steps. */
   public void appendStep(Step newStep) {
     steps.add(newStep);
   }
@@ -125,11 +213,6 @@ public class Recipe {
   @Override
   public boolean equals(Object other) {
     return other instanceof Recipe && equals(this, (Recipe) other);
-  }
-
-  /** Adds a spin-off to the recipe's list of spin-offs. */
-  protected void addSpinOff(SpinOff spinOff) {
-    spinOffs.add(spinOff);
   }
 
   /**
