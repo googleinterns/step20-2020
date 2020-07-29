@@ -65,13 +65,14 @@ public class DisplayRecipesServlet extends HttpServlet {
    /** Converts a Datastore entity into a Recipe. */
   public Recipe entityToRecipe(Entity recipeEntity) {
     String key = KeyFactory.keyToString(recipeEntity.getKey());
+    String user = (String) recipeEntity.getProperty("user");
     String name = (String) recipeEntity.getProperty("name");
     String description = (String) recipeEntity.getProperty("description");
     LinkedHashSet<String> tags = new LinkedHashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("tags"), "tag"));
     LinkedHashSet<String> ingredients = new LinkedHashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("ingredients"), "ingredient"));
     LinkedList<Step> steps = (LinkedList<Step>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("steps"), "step");
     long timestamp = (long) recipeEntity.getProperty("timestamp");
-    return new Recipe(key, name, description, tags, ingredients, steps, timestamp);
+    return new Recipe(key, name, user, description, tags, ingredients, steps, timestamp);
   }
 
   /** Gets a list of Recipe parameters from a Datastore property. */

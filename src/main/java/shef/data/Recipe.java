@@ -27,6 +27,7 @@ public class Recipe {
   private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
   
   private String key;
+  private String user;
   private String name;
   private String description;
   private Set<String> tags;
@@ -50,8 +51,9 @@ public class Recipe {
   }
 
   /** Default constructor called when creating a new recipe. */
-  public Recipe(String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
+  public Recipe(String name, String user, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
     this.name = name;
+    this.user = user;
     this.tags = tags;
     this.ingredients = ingredients;
     this.description = description;
@@ -63,8 +65,9 @@ public class Recipe {
   }
 
   /** Constructor called when creating a recipe to display on the recipe feed. */
-  public Recipe(String key, String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
+  public Recipe(String key, String user, String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
     this.key = key;
+    this.user = user;
     this.name = name;
     this.tags = tags;
     this.ingredients = ingredients;

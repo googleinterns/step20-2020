@@ -140,14 +140,12 @@ function loadLiveStreams() {
     liveStreams.forEach((liveStream) => {
       // Every three live streams, create a new row.
       if (liveStreamCount % 3 == 0) {
-        if (liveStreamCount != 0) {
-          liveStreamGrid.appendChild(rowVars['liveStreamRow' + rowCount]);
-        }
         rowCount++;
         rowVars['liveStreamRow' + rowCount] = document.createElement('div');
         rowVars['liveStreamRow' + rowCount].className = "row";
       }
       rowVars['liveStreamRow' + rowCount].appendChild(createLiveStreamElement(liveStream));
+      liveStreamGrid.appendChild(rowVars['liveStreamRow' + rowCount]);
       liveStreamCount++;
     })
   });
@@ -875,10 +873,16 @@ function hideAuthButton() {
 }
 
 function loadClient() {
-  gapi.client.setApiKey("AIzaSyCoTpMozat1rLnBqHPzd2GN4e5NE3al5w8");
+  fetch('assets/files/api_key.json').then(response => {
+    return response.json();
+  }).then(data => {
+  gapi.client.setApiKey(data.API_KEY);
   return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
       .then(function() { console.log("GAPI client loaded for API"); },
             function(err) { console.error("Error loading GAPI client for API", err); });
+  }).catch(error => {
+    console.log(error);
+  });
 }
 
 // Make sure the client is loaded and sign-in is complete before calling this method.
@@ -911,7 +915,13 @@ function execute(videoId) {
 }
 
 gapi.load("client:auth2", function() {
-  gapi.auth2.init({client_id: "583465356044-j1fls4tnrtpmf24ojrkjmqm4ldvckn4p.apps.googleusercontent.com"});
+  fetch('assets/files/api_key.json').then(response => {
+    return response.json();
+  }).then(data => {
+  gapi.auth2.init({client_id: data.CLIENT_ID});
+  }).catch(error => {
+    console.log(error);
+  });
 });
 
 /** Calendar */
@@ -1024,6 +1034,24 @@ function hyperlinkText(text, link) {
   return "<a href=" + link + ">" + text + "</a>";
 }
 
+/** Fetches the recipes associated with the user from the server and adds them
+    as options to the DOM. */
+function loadUserRecipes() {
+  fetch('/fetch-user-recipes').then(response => response.json()).then((recipes) => {
+    const recipeList = document.getElementById('recipe-selection');
+    recipeCount = 0;
+    recipes.forEach((recipe) => {
+      var recipeOption = document.createElement('option');
+      if (recipeCount === 0) {
+        recipeOption.selected = "selected";
+        recipeCount++;
+      }
+      recipeOption.innerHTML += recipe;
+      recipeList.appendChild(recipeOption);
+    })
+  });
+}
+
 /** Fetches recipes from the server and adds them to the DOM. */
 function loadRecipes() {
   // rowVars used to dynamically name divs of class row, for up to 3 recipes.
@@ -1085,6 +1113,7 @@ function getRecipeInfo() {
 
   fetch('/new-recipe?' + key).then(response => response.json()).then(recipe => {
     document.getElementById('recipe-title').innerHTML = recipe.name;
+    document.getElementById('recipe-author').innerHTML = recipe.user;
     document.getElementById('recipe-description').innerHTML = recipe.description;
     displayTags(recipe.tags);
     displayIngredients(recipe.ingredients);

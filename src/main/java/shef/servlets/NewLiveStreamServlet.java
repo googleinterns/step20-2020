@@ -33,6 +33,16 @@ public class NewLiveStreamServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Entity liveStreamEntity = new Entity("LiveStream");
+
+    // At this point, it is assumed the user is logged in, since
+    // the live stream creation page is protected by the protectPage()
+    // javscript function.
+    UserService userService = UserServiceFactory.getUserService(); 
+    String id = userService.getCurrentUser().getUserId();
+    Key userKey = KeyFactory.createKey("User", id);
+    String userKeyString = KeyFactory.keyToString(userKey);
+    liveStreamEntity.setProperty("user-key", userKeyString);
+    
     if (request.getParameterMap().get("duration")[0].equals("P0D")) {
       throw new IllegalArgumentException("Live stream start or end time is missing or invalid.");
     }

@@ -14,10 +14,9 @@
  
 package shef.servlets;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import shef.data.TestRecipe;
+import java.util.stream.Collectors;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -31,30 +30,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
-/** Servlet responsible for displaying recipes. */
-@WebServlet("/display-recipes")
-public class TestDisplayRecipesServlet extends HttpServlet {
+/** Servlet responsible for fetching recipes the user has created. */
+@WebServlet("/fetch-user-recipes")
+public class FetchOptionsServlet extends HttpServlet {
  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("Recipe").addSort("timestamp", SortDirection.DESCENDING);
+    Filter userRecipesFilter = new FilterPredicate("user", FilterOperator.EQUAL, request.getParameter("user-id"));
  
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
  
-    List<TestRecipe> testRecipes = new LinkedList<>();
+    List<String> recipeIds = new LinkedList<>();
     for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
-      ArrayList<String> searchStrings = (ArrayList<String>) entity.getProperty("search-strings");
-      long timestamp = (long) entity.getProperty("timestamp");
- 
-      TestRecipe testRecipe = new TestRecipe(id, searchStrings, timestamp);
-      testRecipes.add(testRecipe);
+      String recipeId = (String) entity.getProperty("key");
+      recipeIds.addAll(recipeId);
     }
  
     Gson gson = new Gson();
- 
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(testRecipes));
+    response.getWriter().println(gson.toJson(recipeIds));
   }
 }
