@@ -44,14 +44,14 @@ public class DisplayLiveStreamsServlet extends HttpServlet {
 
     List<LiveStream> liveStreams = new LinkedList<>();
     for (Entity entity : results.asIterable()) {
-      String keyString = (String) KeyFactory.keyToString(entity.getKey());
       String recipeKey = (String) entity.getProperty("recipe-key");
+      String keyString = (String) KeyFactory.keyToString(entity.getKey());
       String link = (String) entity.getProperty("live-stream-link");
       String schedStartTime = (String) entity.getProperty("sched-start-time");
       String schedEndTime = (String) entity.getProperty("sched-end-time");
       String duration = (String) entity.getProperty("duration");
 
-      LiveStream liveStream = new LiveStream(keyString, recipeKey, link, schedStartTime, schedEndTime, duration);
+      LiveStream liveStream = new LiveStream(recipeKey, keyString, link, schedStartTime, schedEndTime, duration);
       liveStreams.add(liveStream);
     }
 

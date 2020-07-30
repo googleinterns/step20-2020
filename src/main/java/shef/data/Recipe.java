@@ -51,6 +51,19 @@ public class Recipe {
   }
 
   /** Default constructor called when creating a new recipe. */
+  public Recipe(String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
+    this.name = name;
+    this.tags = tags;
+    this.ingredients = ingredients;
+    this.description = description;
+    this.tags = tags;
+    this.ingredients = ingredients;
+    this.steps = steps;
+    this.timestamp = timestamp;
+    this.spinOffs = new HashSet<>();
+  }
+
+  /** MODIFIED WITH USER: constructor called when creating a new recipe. */
   public Recipe(String name, String user, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
     this.name = name;
     this.user = user;

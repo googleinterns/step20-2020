@@ -30,8 +30,7 @@ public class LiveStream {
   * @param liveStreamKey Unique key of the live stream.
   * @param link Link to the live stream.
   */
-  public LiveStream(String recipeKey, String liveStreamKey, String recipeKey, String link, String startTime, String endTime, String duration) {
-    this.userKey = userKey;
+  public LiveStream(String recipeKey, String liveStreamKey, String link, String startTime, String endTime, String duration) {
     this.recipeKey = recipeKey;
     this.liveStreamKey = liveStreamKey;
     this.link = link;

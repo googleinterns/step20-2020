@@ -106,7 +106,10 @@ public class NewRecipeServlet extends HttpServlet {
     // Temporary if statement, can be removed once user service is fully integrated with recipe creation.
     // Without this if statement for the time being, the servlet crashes.
     if (userService != null && userService.getCurrentUser() != null) {
-      recipe.setProperty("user", userService.getCurrentUser().getUserId());
+      String id = userService.getCurrentUser().getUserId();
+      Key userKey = KeyFactory.createKey("User", id);
+      String userKeyString = KeyFactory.keyToString(userKey);
+      recipe.setProperty("user", userKeyString);
     }
     datastore.put(recipe);
 

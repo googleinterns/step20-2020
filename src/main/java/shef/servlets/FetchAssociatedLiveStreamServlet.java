@@ -23,13 +23,9 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -38,24 +34,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
 /** Servlet responsible for fetching recipes the user has created. */
-@WebServlet("/fetch-user-recipes")
-public class FetchUserRecipesServlet extends HttpServlet {
+@WebServlet("/fetch-associated-live-stream")
+public class FetchAssociatedLiveStreamServlet extends HttpServlet {
  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    UserService userService = UserServiceFactory.getUserService();
-    Key currentUserKey = KeyFactory.createKey("User", userService.getCurrentUser().getUserId());
-    String userKeyString = KeyFactory.keyToString(currentUserKey);
-    Query query = new Query("Recipe");
-    Filter userRecipesFilter = new FilterPredicate("user", FilterOperator.EQUAL, userKeyString);
-    query.setFilter(userRecipesFilter);
- 
+    Query query = new Query("LiveStream");
+    Filter recipeKeyFilter = new FilterPredicate("recipeKey", FilterOperator.EQUAL, request.getParameter("recipe-key"));
+    query.setFilter(recipeKeyFilter);
+
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
  
     List<String> recipeIds = new LinkedList<>();
     for (Entity entity : results.asIterable()) {
-      String recipeId = (String) entity.getProperty("name");
+      String recipeId = (String) entity.getProperty("key");
       recipeIds.add(recipeId);
     }
  

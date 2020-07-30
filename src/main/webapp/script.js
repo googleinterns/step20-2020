@@ -925,9 +925,6 @@ gapi.load("client:auth2", function() {
 });
 
 /** Calendar */
-// Client ID and API key from the Developer Console
-var CLIENT_ID = '583465356044-j1fls4tnrtpmf24ojrkjmqm4ldvckn4p.apps.googleusercontent.com';
-var API_KEY = 'AIzaSyCoTpMozat1rLnBqHPzd2GN4e5NE3al5w8';
 
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
@@ -944,16 +941,25 @@ function handleClientLoad() {
 }
 
 /**
-  *  Initializes the API client library and sets up sign-in state
-  *  listeners.
+  * Initializes the API client library and sets up sign-in state
+  * listeners.
   */
 function initClient() {
-  console.log("Initializing client!");
   gapi.client.init({
     apiKey: API_KEY,
     clientId: CLIENT_ID,
     discoveryDocs: DISCOVERY_DOCS,
     scope: SCOPES
+  }).then(function () {
+    // Listen for sign-in state changes.
+    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+  // Handle the initial sign-in state.
+  updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+  authorizeButton.onclick = handleAuthClick;
+  signoutButton.onclick = handleSignoutClick;
+  }, function(error) {
+    appendPre(JSON.stringify(error, null, 2));
   });
 }
 
@@ -995,17 +1001,17 @@ function appendPre(message) {
   pre.appendChild(textContent);
 }
 
-function addEvent(){
+function addEvent(startTime, endTime){
   var event = {
     'summary': 'Google I/O 2015',
     'location': '800 Howard St., San Francisco, CA 94103',
     'description': 'A chance to hear more about Google\'s developer products.',
     'start': {
-      'dateTime': '2020-07-21T09:00:00-07:00',
+      'dateTime': startTime,
       'timeZone': 'America/Los_Angeles'
     },
     'end': {
-      'dateTime': '2020-07-21T17:00:00-07:00',
+      'dateTime': endTime,
       'timeZone': 'America/Los_Angeles'
     },
     'recurrence': [
@@ -1115,9 +1121,23 @@ function getRecipeInfo() {
     document.getElementById('recipe-title').innerHTML = recipe.name;
     document.getElementById('recipe-author').innerHTML = recipe.user;
     document.getElementById('recipe-description').innerHTML = recipe.description;
+    document.getElementById('recipe-video').innerHTML = getAssociatedLiveStreamLink(key);
     displayTags(recipe.tags);
     displayIngredients(recipe.ingredients);
     displaySteps(recipe.steps);
+  });
+}
+
+/** Get the link to the live stream associated with the given recipe key. */
+function getAssociatedLiveStreamLink(recipeKey) {
+  fetch('/fetch-associated-live-stream?recipe-key=' + key).then(response => response.json()).then(livestream => {
+    return livestream.link();
+  });
+}
+
+function addLiveStreamToCalendar(recipeKey) {
+  fetch('/fetch-associated-live-stream?recipe-key=' + key).then(response => response.json()).then(livestream => {
+    addEvent(livestream.startTime, livestream.endTime)
   });
 }
 
