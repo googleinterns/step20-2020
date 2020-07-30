@@ -14,6 +14,7 @@
  
 package shef.servlets;
 
+import shef.data.LiveStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,8 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -46,14 +49,21 @@ public class FetchAssociatedLiveStreamServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
  
-    List<String> recipeIds = new LinkedList<>();
+    List<LiveStream> liveStreams = new LinkedList<>();
     for (Entity entity : results.asIterable()) {
-      String recipeId = (String) entity.getProperty("key");
-      recipeIds.add(recipeId);
+      String recipeKey = (String) entity.getProperty("recipe-key");
+      String keyString = (String) KeyFactory.keyToString(entity.getKey());
+      String link = (String) entity.getProperty("live-stream-link");
+      String schedStartTime = (String) entity.getProperty("sched-start-time");
+      String schedEndTime = (String) entity.getProperty("sched-end-time");
+      String duration = (String) entity.getProperty("duration");
+
+      LiveStream liveStream = new LiveStream(recipeKey, keyString, link, schedStartTime, schedEndTime, duration);
+      liveStreams.add(liveStream);
     }
  
     Gson gson = new Gson();
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(recipeIds));
+    response.getWriter().println(gson.toJson(liveStreams));
   }
 }

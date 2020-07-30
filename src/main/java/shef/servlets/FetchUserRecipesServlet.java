@@ -53,14 +53,14 @@ public class FetchUserRecipesServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
  
-    List<String> recipeIds = new LinkedList<>();
+    List<String> recipeKeys = new LinkedList<>();
     for (Entity entity : results.asIterable()) {
-      String recipeId = (String) entity.getProperty("name");
-      recipeIds.add(recipeId);
+      String recipeKey = KeyFactory.keyToString(entity.getKey());
+      recipeKeys.add(recipeKey);
     }
  
     Gson gson = new Gson();
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(recipeIds));
+    response.getWriter().println(gson.toJson(recipeKeys));
   }
 }
