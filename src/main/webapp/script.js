@@ -476,6 +476,38 @@ class ParameterInput extends HTMLElement {
 }
 customElements.define('parameter-input', ParameterInput);
 
+/**
+ * @class A custom element that represents an ingredient input.
+ * This class extends ParameterInput to add functionality.
+*/
+class IngredientInput extends ParameterInput {
+  constructor() {
+    super();
+    this.amountInput = document.createElement('input');
+    this.unitInput = document.createElement('input');
+    this.textArea.insertAdjacentElement('beforebegin', this.amountInput);
+    this.textArea.insertAdjacentElement('beforebegin', this.unitInput);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.amountInput.type = 'number';
+    this.amountInput.min = '0';
+    this.amountInput.placeholder= 'Enter amount';
+    this.amountInput.step = '0.5';
+    this.amountInput.cols = '4';
+    this.unitInput.type = 'select';
+    this.unitInput.placeholder = 'Select unit';
+    this.unitInput.cols = '15';
+
+    this.addButton.onclick = event => {
+      var newParameter = createIngredientInput(this.name, this.index + 1);
+      insertParameterInput(this, newParameter);
+    };
+  }
+}
+customElements.define('ingredient-input', IngredientInput);
+
 /** 
  * Creates a ParameterInput.
  * @param {string} name Used for displaying and determining the parent field.
@@ -483,6 +515,14 @@ customElements.define('parameter-input', ParameterInput);
  */
 function createParameterInput(name, index) {
   var newParameter = document.createElement('parameter-input');
+  newParameter.setAttribute('name', name);
+  newParameter.setAttribute('index', index);
+  newParameter.setAttribute('id', name + index);
+  return newParameter;
+}
+
+function createIngredientInput(name, index) {
+  var newParameter = document.createElement('ingredient-input');
   newParameter.setAttribute('name', name);
   newParameter.setAttribute('index', index);
   newParameter.setAttribute('id', name + index);
