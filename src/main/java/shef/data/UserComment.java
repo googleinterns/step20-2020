@@ -17,17 +17,26 @@ package shef.data;
 /** A user's comment, with corresponding user info. */
 public class UserComment {
   long id;
+  String username;
+  String location;
   String comment;
   long timestamp;
+  String MMDDYYYY;
 
  /**
   * @param id The entity's id.
+  * @param username The user's username.
+  * @param location The user's location.
   * @param comment The user's comment.
-  * @param timestamp The time at which the comment was submitted.
+  * @param timestamp The time in milliseconds at which the comment was submitted.
+  * @param MMDDYYYY The time in MM/DD/YYYY at which the comment was submitted.
   */
-  public UserComment(long id, String comment, long timestamp) {
+  public UserComment(long id, String username, String location, String comment, long timestamp, String MMDDYYYY) {
       this.id = id;
+      this.username = username;
+      this.location = location;
       this.comment = comment;
       this.timestamp = timestamp;
+      this.MMDDYYYY = MMDDYYYY;
   }
 }   

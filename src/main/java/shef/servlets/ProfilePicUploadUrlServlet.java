@@ -14,32 +14,24 @@
 
 package shef.servlets;
 
-import java.util.ArrayList;
-import java.util.List;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet responsible for creating new LiveStream entities
-    and storing them in Datastore. */
-@WebServlet("/new-live-stream")
-public class NewLiveStreamServlet extends HttpServlet {
+/** Servlet that returns the Blobstore upload url for profile pictures. */
+@WebServlet("/profile-pic-upload-url")
+public class ProfilePicUploadUrlServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Entity liveStreamEntity = new Entity("LiveStream");
-    for (String param : request.getParameterMap().keySet()) {
-      liveStreamEntity.setProperty(param, (String) request.getParameterMap().get(param)[0]);
-    }
-    
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(liveStreamEntity);
+    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    String uploadUrl = blobstoreService.createUploadUrl("/user");
 
-    response.sendRedirect("/create-live-stream.html");
+    response.setContentType("text/html");
+    response.getWriter().println(uploadUrl);
   }
 }

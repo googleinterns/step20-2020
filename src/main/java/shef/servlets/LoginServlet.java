@@ -14,32 +14,34 @@
 
 package shef.servlets;
 
-import java.util.ArrayList;
-import java.util.List;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet responsible for creating new LiveStream entities
-    and storing them in Datastore. */
-@WebServlet("/new-live-stream")
-public class NewLiveStreamServlet extends HttpServlet {
+/** Servlet that returns login status of the user and a url to log in or out. */
+@WebServlet("/login")
+public class LoginServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Entity liveStreamEntity = new Entity("LiveStream");
-    for (String param : request.getParameterMap().keySet()) {
-      liveStreamEntity.setProperty(param, (String) request.getParameterMap().get(param)[0]);
-    }
-    
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(liveStreamEntity);
+    response.setContentType("application/json");
 
-    response.sendRedirect("/create-live-stream.html");
+    UserService userService = UserServiceFactory.getUserService();
+    String urlToRedirectTo = "/signup-test.html";
+    String json;
+
+    if(userService.isUserLoggedIn()) {
+      String logoutUrl = userService.createLogoutURL(urlToRedirectTo);
+      json = "{ \"status\": true, \"url\": \"" + logoutUrl + "\" }";
+    } else {
+      String loginUrl = userService.createLoginURL(urlToRedirectTo);
+      json = "{ \"status\": false, \"url\": \"" + loginUrl + "\" }";
+    }
+
+    response.getWriter().println(json);
+    }
   }
-}

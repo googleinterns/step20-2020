@@ -14,6 +14,8 @@
 
 package shef.servlets;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -31,14 +33,26 @@ public class NewCommentServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String comment = request.getParameter("comment-input");
     long timestamp = System.currentTimeMillis();
+    String MMDDYYYY = timestampToMMDDYYYY(timestamp);
 
     Entity userCommentEntity = new Entity("UserComment");
+    userCommentEntity.setProperty("username", "mcardenas");
+    userCommentEntity.setProperty("location", "Seattle, WA");
     userCommentEntity.setProperty("comment", comment);
     userCommentEntity.setProperty("timestamp", timestamp);
+    userCommentEntity.setProperty("MMDDYYYY", MMDDYYYY);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(userCommentEntity);
 
     response.sendRedirect("/recipe.html");
+  }
+
+ /**
+  * @param timestamp Time in milliseconds.
+  * @return Input timestamp in MM/DD/YYYY format.
+  */
+  private String timestampToMMDDYYYY(long timestamp) {
+    return new SimpleDateFormat("MM/dd/yyyy").format(new Date(timestamp));
   }
 }

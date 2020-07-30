@@ -14,32 +14,33 @@
 
 package shef.servlets;
 
-import java.util.ArrayList;
-import java.util.List;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet responsible for creating new LiveStream entities
-    and storing them in Datastore. */
-@WebServlet("/new-live-stream")
-public class NewLiveStreamServlet extends HttpServlet {
+/** Servlet that returns a sign-in or sign-out URL. */
+@WebServlet("/sign-in")
+public class SignInServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Entity liveStreamEntity = new Entity("LiveStream");
-    for (String param : request.getParameterMap().keySet()) {
-      liveStreamEntity.setProperty(param, (String) request.getParameterMap().get(param)[0]);
-    }
-    
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(liveStreamEntity);
 
-    response.sendRedirect("/create-live-stream.html");
+    UserService userService = UserServiceFactory.getUserService();
+    String json;
+
+    if (userService.isUserLoggedIn()) {
+      String signOutUrl = userService.createLogoutURL("/index.html");
+      json = "{ \"status\": true, \"url\": \"" + signOutUrl + "\" }";
+    } else {
+      String signInUrl = userService.createLoginURL("/sign-in-validity-check");
+      json = "{ \"status\": false, \"url\": \"" + signInUrl + "\" }";
+    }
+
+    response.setContentType("application/json");
+    response.getWriter().println(json);
   }
 }

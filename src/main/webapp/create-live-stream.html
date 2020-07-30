@@ -20,7 +20,7 @@
     </script>
 
     <button onclick="authenticate().then(loadClient)">Authorize</button>
-    <form method="POST" action="/new-live-stream" class="form-group">
+    <form class="form-group">
       <h4>1.</h4>
       <div class="form-group">
         <label for="recipe-selection">Recipe associated with live stream:</label>
@@ -35,5 +35,7 @@
       <input type="url" id="live-stream-link" name="live-stream-link">
     </form>
     <button onclick="execute(getId())">Submit</button>
+    <button onclick="loadLiveStreams()">Load Live Streams</button>
+    <ul id="livestream-list"></ul>
   </body>
 </html>
