@@ -945,21 +945,17 @@ function handleClientLoad() {
   * listeners.
   */
 function initClient() {
-  gapi.client.init({
-    apiKey: API_KEY,
-    clientId: CLIENT_ID,
-    discoveryDocs: DISCOVERY_DOCS,
-    scope: SCOPES
-  }).then(function () {
-    // Listen for sign-in state changes.
-    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-  // Handle the initial sign-in state.
-  updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-  authorizeButton.onclick = handleAuthClick;
-  signoutButton.onclick = handleSignoutClick;
-  }, function(error) {
-    appendPre(JSON.stringify(error, null, 2));
+  fetch('assets/files/api_key.json').then(response => {
+    return response.json();
+  }).then(data => {
+    gapi.client.init({
+      apiKey: data.API_KEY,
+      clientId: data.CLIENT_ID,
+      discoveryDocs: DISCOVERY_DOCS,
+      scope: SCOPES
+    })
+  }).catch(error => {
+    console.log(error);
   });
 }
 
@@ -1130,15 +1126,24 @@ function getRecipeInfo() {
 
 /** Get the link to the live stream associated with the given recipe key. */
 function getAssociatedLiveStreamLink(recipeKey) {
-  fetch('/fetch-associated-live-stream?recipe-key=' + key).then(response => response.json()).then(livestream => {
-    return livestream.link();
+  fetch('/fetch-associated-live-stream?recipe-key=' + recipeKey).then(response => response.json()).then((livestreams) => {
+    console.log("Fetching live stream link... " + livestreams.length);
+    // There should only be one live stream.
+    livestreams.forEach((livestream) => {
+      return result.link;
+    })
   });
 }
 
-function addLiveStreamToCalendar(recipeKey) {
-  fetch('/fetch-associated-live-stream?recipe-key=' + key).then(response => response.json()).then(livestream => {
-    addEvent(livestream.startTime, livestream.endTime)
-  });
+function addLiveStreamToCalendar() {
+  var key = url.split('?')[1];
+  fetch('/fetch-associated-live-stream?recipe-key=' + key).then(response => response.json()).then((livestreams => {
+    console.log("Adding live stream to calendar... " + livestreams.length);
+    // There should only be one live stream.
+    livestreams.forEach((livestream) => {
+      addEvent(livestream.startTime, livestream.endTime)
+    })
+  }));
 }
 
 /** Formats and displays tags on the page. */

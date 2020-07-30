@@ -43,7 +43,7 @@ public class FetchAssociatedLiveStreamServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Query query = new Query("LiveStream");
-    Filter recipeKeyFilter = new FilterPredicate("recipeKey", FilterOperator.EQUAL, request.getParameter("recipe-key"));
+    Filter recipeKeyFilter = new FilterPredicate("recipe-key", FilterOperator.EQUAL, request.getParameter("recipe-key"));
     query.setFilter(recipeKeyFilter);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
