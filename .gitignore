@@ -2,4 +2,4 @@ target/
 .idea
 .gitattributes
 .gradle/
-src/main/webapp/assets/files/api_key.json
+src/main/webapp/assets/files/
