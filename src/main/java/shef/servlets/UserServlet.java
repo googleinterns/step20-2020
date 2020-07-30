@@ -18,7 +18,6 @@ import shef.data.User;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.net.MalformedURLException;
 import java.net.URL;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,9 +39,6 @@ import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.images.ImagesService;
-import com.google.appengine.api.images.ImagesServiceFactory;
-import com.google.appengine.api.images.ServingUrlOptions;
 
 
 /** Servlet to store and get retrieve user information. */
@@ -112,7 +108,7 @@ public final class UserServlet extends HttpServlet {
     } catch (EntityNotFoundException e) {
       // Create a new User entity with data from the request.
       user = new Entity(userKey);
-      redirectUrl = "/account-creation-finish.html";
+      redirectUrl = "/quiz.html";
     }
 
     // These properties don't come from the request, so we add to the map here.

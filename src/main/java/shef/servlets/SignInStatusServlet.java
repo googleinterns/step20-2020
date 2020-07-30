@@ -22,26 +22,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns login status of the user and a url to log in or out. */
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+/** Servlet that returns the sign-in status of the user. */
+@WebServlet("/sign-in-status")
+public class SignInStatusServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("application/json");
-
-    UserService userService = UserServiceFactory.getUserService();
-    String urlToRedirectTo = "/signup-test.html";
-    String json;
-
-    if(userService.isUserLoggedIn()) {
-      String logoutUrl = userService.createLogoutURL(urlToRedirectTo);
-      json = "{ \"status\": true, \"url\": \"" + logoutUrl + "\" }";
-    } else {
-      String loginUrl = userService.createLoginURL(urlToRedirectTo);
-      json = "{ \"status\": false, \"url\": \"" + loginUrl + "\" }";
+      UserService userService = UserServiceFactory.getUserService();
+      response.setContentType("text/html;");    
+      response.getWriter().print(userService.isUserLoggedIn());
     }
-
-    response.getWriter().println(json);
-    }
-  }
+}
