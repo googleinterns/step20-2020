@@ -16,6 +16,7 @@ package shef.servlets;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -33,11 +34,12 @@ public class NewLiveStreamServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Entity liveStreamEntity = new Entity("LiveStream");
-    if (request.getParameterMap().get("duration")[0].equals("P0D")) {
+    Map<String, String[]> paramMap = request.getParameterMap();
+    if (paramMap.get("duration")[0].equals("P0D")) {
       throw new IllegalArgumentException("Live stream start or end time is missing or invalid.");
     }
-    for (String param : request.getParameterMap().keySet()) {
-      liveStreamEntity.setProperty(param, (String) request.getParameterMap().get(param)[0]);
+    for (String param : paramMap.keySet()) {
+      liveStreamEntity.setProperty(param, (String) paramMap.get(param)[0]);
     }
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
