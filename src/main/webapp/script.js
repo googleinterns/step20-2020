@@ -101,7 +101,7 @@ gapi._bs = new Date().getTime();
         this.f = a
     };
     (new n).a("");
-    /* gapi.loader.OBJECT_CREATE_TEST_OVERRIDE &&*/
+    /* gapi.loader.OBJECT_CREATE_TEST_OVERRIDE && */
     var q = window,
         v = document,
         aa = q.location,
