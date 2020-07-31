@@ -400,7 +400,6 @@ class ParameterInput extends HTMLElement {
     this.container.appendChild(this.textArea);
     this.container.appendChild(this.addButton);
     this.container.appendChild(this.deleteButton);
-    //this.container.appendChild(document.createElement('br'));
   }
 
   /** Once the attributes for the ParameterInput exist, set its values accordingly. */
@@ -430,13 +429,13 @@ class ParameterInput extends HTMLElement {
     this.textArea.name = paramName;
 
     // Inserts a new ParameterInput below the one clicked.
-    this.addButton.onclick = event => {
+    this.addButton.onclick = () => {
       var newParameter = createParameterInput(this.name, this.index + 1);
       insertParameterInput(this, newParameter);
     };
 
     // Deletes the ParameterInput clicked.
-    this.deleteButton.onclick = event => {
+    this.deleteButton.onclick = () => {
       const fieldName = this.field;
       const startIndex = this.index;
       this.remove();
@@ -476,6 +475,115 @@ class ParameterInput extends HTMLElement {
 }
 customElements.define('parameter-input', ParameterInput);
 
+const volume = {
+  units: ['teaspoon', 'tablespoon', 'fluid ounce', 'cup', 'pint', 'quart', 'gallon', 'millilter', 'liter'],
+  conversions: [
+      /**              tsp.  tbsp.  fl oz.   c    pt     qt    gal     mL     L   */
+      /** tsp.  */   [  1,     3,     6,    48,   96,   192,   768,  .203,   203],
+      /** tbsp. */   [.333,    1,     2,    16,   32,    64,   256,  .068,  67.6],
+      /** fl oz */   [.167,   0.5,    1,     8,   16,    32,   128,  .034,  33.8],
+      /**  cup  */   [.021,  .063,  .125,    1,    2,     4,    16,  .004,  4.23],
+      /** pint  */   [.010,  .031,  .063,   0.5,   1,     2,    8,   .002,  2.11],
+      /** quart */   [.005,  .016,  .031,    4,    2,     1,   .25,  .001,  1.06],
+      /**  gal  */   [.001,  .004,  .008,  .063, .125,   .25,   1,  .0002,  .264],
+      /**  mL   */   [4.93,  14.8,  29.6,   237,  473,   946,  3785,   1,   1000],
+      /** liter */   [.005,  .015,   .03,  .237, .473,  .946,  3.79, .001,    1 ],
+    ]
+}
+
+const weight = {
+  units: ['pound', 'ounce', 'milligram', 'gram', 'kilogram'],
+  conversions: [
+      /**              lb      oz.      mg       g       kg  */
+      /** pound */   [  1,    .063,  .000002,  .002,     2.2 ],
+      /** ounce */   [  16,     1,   .000035,  .035,    35.3 ],
+      /**  mg   */   [453592, 28350,    1,     1000,  1000000],
+      /** gram  */   [  454,  28.35,  .001,      1,     1000 ],
+      /**  kg   */   [.4536,   .028, .000001,  0.001,     1  ]
+    ]
+} 
+
+const length = {
+  units: ['millimeter', 'centimeter', 'inch'],
+  conversions: [
+      /**               mm   cm    in  */
+      /**  mm   */   [  1,   10,  25.4],
+      /**  cm   */   [ .1,    1,  2.54],
+      /** inch  */   [.039, .394,  1  ]
+    ]
+} 
+
+const units = {
+  'teaspoon': {
+    index: 0,
+    abbreviation: 'tsp.'
+  },
+  'tablespoon': {
+    index: 1,
+    abbreviation: 'tbsp.'
+  },
+  'fluid ounce': {
+    index: 2,
+    abbreviation: 'fl oz.'
+  },
+  'cup': {
+    index: 3,
+    abbreviation: 'c'
+  },
+  'pint': {
+    index: 4,
+    abbreviation: 'pt'
+  },
+  'quart': {
+    index: 5,
+    abbreviation: 'qt'
+  },
+  'gallon': {
+    index: 6,
+    abbreviation: 'gal'
+  },
+  'milliliter': {
+    index: 7,
+    abbreviation: 'mL'
+  },
+  'liter': {
+    index: 8,
+    abbreviation: 'L'
+  },
+  'pound': {
+    index: 9,
+    abbreviation: 'lb'
+  },
+  'ounce': {
+    index: 10,
+    abbreviation: 'oz.'
+  },
+  'milligram': {
+    index: 11,
+    abbreviation: 'mg'
+  },
+  'gram': {
+    index: 12,
+    abbreviation: 'g'
+  },
+  'kilogram': {
+    index: 13,
+    abbreviation: 'kg'
+  },
+  'millimeter': {
+    index: 14,
+    abbreviation: 'mm'
+  },
+  'centimeter': {
+    index: 15,
+    abbreviation: 'cm'
+  },
+  'inch': {
+    index: 16,
+    abbreviation: 'in'
+  },
+}
+
 /**
  * @class A custom element that represents an ingredient input.
  * This class extends ParameterInput to add functionality.
@@ -484,7 +592,7 @@ class IngredientInput extends ParameterInput {
   constructor() {
     super();
     this.amountInput = document.createElement('input');
-    this.unitInput = document.createElement('input');
+    this.unitInput = document.createElement('select');
     this.textArea.insertAdjacentElement('beforebegin', this.amountInput);
     this.textArea.insertAdjacentElement('beforebegin', this.unitInput);
   }
@@ -495,12 +603,18 @@ class IngredientInput extends ParameterInput {
     this.amountInput.min = '0';
     this.amountInput.placeholder= 'Enter amount';
     this.amountInput.step = '0.5';
-    this.amountInput.cols = '4';
-    this.unitInput.type = 'select';
+    this.amountInput.name = this.textArea.name;
     this.unitInput.placeholder = 'Select unit';
-    this.unitInput.cols = '15';
+    this.unitInput.name = this.textArea.name;
 
-    this.addButton.onclick = event => {
+    for (var unit in units) {
+      const option = document.createElement('option');
+      option.value = unit;
+      option.innerText = units[unit].abbreviation;
+      this.unitInput.appendChild(option);
+    }
+
+    this.addButton.onclick = () => {
       var newParameter = createIngredientInput(this.name, this.index + 1);
       insertParameterInput(this, newParameter);
     };
