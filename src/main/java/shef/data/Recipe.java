@@ -66,7 +66,10 @@ public class Recipe {
     this.timestamp = timestamp;
   }
 
-  /** Creates a Recipe from a Datastore entity. */
+  /** 
+   * Creates a Recipe from a Datastore entity.
+   * This constructor is used to easily convert an Entity into an object, which can be sent as JSON.
+   */
   public Recipe(Entity recipeEntity) {
     this.name = (String) recipeEntity.getProperty("name");
     this.description = (String) recipeEntity.getProperty("description");
