@@ -39,6 +39,7 @@ function addParagraph(content) {
   return "<p>" + content + "</p>";
 }
 
+/** Creates a new groupchat and redirects the client to the chatting page. */
 function newGroupchat() {
   var request = new Request("/load-groupchat", {method: 'POST'});
   fetch(request).then(response => response.text()).then((key) => {
@@ -46,6 +47,7 @@ function newGroupchat() {
   });
 }
 
+/** Loads an existing groupchat. */
 function loadGroupchat() {
   const urlParams = new URLSearchParams(window.location.search);
   const key = urlParams.get('key');
@@ -63,44 +65,47 @@ function loadGroupchat() {
   });
 }
 
+/** Posts a message to a groupchat. */
 function postNextMessage() {
   const message = document.getElementById('message-input').value;
   const groupKey = document.getElementById('groupchat-key').value;
   var request = new Request('/new-message?message=' + message + '&groupchat-key=' + groupKey, {method: 'POST'});
-  fetch(request)
-    .then(() => {
-      console.log('POST success');
-      document.getElementById('message-input').value = '';
-      }, () => console.log('POST failure'));
+  fetch(request).then(
+    document.getElementById('message-input').value = ''
+  );
 }
 
+/**
+ * Sends a request to the server to get the next message.
+ * This method is recursive (upon success) so that each client is always waiting for the next message.
+ * Requests use asynchronous Promises, so the client can perform other functions while waiting for a message.
+ */
 function getNextMessage() {
-  console.log('getting a new message');
   var request = new Request("/new-message", {method: 'GET'})
-  console.log('sending request ' + request.url + ' ' + request.method);
   fetch(request)
     .then(response => {
       if (response.ok) {
-        console.log("Received response " + response);
         return response.text();
       } else {
         throw new Error('Servlet closed');
       }
-    })
-    .then(message => {
-      console.log('Got message "' + message + '"');
+    }).then(message => {
       addMessage(message);
-      console.log('recursively calling getNextMessage()')
       getNextMessage();
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      alert(err);
+      window.location.href = 'index.html';
+    });
 }
 
+/** Given a groupchat key, redirects the client to that groupchat. */
 function redirectToGroupchat(keyParameter) {
   const key = keyParameter ? keyParameter : document.getElementById('groupchat-key').value;
   window.location.href = "/groupchat.html?key=" + key;
 }
 
+/** Adds a <p> element containing a message to a groupchat. */
 function addMessage(message) {
   var messagesContainer = document.getElementById('messages');
   const messageElement = document.createElement('p');

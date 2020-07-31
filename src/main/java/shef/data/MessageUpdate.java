@@ -37,9 +37,7 @@ public class MessageUpdate extends Observable {
 
   /** Set the message and mark the MessageUpdate as changed. */
   public void setMessage(String message) {
-    System.out.println("setting MessageUpdate: " + message);
     this.message = message; 
     setChanged();
-    System.out.println("Observers: " + countObservers());
   }
 }
