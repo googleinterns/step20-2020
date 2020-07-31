@@ -156,6 +156,9 @@ function createLiveStreamElement(liveStream) {
   const liveStreamItem = document.createElement('div');
   liveStreamItem.className = 'col feed-img-container';
   liveStreamItem.innerHTML += "<img src=" + "https://tinyurl.com/y8eph3n6" + ">";
+  liveStreamItem.onclick = function() {
+    window.location="/recipe.html?key=" + liveStream.recipeKey;
+  }
 
   const overlay = document.createElement('div');
   overlay.className = "overlay";
