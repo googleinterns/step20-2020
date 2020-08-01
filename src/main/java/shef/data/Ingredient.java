@@ -16,10 +16,46 @@ package shef.data;
 
 public class Ingredient {
 
-  public Ingredient() {
-    
+  private double amount;
+  private String unit;
+  private String name;
+
+  public Ingredient(double amount, String unit, String name) {
+    this.amount = amount;
+    this.unit = unit;
+    this.name = name;
   }
 
+  public Ingredient(EmbeddedEntity entity) {
+    this.amount = (double) entity.getProperty("amount");
+    this.unit = (String) entity.getProperty("unit");
+    this.name = (String) entity.getProperty("name");
+  }
 
+  public double amount() {
+    return amount;
+  }
 
+  public String unit() {
+    return unit;
+  }
+
+  public String name() {
+    return name;
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    return other instanceof Ingredient && this.amount == ((Ingredient) other).amount() && this.unit.equals(((Ingredient) other).unit()) && this.name.equals(((Ingredient) other).name());
+  }
+
+  @Override
+  public String toString() {
+    return "[Ingredient: " + amount + ", " + unit + ", " + name + "]";
+  }
+
+  @Override
+  public int hashCode() {
+    return (int) amount >> 2 + name.length();
+  }
 }
