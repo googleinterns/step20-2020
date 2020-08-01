@@ -487,6 +487,7 @@ class IngredientInput extends ParameterInput {
     this.unitInput = document.createElement('input');
     this.textArea.insertAdjacentElement('beforebegin', this.amountInput);
     this.textArea.insertAdjacentElement('beforebegin', this.unitInput);
+    this.textArea.insertAdjacentElement('beforebegin', document.createElement('br'));
   }
 
   connectedCallback() {
@@ -498,12 +499,39 @@ class IngredientInput extends ParameterInput {
     this.amountInput.cols = '4';
     this.unitInput.type = 'select';
     this.unitInput.placeholder = 'Select unit';
-    this.unitInput.cols = '15';
+    this.unitInput.name = this.textArea.name;
 
-    this.addButton.onclick = event => {
+    for (var unit in units) {
+      const option = document.createElement('option');
+      option.value = unit;
+      option.innerText = units[unit].abbreviation;
+      this.unitInput.appendChild(option);
+    }
+    this.setIndexAttributes();
+  }
+
+  setIndexAttributes() {
+    super.setIndexAttributes();
+    this.addButton.onclick = () => {
       var newParameter = createIngredientInput(this.name, this.index + 1);
       insertParameterInput(this, newParameter);
     };
+  }
+
+  get amount() {
+    return parseDouble(this.amountInput.value);
+  }
+
+  get unit() {
+    return this.unitInput.value;
+  }
+
+  set amount(value) {
+    this.amountInput.value = value.toString();
+  }
+
+  set unit(value) {
+    this.unitInput.value = value;
   }
 }
 customElements.define('ingredient-input', IngredientInput);
@@ -576,7 +604,6 @@ function getOriginalRecipe() {
   const key = document.getElementById('key').value;
   if (key) {
     fetch('/new-recipe?key=' + key).then(response => response.json()).then((recipe) => {
-      console.log(recipe);
       populateRecipeCreationForm(recipe);
     });
   }
@@ -590,7 +617,7 @@ function populateRecipeCreationForm(recipe) {
   document.getElementById('servingsInput').value = recipe.servings;
   document.getElementById('recipe-image').src = '/blob?blob-key=' + recipe.imageKey;
   populateFormField('Tag', recipe.tags);
-  populateFormField('Ingredient', recipe.ingredients);
+  populateIngredients(recipe.ingredients);
   populateFormField('Equipment', recipe.equipment);
   populateFormField('Step', recipe.steps);
 }
@@ -605,6 +632,23 @@ function populateFormField(fieldName, data) {
       var newParameter = createParameterInput(fieldName, i);
       newParameter.text = getText(data[i]);
       appendParameterInput(fieldName + 's', newParameter);
+    }
+  }
+}
+
+function populateIngredients(data) {
+  for (var i = 0; i < data.length; i++) {
+    var parameter = document.getElementById('Ingredient' + i);
+    if (parameter !== null) {
+      parameter.amount = data[i].amount;
+      parameter.unit = data[i].unit;
+      parameter.text = data[i].name;
+    } else {
+      var newParameter = createIngredientInput('Ingredient', i);
+      newParameter.amount = data[i].amount;
+      newParameter.unit = data[i].unit;
+      newParameter.text = data[i].name;
+      appendParameterInput('Ingredients', newParameter);
     }
   }
 }
