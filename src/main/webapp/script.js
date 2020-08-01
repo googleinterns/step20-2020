@@ -509,78 +509,95 @@ const length = {
       /**               mm   cm    in  */
       /**  mm   */   [  1,   10,  25.4],
       /**  cm   */   [ .1,    1,  2.54],
-      /** inch  */   [.039, .394,  1  ]
+      /** inch  */   [.039, .394,   1 ]
     ]
 } 
 
 const units = {
   'teaspoon': {
     index: 0,
-    abbreviation: 'tsp.'
+    abbreviation: 'tsp.',
+    group: volume
   },
   'tablespoon': {
     index: 1,
-    abbreviation: 'tbsp.'
+    abbreviation: 'tbsp.',
+    group: volume
   },
   'fluid ounce': {
     index: 2,
-    abbreviation: 'fl oz.'
+    abbreviation: 'fl oz.',
+    group: volume
   },
   'cup': {
     index: 3,
-    abbreviation: 'c'
+    abbreviation: 'c',
+    group: volume
   },
   'pint': {
     index: 4,
-    abbreviation: 'pt'
+    abbreviation: 'pt',
+    group: volume
   },
   'quart': {
     index: 5,
-    abbreviation: 'qt'
+    abbreviation: 'qt',
+    group: volume
   },
   'gallon': {
     index: 6,
-    abbreviation: 'gal'
+    abbreviation: 'gal',
+    group: volume
   },
   'milliliter': {
     index: 7,
-    abbreviation: 'mL'
+    abbreviation: 'mL',
+    group: volume
   },
   'liter': {
     index: 8,
-    abbreviation: 'L'
+    abbreviation: 'L',
+    group: volume
   },
   'pound': {
     index: 9,
-    abbreviation: 'lb'
+    abbreviation: 'lb',
+    group: weight
   },
   'ounce': {
     index: 10,
-    abbreviation: 'oz.'
+    abbreviation: 'oz.',
+    group: weight
   },
   'milligram': {
     index: 11,
-    abbreviation: 'mg'
+    abbreviation: 'mg',
+    group: weight
   },
   'gram': {
     index: 12,
-    abbreviation: 'g'
+    abbreviation: 'g',
+    group: weight
   },
   'kilogram': {
     index: 13,
-    abbreviation: 'kg'
+    abbreviation: 'kg',
+    group: weight
   },
   'millimeter': {
     index: 14,
-    abbreviation: 'mm'
+    abbreviation: 'mm',
+    group: length
   },
   'centimeter': {
     index: 15,
-    abbreviation: 'cm'
+    abbreviation: 'cm',
+    group: length
   },
   'inch': {
     index: 16,
-    abbreviation: 'in'
+    abbreviation: 'in',
+    group: length
   },
 }
 
@@ -595,6 +612,7 @@ class IngredientInput extends ParameterInput {
     this.unitInput = document.createElement('select');
     this.textArea.insertAdjacentElement('beforebegin', this.amountInput);
     this.textArea.insertAdjacentElement('beforebegin', this.unitInput);
+    this.textArea.insertAdjacentElement('beforebegin', document.createElement('br'));
   }
 
   connectedCallback() {
@@ -613,11 +631,31 @@ class IngredientInput extends ParameterInput {
       option.innerText = units[unit].abbreviation;
       this.unitInput.appendChild(option);
     }
+    this.setIndexAttributes();
+  }
 
+  setIndexAttributes() {
+    super.setIndexAttributes();
     this.addButton.onclick = () => {
       var newParameter = createIngredientInput(this.name, this.index + 1);
       insertParameterInput(this, newParameter);
     };
+  }
+
+  get amount() {
+    return parseDouble(this.amountInput.value);
+  }
+
+  get unit() {
+    return this.unitInput.value;
+  }
+
+  set amount(value) {
+    this.amountInput.value = value.toString();
+  }
+
+  set unit(value) {
+    this.unitInput.value = value;
   }
 }
 customElements.define('ingredient-input', IngredientInput);
@@ -690,7 +728,6 @@ function getOriginalRecipe() {
   const key = document.getElementById('key').value;
   if (key) {
     fetch('/new-recipe?key=' + key).then(response => response.json()).then((recipe) => {
-      console.log(recipe);
       populateRecipeCreationForm(recipe);
     });
   }
@@ -704,7 +741,7 @@ function populateRecipeCreationForm(recipe) {
   document.getElementById('servingsInput').value = recipe.servings;
   document.getElementById('recipe-image').src = '/blob?blob-key=' + recipe.imageKey;
   populateFormField('Tag', recipe.tags);
-  populateFormField('Ingredient', recipe.ingredients);
+  populateIngredients(recipe.ingredients);
   populateFormField('Equipment', recipe.equipment);
   populateFormField('Step', recipe.steps);
 }
@@ -719,6 +756,23 @@ function populateFormField(fieldName, data) {
       var newParameter = createParameterInput(fieldName, i);
       newParameter.text = getText(data[i]);
       appendParameterInput(fieldName + 's', newParameter);
+    }
+  }
+}
+
+function populateIngredients(data) {
+  for (var i = 0; i < data.length; i++) {
+    var parameter = document.getElementById('Ingredient' + i);
+    if (parameter !== null) {
+      parameter.amount = data[i].amount;
+      parameter.unit = data[i].unit;
+      parameter.text = data[i].name;
+    } else {
+      var newParameter = createIngredientInput('Ingredient', i);
+      newParameter.amount = data[i].amount;
+      newParameter.unit = data[i].unit;
+      newParameter.text = data[i].name;
+      appendParameterInput('Ingredients', newParameter);
     }
   }
 }
