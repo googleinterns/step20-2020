@@ -20,11 +20,13 @@ import org.junit.Test;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.Arrays;
 import shef.data.Recipe;
 import shef.data.SpinOff;
 import shef.data.Step;
+import shef.data.Ingredient;
 
 @RunWith(JUnit4.class)
 public final class RecipeTest {
@@ -32,7 +34,10 @@ public final class RecipeTest {
   private static final String NAME = "Grilled Cheese";
   private static final String DESCRIPTION = "It's literally just melted cheese on bread";
   private static final Set<String> TAGS = new HashSet<>(Arrays.asList("grilledcheese", "quick"));
-  private static final Set<String> INGREDIENTS = new HashSet<>(Arrays.asList("bread", "cheese", "butter"));
+  private static final Set<Ingredient> INGREDIENTS = new LinkedHashSet<>(Arrays.asList(
+      new Ingredient(1.5, "oz.", "bread"),
+      new Ingredient(2, "g", "cheese"),
+      new Ingredient(4, "in", "butter")));
   private static final List<Step> STEPS = Arrays.asList(
       new Step("Toast the bread for 2 minutes"),
       new Step("Melt the cheese"),
@@ -221,22 +226,31 @@ public final class RecipeTest {
 
   @Test
   public void addIngredient() {
-    Set<String> expected = new HashSet<>(Arrays.asList("bread", "cheese", "butter", "oil"));
-    recipe.addIngredient("oil");
+    Set<Ingredient> expected = new LinkedHashSet<>(Arrays.asList(      
+      new Ingredient(1.5, "oz.", "bread"),
+      new Ingredient(2, "g", "cheese"),
+      new Ingredient(4, "in", "butter"),
+      new Ingredient(1, "tsp", "oil")));
+    recipe.addIngredient(new Ingredient(1, "tsp", "oil"));
     Assert.assertEquals(expected, recipe.getIngredients());
   }
 
   @Test
   public void removeIngredient() {
-    Set<String> expected = new HashSet<>(Arrays.asList("cheese", "butter"));
-    recipe.removeIngredient("bread");
+    Set<Ingredient> expected = new LinkedHashSet<>(Arrays.asList(
+      new Ingredient(2, "g", "cheese"),
+      new Ingredient(4, "in", "butter")));
+    recipe.removeIngredient(new Ingredient(1.5, "oz.", "bread"));
     Assert.assertEquals(expected, recipe.getIngredients());
   }
 
   @Test
   public void removeNonexistentIngredient() {
-    Set<String> expected = new HashSet<>(Arrays.asList("bread", "cheese", "butter"));
-    recipe.removeIngredient("chicken");
+    Set<Ingredient> expected = new LinkedHashSet<>(Arrays.asList(
+      new Ingredient(1.5, "oz.", "bread"),
+      new Ingredient(2, "g", "cheese"),
+      new Ingredient(4, "in", "butter")));
+    recipe.removeIngredient(new Ingredient(3000, "L", "chicken"));
     Assert.assertEquals(expected, recipe.getIngredients());
   }
 
