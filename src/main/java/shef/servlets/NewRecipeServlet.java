@@ -144,7 +144,7 @@ public class NewRecipeServlet extends HttpServlet {
     while (parameterValues != null) {
       addToSearchStrings(searchStrings, parameterValues[2]);
       EmbeddedEntity parameterEntity = new EmbeddedEntity();
-      parameterEntity.setProperty("amount", parameterValues[0]);
+      parameterEntity.setProperty("amount", Double.parseDouble(parameterValues[0]));
       parameterEntity.setProperty("unit", parameterValues[1]);
       parameterEntity.setProperty("name", parameterValues[2]);
       parameters.add(parameterEntity);
