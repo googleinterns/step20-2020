@@ -14,6 +14,8 @@
 
 package shef.data;
 
+import com.google.appengine.api.datastore.EmbeddedEntity;
+
 public class Ingredient {
 
   private double amount;

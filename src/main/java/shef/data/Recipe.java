@@ -85,7 +85,7 @@ public class Recipe {
   }
 
   /** Constructor called when creating a recipe to display on the recipe feed. */
-  public Recipe(String key, String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
+  public Recipe(String key, String name, String description, Set<String> tags, Set<Ingredient> ingredients, List<Step> steps, long timestamp) {
     this.key = key;
     this.name = name;
     this.tags = tags;
