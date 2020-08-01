@@ -50,6 +50,8 @@ function getProfilePageData() {
     document.getElementById('username-display').innerHTML = userInfo.username;
     document.getElementById('location-display').innerHTML = userInfo.location;
     document.getElementById('bio-display').innerHTML = userInfo.bio;
+    document.getElementById('following-count').innerHTML = userInfo.followingCount;
+    document.getElementById('followers-count').innerHTML = userInfo.followersCount;
 
     document.getElementById('username').innerHTML = userInfo.username;
     document.getElementById('location').innerHTML = userInfo.location;
@@ -57,6 +59,14 @@ function getProfilePageData() {
 
     if(!userInfo.isCurrentUser) {
       document.getElementById('edit-button').classList.add('d-none');
+
+      const followForm = document.getElementById('follow-form');
+      followForm.classList.remove('d-none');
+      if(userInfo.isFollowedByCurrentUser) {
+        document.getElementById('follow-button').value = "Unfollow";
+      }
+      var unfollow = userInfo.isFollowedByCurrentUser.toString();
+      followForm.action = "/following?user=" + userInfo.key + "&unfollow=" + unfollow;
     }
   });
 }
@@ -1326,3 +1336,68 @@ function protectPage() {
     }
   });
 }
+
+function onClickedRecipes() {
+  document.getElementById('recipes').classList.remove('d-none');
+  document.getElementById('recipes-icon').classList.add('active');
+
+  document.getElementById('followers').classList.add('d-none');
+  document.getElementById('followers-icon').classList.remove('active');
+
+  document.getElementById('following').classList.add('d-none');
+  document.getElementById('following-icon').classList.remove('active');
+}
+
+function onClickedFollowers() {
+  document.getElementById('recipes').classList.add('d-none');
+  document.getElementById('recipes-icon').classList.remove('active');
+
+  document.getElementById('followers').classList.remove('d-none');
+  document.getElementById('followers-icon').classList.add('active');
+
+  document.getElementById('following').classList.add('d-none');
+  document.getElementById('following-icon').classList.remove('active');
+}
+
+function onClickedFollowing() {
+  document.getElementById('recipes').classList.add('d-none');
+  document.getElementById('recipes-icon').classList.remove('active');
+
+  document.getElementById('followers').classList.add('d-none');
+  document.getElementById('followers-icon').classList.remove('active');
+
+  document.getElementById('following').classList.remove('d-none');
+  document.getElementById('following-icon').classList.add('active');
+}
+
+function populateFollowingList() {
+  var url = window.location.href;
+  var key = url.split('?')[1];
+ 
+  fetch('/following?' + key).then(response => response.json()).then((following) => {
+    following.forEach((user) => {
+      const followListEl = document.getElementById('following-list');
+      followListEl.appendChild(createUserElement(user));
+    })
+  });
+}
+
+function populateFollowerList() {
+  var url = window.location.href;
+  var key = url.split('?')[1];
+
+  fetch('/followers?' + key).then(response => response.json()).then((followers) => {
+    followers.forEach((user) => {
+      const followListEl = document.getElementById('followers-list');
+      followListEl.appendChild(createUserElement(user));
+    })
+  });
+}
+
+function createUserElement(user) {
+  const liElement = document.createElement('li');
+  liElement.innerHTML = '<img class="profile-pic rounded-circle" src="/blob?blob-key=' + user.profilePicKey + '"></img>' + '<a class="ml-5" href="/profile-page.html?key=' + user.key + '">' + user.username + '</a>';
+  liElement.classList.add('list-group-item');
+  return liElement;
+}
+

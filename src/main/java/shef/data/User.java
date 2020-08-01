@@ -28,8 +28,12 @@ public class User {
     private String bio;
     private String profilePageUrl;
     private boolean isCurrentUser;
+    private boolean isFollowedByCurrentUser;
+    private long followingCount;
+    private long followersCount;
 
-    public User(String key, String email, String username, String location, String profilePicKey, String bio, boolean isCurrentUser) {
+
+    public User(String key, String email, String username, String location, String profilePicKey, String bio, boolean isCurrentUser, boolean isFollowedByCurrentUser, long followingCount, long followersCount) {
       this.key = key;
       this.email = email;
       this.username = username;
@@ -37,5 +41,14 @@ public class User {
       this.profilePicKey = profilePicKey;
       this.bio = bio;
       this.isCurrentUser = isCurrentUser;
+      this.isFollowedByCurrentUser = isFollowedByCurrentUser;
+      this.followingCount = followingCount;
+      this.followersCount = followersCount;
+    }
+
+    public User(String key, String username, String profilePicKey) {
+      this.key = key;
+      this.username = username;
+      this.profilePicKey = profilePicKey;
     }
 }
