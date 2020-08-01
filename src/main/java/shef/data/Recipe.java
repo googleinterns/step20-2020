@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.logging.*;
 import java.util.Iterator;
 import com.google.appengine.api.datastore.Entity;
@@ -36,7 +37,7 @@ public class Recipe {
   private double servings;
   private String imageKey;
   private Set<String> tags;
-  private Set<String> ingredients;
+  private Set<Ingredient> ingredients;
   private Set<String> equipment;
   private List<Step> steps;
   private Set<SpinOff> spinOffs;
@@ -56,7 +57,7 @@ public class Recipe {
   }
 
   /** Default constructor called when creating a new recipe. */
-  public Recipe(String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
+  public Recipe(String name, String description, Set<String> tags, Set<Ingredient> ingredients, List<Step> steps, long timestamp) {
     this.name = name;
     this.description = description;
     this.tags = tags;
@@ -123,7 +124,7 @@ public class Recipe {
   }
 
   /** Gets the recipe's ingredients. */
-  public Set<String> getIngredients() {
+  public Set<Ingredient> getIngredients() {
     return ingredients;
   }
 
@@ -138,7 +139,7 @@ public class Recipe {
   }
 
   /** Adds an ingredient to the recipe. */
-  public void addIngredient(String ingredient) {
+  public void addIngredient(Ingredient ingredient) {
     ingredients.add(ingredient);
   }
 
@@ -153,7 +154,7 @@ public class Recipe {
   }
 
   /** Removes an ingredient from the recipe. */
-  public void removeIngredient(String ingredient) {
+  public void removeIngredient(Ingredient ingredient) {
     ingredients.remove(ingredient);
   }
 
@@ -255,10 +256,10 @@ public class Recipe {
   }
 
   /** Returns the ingredients of an EmbeddedEntity as a Set. */
-  private Set<String> getIngredientsFromEntity(Collection<EmbeddedEntity> entityIngredients) {
-    Set<String> ingredientsSet = new HashSet<>();
+  private Set<Ingredient> getIngredientsFromEntity(Collection<EmbeddedEntity> entityIngredients) {
+    Set<Ingredient> ingredientsSet = new HashSet<>();
     for (EmbeddedEntity ingredient : entityIngredients) {
-      ingredientsSet.add((String) ingredient.getProperty("ingredient"));
+      ingredientsSet.add(new Ingredient(ingredient));
     }
     return ingredientsSet;
   }

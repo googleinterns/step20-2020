@@ -131,7 +131,8 @@ public class NewRecipeServlet extends HttpServlet {
     int parameterNum = 0;
     String parameterName = "ingredient" + parameterNum;
     String[] parameterValues = request.getParameterValues(parameterName);
-    System.out.println(parameterValues.length);
+    for (int i = 0; i < parameterValues.length; i++)
+      System.out.println(parameterValues[i]);
 
     // In the HTML form, parameters are named as [field name][index], ie step0.
     // This loop increments the index of the parameter's name, exiting once it reaches an index for which there is no parameter.
@@ -140,7 +141,7 @@ public class NewRecipeServlet extends HttpServlet {
       EmbeddedEntity parameterEntity = new EmbeddedEntity();
       parameterEntity.setProperty("amount", parameterValues[0]);
       parameterEntity.setProperty("unit", parameterValues[1]);
-      parameterEntity.setProperty("ingredient", parameterValues[2]);
+      parameterEntity.setProperty("name", parameterValues[2]);
       parameters.add(parameterEntity);
 
       parameterName = "ingredient" + (++parameterNum);
