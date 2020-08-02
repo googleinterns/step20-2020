@@ -967,37 +967,19 @@ function initClient() {
   */
 function handleAuthClick(event) {
   var authorizeButton = document.getElementById('authorize_button');
-  var signoutButton = document.getElementById('signout_button');
   var eventButton = document.getElementById('event_button');
   gapi.auth2.getAuthInstance().signIn();
   authorizeButton.style.display = 'none';
   eventButton.style.display = 'block';
-  signoutButton.style.display = 'block';
 }
 
 /**
-  *  Sign out the user upon button click.
+  * Used to display the results of the API call.
+  * @param {string} message Text to be placed in an element.
   */
-function handleSignoutClick(event) {
-  var authorizeButton = document.getElementById('authorize_button');
-  var signoutButton = document.getElementById('signout_button');
-  var eventButton = document.getElementById('event_button');
-  gapi.auth2.getAuthInstance().signOut();
-  authorizeButton.style.display = 'block';
-  eventButton.style.display = 'none';
-  signoutButton.style.display = 'none';
-}
-
-/**
-  * Append a pre element to the body containing the given message
-  * as its text node. Used to display the results of the API call.
-  *
-  * @param {string} message Text to be placed in pre element.
-  */
-function appendPre(message) {
-  var pre = document.getElementById('content');
-  var textContent = document.createTextNode(message + '\n');
-  pre.appendChild(textContent);
+function appendMessage(message) {
+  var element = document.getElementById('event-message');
+  element.innerHTML = message + "\n";
 }
 
 function addEvent(link, startTime, endTime){
@@ -1012,9 +994,6 @@ function addEvent(link, startTime, endTime){
       'dateTime': endTime,
       'timeZone': 'America/Los_Angeles'
     },
-    'recurrence': [
-      'RRULE:FREQ=DAILY;COUNT=2'
-    ],
     'reminders': {
       'useDefault': false,
       'overrides': [
@@ -1023,9 +1002,6 @@ function addEvent(link, startTime, endTime){
       ]
     }
   };
-  console.log("link: " + link);
-  console.log("start: " + startTime);
-  console.log("end: " + endTime);
 
   var request = gapi.client.calendar.events.insert({
     'calendarId': 'primary',
@@ -1033,7 +1009,7 @@ function addEvent(link, startTime, endTime){
   });
 
   request.execute(function(event) {
-    appendPre('Event created: ' + event.htmlLink);
+    appendMessage('Event created! Click <a href=' + event.htmlLink + ">here</a> to view it on your calendar.");
   });
 }
 
@@ -1131,7 +1107,6 @@ function getRecipeInfo() {
 /** Gets the link to the live stream associated with the given recipe key
     and adds it to the DOM. */
 function setAssociatedLiveStreamLink(recipeKey) {
-  console.log('/fetch-associated-live-stream?recipe-key=' + recipeKey);
   fetch('/fetch-associated-live-stream?recipe-key=' + recipeKey).then(response => response.json()).then((liveStreams) => {
     // There should only be one live stream.
     document.getElementById('recipe-video').innerHTML += liveStreams[0].link;
@@ -1141,7 +1116,6 @@ function setAssociatedLiveStreamLink(recipeKey) {
 function addLiveStreamToCalendar() {
   var key = getURLParamVal("key");
   fetch('/fetch-associated-live-stream?recipe-key=' + key).then(response => response.json()).then((liveStreams => {
-    console.log('/fetch-associated-live-stream?recipe-key=' + key);
     // There should only be one live stream.
     addEvent(liveStreams[0].link, liveStreams[0].startTime, liveStreams[0].endTime)
   }));
