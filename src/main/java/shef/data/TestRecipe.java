@@ -11,29 +11,24 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
+ 
 package shef.data;
 
-public class Step {
-
-  private String instruction;
-
-  public Step(String instruction) {
-    this.instruction = instruction;
+import java.util.ArrayList;
+import java.util.List;
+ 
+/** A recipe, with recipe info used for search. */
+public class TestRecipe {
+  long id;
+  List<String> searchStrings;
+  long timestamp;
+ 
+ /**
+  * @param id The entity's id.
+  */
+  public TestRecipe(long id, ArrayList<String> searchStrings, long timestamp) {
+    this.id = id;
+    this.searchStrings = searchStrings;
+    this.timestamp = timestamp;
   }
-
-  public String getInstruction() {
-    return instruction;
-  }
-
-  @Override
-  public String toString() {
-    return instruction;
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    return other instanceof Step && instruction.equals(((Step) other).getInstruction());
-  }
-
-}
+}   

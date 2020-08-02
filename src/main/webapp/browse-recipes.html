@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="css/style.css"/>
+    <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <title>shef</title>
+  </head>
+ 
+  <body onload="loadRecipes();">
+    <!--Nav bar-->
+    <div id="nav-placeholder">
+    </div>
+    <script>
+      $(function(){
+        $("#nav-placeholder").load("nav.html");
+      });
+    </script>
+ 
+    <div class="jumbotron">
+      <h1 class="display-4">Browse Recipes</h1>
+      <div class="tab-guide">
+        <button onclick="getRecipes('foryou')">For You</button>
+        <button onclick="getRecipes('trending')">Trending</button>
+      </div>
+      <div id="results"></div>
+    </div>
+  </body>
+</html>
