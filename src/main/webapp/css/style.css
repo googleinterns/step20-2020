@@ -11484,7 +11484,7 @@ p {
   font-size: 1.25rem;
 }
 
-parameter-input {
+parameter-input, ingredient-input {
   display: inline-block;
   vertical-align: middle;
   margin: 0 0 15px 0;

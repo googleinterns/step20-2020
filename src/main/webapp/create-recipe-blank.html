@@ -36,7 +36,7 @@ THE SOFTWARE.-->
     <title>shef</title>
   </head>
 
-  <body class="page-container" onload="protectPage(); navBarSetup();">
+  <body class="page-container" onload="protectPage(); navBarSetup(); getRecipeImageUploadUrl();">
     <template>
       <span>
         <svg class="bi bi-plus-circle bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -72,7 +72,7 @@ THE SOFTWARE.-->
       <div class="med-sep">
         <div class="row">
           <div class="col-sm-6 col-md-6 col-lg-6 text-left">
-            <form action="/new-recipe" method="POST">
+            <form id="form" method="POST" enctype="multipart/form-data">
               <h2>Basic Info</h2>
               <div class="form-group small-sep">
                 <label for="dishNameInput">1. What’s your dish called? *</label>
@@ -85,10 +85,14 @@ THE SOFTWARE.-->
               <div class="form-group small-sep">
                 <label for="servingsInput">3. How many servings does it make? *</label>
                 <input type="number" name="servings" class="form-control" id="servingsInput" placeholder="...">
-              </div>       
+              </div>
               <div class="form-group small-sep">
-                <label>4. What tags apply to this recipe?</label>
-                <div id="Tags">        
+                <label for="image">4. Upload an image of your dish!</label><br>
+                <input type="file" name="image" id="image">
+              </div>
+              <div class="form-group small-sep">
+                <label>5. What tags apply to this recipe?</label>
+                <div id="Tags">
                   <parameter-input name="Tag" index="0" id="Tag0"></parameter-input>
                 </div>
               </div>
@@ -102,7 +106,7 @@ THE SOFTWARE.-->
               <div class="med-sep">
                 <h2>Ingredients</h2>
                 <div class="form-group small-sep" id="Ingredients">
-                  <parameter-input name="Ingredient" index="0" id="Ingredient0"></parameter-input>
+                  <ingredient-input name="Ingredient" index="0"></ingredient-input>
                 </div>
               </div>
               <div class="med-sep">
@@ -138,7 +142,7 @@ THE SOFTWARE.-->
                 <h2>Sharing</h2>
                 <div class="form-group">
                   <label for="permissionSelect">Spread the joy!</label>
-                  <select class="form-control" id="permissionSelect">
+                  <select class="form-control" id="groupSelect">
                     <option>Reciplease</option>
                     <option>Cal Badminton</option>
                     <option>Some Group</option>
@@ -150,7 +154,7 @@ THE SOFTWARE.-->
           </div>
           <div class="col-sm-6 col-md-6 col-lg-6 text-center">
             <figure class="figure">
-              <img src="assets/images/bdd_jjg.jpeg" class="figure-img img-fluid rounded" alt="...">
+              <img id="recipe-image" src="assets/images/bdd_jjg.jpeg" class="figure-img img-fluid rounded" alt="...">
               <figcaption class="figure-caption">The cover photo for your recipe - choose wisely.</figcaption>
             </figure>
           </div>

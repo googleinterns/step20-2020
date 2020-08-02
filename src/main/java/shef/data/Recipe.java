@@ -32,8 +32,12 @@ public class Recipe {
   private String key;
   private String name;
   private String description;
+  private double time;
+  private double servings;
+  private String imageKey;
   private Set<String> tags;
   private Set<String> ingredients;
+  private Set<String> equipment;
   private List<Step> steps;
   private Set<SpinOff> spinOffs;
   private long timestamp;
@@ -66,8 +70,12 @@ public class Recipe {
   public Recipe(Entity recipeEntity) {
     this.name = (String) recipeEntity.getProperty("name");
     this.description = (String) recipeEntity.getProperty("description");
+    this.time = (double) recipeEntity.getProperty("time");
+    this.servings = (double) recipeEntity.getProperty("servings");
+    this.imageKey = (String) recipeEntity.getProperty("imageKey");
     this.tags = getTagsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("tags"));
     this.ingredients = getIngredientsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("ingredients"));
+    this.equipment = getEquipmentFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("equipment"));
     this.steps = getStepsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("steps"));
     this.timestamp = (long) recipeEntity.getProperty("timestamp");
   }
@@ -250,6 +258,15 @@ public class Recipe {
       ingredientsSet.add((String) ingredient.getProperty("ingredient"));
     }
     return ingredientsSet;
+  }
+
+  /** Returns the equipment of an EmbeddedEntity as a Set. */
+  private Set<String> getEquipmentFromEntity(Collection<EmbeddedEntity> entityEquipment) {
+    Set<String> equipmentSet = new HashSet<>();
+    for (EmbeddedEntity equipment : entityEquipment) {
+      equipmentSet.add((String) equipment.getProperty("equipment"));
+    }
+    return equipmentSet;
   }
 
   /** Returns the steps of an EmbeddedEntity as a List. */
