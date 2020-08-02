@@ -1090,10 +1090,20 @@ function refillDatalist(input, options, existingInput) {
   }
 }
 
+/** Hyperlink is not supported via element creation or direct HTML insertion,
+    so for now, just show the recipe URL as is. */
 function shareViaGmail() {
-  let msgbody = "Yum!";
+  let msgbody = "Yum! You should give this a try: " + window.location.href;
   let url = 'https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su=Check+out+this+recipe!&body='+msgbody+'&ui=2&tf=1&pli=1';
   window.open(url, 'sharer', 'toolbar=0,status=0,width=648,height=395');
+}
+
+/** Sets up sharing for twitter and facebook by attaching
+    the current website URL as the link to share. */
+function sharingSetup() {
+  var currentURL = window.location.href;
+  document.getElementById("fb-sharing").setAttribute("data-href", currentURL);
+  document.getElementById("twitter-sharing").setAttribute("data-url", currentURL);
 }
 
 /** @class A custom element that represents a parameter input. */
@@ -1289,7 +1299,7 @@ function getText(data) {
  * For You displays recipes unique to each user's preferences.
  * Trending displays the recipes that are most popular. */
 function getRecipes(algorithm) {
-  const results = document.getElementById('results');
+  const results = document.getElementById('recipe-grid');
   results.innerHTML = '';
   fetch('/browse-recipes?algorithm=' + algorithm).then(response => response.json()).then((recipes) => {
     for (var i = 0; i < recipes.length; i++) {

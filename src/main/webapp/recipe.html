@@ -34,7 +34,7 @@ THE SOFTWARE.-->
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
 
-  <body class="page-container" onload="recipePageInit(); navBarSetup();">
+  <body class="page-container" onload="recipePageInit(); navBarSetup(); sharingSetup();">
     <!--Javascript SDK for sharing on Facebook -->
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v7.0" nonce="bSEBuptV"></script>
@@ -62,18 +62,19 @@ THE SOFTWARE.-->
               <ul class="list-inline">
                 <li class="list-inline-item">
                   <!--When actual recipe link is available, replace link below with formatting generated from https://developers.facebook.com/docs/plugins/share-button. -->
+                  <div id="fb-sharing" data-href="https://shef-step-2020.appspot.com">
                   <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">
                   <img src="/assets/images/facebook_icon.png" class="share-icon">
                   </a>
+                  </div>
                 </li>
                 <li class="list-inline-item">
                    <!--When actual recipe link is available, replace link below.-->
-                  <a href="https://twitter.com/intent/tweet" data-size="large" data-text="Check out this recipe on shef!" data-url="https://dev.twitter.com/web/tweet-button">
+                  <a id="twitter-sharing" href="https://twitter.com/intent/tweet" data-size="large" data-text="Check out this recipe on shef!">
                   <img src="/assets/images/twitter_icon.png" class="share-icon">
                   </a>
                 </li>
-                <li class="list-inline-item"><img src="/assets/images/mail_icon.png" id="myItem" class="share-icon"></li>
-                <div id="myItem" data-page_id="1510970">1510970</div>
+                <li class="list-inline-item"><img src="/assets/images/mail_icon.png" id="myItem" class="share-icon" onclick="shareViaGmail();"></li>
               </ul>
             </div>
             <div class="modal-footer">
