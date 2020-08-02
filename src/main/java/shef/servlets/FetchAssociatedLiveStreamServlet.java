@@ -49,7 +49,8 @@ public class FetchAssociatedLiveStreamServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    // There should only be one result.
+    /* TODO: Ensure that a recipe can only be associated with one live stream
+      or offer support for attachment to multiple live streams. */
     List<LiveStream> liveStreams = new LinkedList<>();
     for (Entity entity : results.asIterable()) {
       String recipeKey = (String) entity.getProperty("recipe-key");
