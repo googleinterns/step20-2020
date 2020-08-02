@@ -31,66 +31,21 @@ THE SOFTWARE.-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>shef</title>
     <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
 
-  <body class="page-container" onload="loadComments()">
+  <body class="page-container" onload="recipePageInit(); navBarSetup();">
     <!--Javascript SDK for sharing on Facebook -->
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v7.0" nonce="bSEBuptV"></script>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">shef</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="index.html">
-            <svg class="bi bi-house bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M2 13.5V7h1v6.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h1v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5zm11-11V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
-              <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
-            </svg>
-            <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-            <svg class="bi bi-pen bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M5.707 13.707a1 1 0 0 1-.39.242l-3 1a1 1 0 0 1-1.266-1.265l1-3a1 1 0 0 1 .242-.391L10.086 2.5a2 2 0 0 1 2.828 0l.586.586a2 2 0 0 1 0 2.828l-7.793 7.793zM3 11l7.793-7.793a1 1 0 0 1 1.414 0l.586.586a1 1 0 0 1 0 1.414L5 13l-3 1 1-3z"/>
-              <path fill-rule="evenodd" d="M9.854 2.56a.5.5 0 0 0-.708 0L5.854 5.855a.5.5 0 0 1-.708-.708L8.44 1.854a1.5 1.5 0 0 1 2.122 0l.293.292a.5.5 0 0 1-.707.708l-.293-.293z"/>
-              <path d="M13.293 1.207a1 1 0 0 1 1.414 0l.03.03a1 1 0 0 1 .03 1.383L13.5 4 12 2.5l1.293-1.293z"/>
-            </svg>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-            <svg class="bi bi-camera-video bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" d="M2.667 3.5c-.645 0-1.167.522-1.167 1.167v6.666c0 .645.522 1.167 1.167 1.167h6.666c.645 0 1.167-.522 1.167-1.167V4.667c0-.645-.522-1.167-1.167-1.167H2.667zM.5 4.667C.5 3.47 1.47 2.5 2.667 2.5h6.666c1.197 0 2.167.97 2.167 2.167v6.666c0 1.197-.97 2.167-2.167 2.167H2.667A2.167 2.167 0 0 1 .5 11.333V4.667z"/>
-              <path fill-rule="evenodd" d="M11.25 5.65l2.768-1.605a.318.318 0 0 1 .482.263v7.384c0 .228-.26.393-.482.264l-2.767-1.605-.502.865 2.767 1.605c.859.498 1.984-.095 1.984-1.129V4.308c0-1.033-1.125-1.626-1.984-1.128L10.75 4.785l.502.865z"/>
-            </svg>
-            </a>
-          </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <svg class="bi bi-search" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M10.442 10.442a1 1 0 0 1 1.415 0l3.85 3.85a1 1 0 0 1-1.414 1.415l-3.85-3.85a1 1 0 0 1 0-1.415z"/>
-          <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
-        </svg>
-        </form>
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <svg class="bi bi-person-circle bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
-                <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
-              </svg>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <!-- Navbar-->
+    <div id="nav-placeholder"></div>
+    <script>
+      $(function(){
+        $("#nav-placeholder").load("nav.html");
+      });
+    </script>
 
     <div class="jumbotron text-center">
       <!-- Modal -->
@@ -129,10 +84,10 @@ THE SOFTWARE.-->
       </div>
       <img src="assets/images/strawberry_sc.jpg" class="feed-img-prof" alt="...">
       <div class="small-sep">
-        <h2>Strawberry Shortcake</h2>
-        <p>mbazolly</p>
+        <h2 id="recipe-title"></h2>
+        <p id="recipe-author"></p>
         <div class="small-sep">
-          <h3>#vegetarian, #dessert, #summer, #sweet, #american</h3>    
+          <h3 id="recipe-tags"></h3>    
         </div>
         <div class="text-center small-sep">
           <svg class="bi bi-credit-card bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -166,11 +121,7 @@ THE SOFTWARE.-->
           <div class="row">
             <div class="col-sm-2 col-md-2 col-lg-2">
               <h2>Description</h2>
-            </div>
-            <div class ="text-right">
-              <svg class="bi bi-caret-down-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-              </svg>
+              <p id="recipe-description"></p>
             </div>
           </div>
         <hr class="my-4">
@@ -180,42 +131,23 @@ THE SOFTWARE.-->
             <div class="col-sm-2 col-md-2 col-lg-2">
               <h2>Video</h2>
             </div>
-            <div class ="text-right">
-              <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-              </svg>
-            </div>
           </div>
           <div class="text-center">
             <iframe width="853" height="480" src="https://www.youtube.com/embed/aCUC5GVX1VI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
           <hr class="my-4">
         </div>
-          <div class="form-check small-sep">
-            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-            <label class="form-check-label" for="defaultCheck1">
-            Default checkbox
-            </label>
+          <div class="text-left med-sep">
+            <h2>Ingredients</h2>
+            <div id="recipe-ingredients"></div>
           </div>
-          <div class="form-check small-sep">
-            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
-            <label class="form-check-label" for="defaultCheck1">
-            Default checkbox
-            </label>
-          </div>
-          <div class="small-sep">
-          </div>
+          <div class="small-sep"></div>
           <hr class="my-4">
         </div>
         <div class="text-left med-sep">
           <div class="row">
             <div class="col-sm-2 col-md-2 col-lg-2">
               <h2>Equipment</h2>
-            </div>
-            <div class ="text-right">
-              <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-              </svg>
             </div>
           </div>
           <div class="text-center">
@@ -224,28 +156,8 @@ THE SOFTWARE.-->
           <hr class="my-4">
         </div>
         <div class="text-left med-sep">
-          <div class="row">
-            <div class="col-sm-2 col-md-2 col-lg-2">
-              <h2>Steps</h2>
-            </div>
-            <div class ="text-right">
-              <svg class="bi bi-caret-up-fill bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
-              </svg>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-1 col-md-1 col-lg-1">
-              <h3>1</h3>
-            </div>
-            <div class="col-sm-11 col-md-11 col-lg-11">
-              <p>Place a rack in center of oven; preheat to 400°. Line a rimmed baking sheet with parchment paper. Whisk 2 cups flour, 1½ tsp. baking powder, ¼ tsp. baking soda, 4 tsp. sugar, and 1½ tsp. salt in a large bowl to combine.                        </p>
-            </div>
-          </div>
-          <div class="row justify-content-center">
-            <img src="assets/images/strawberry_sc.jpg" class="feed-img" alt="...">
-          </div>
-          <hr class="my-4">
+          <h2>Steps</h2>
+          <div id="recipe-steps"></div>
         </div>
         <div class="text-left med-sep">
           <div class="row">
@@ -271,8 +183,7 @@ THE SOFTWARE.-->
     </div>
 
     <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <!-- First Popper.js, then Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   </body>
