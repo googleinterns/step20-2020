@@ -26,6 +26,8 @@ import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import java.util.Collection;
 import java.util.List;
@@ -40,6 +42,7 @@ import shef.data.Step;
 public class NewRecipeServlet extends HttpServlet {
 
   private DatastoreService datastore;
+  private UserService userService;
   private final String TAG = "tag";
   private final String INGREDIENT = "ingredient";
   private final String STEP = "step";
@@ -47,6 +50,7 @@ public class NewRecipeServlet extends HttpServlet {
   @Override
   public void init() {
     datastore = DatastoreServiceFactory.getDatastoreService();
+    userService = UserServiceFactory.getUserService();
   }
 
   /** When a spin-off is created, this GET request gets the original recipe's data. */
@@ -93,6 +97,14 @@ public class NewRecipeServlet extends HttpServlet {
     recipe.setProperty("has-live-stream", false); // A newly created recipe does not have an associated live stream.
     recipe.setProperty("timestamp", timestamp);
     recipe.setProperty("likes", likes);
+
+    // Add property for the key string of the current user.
+    if (userService != null && userService.getCurrentUser() != null) {
+      String id = userService.getCurrentUser().getUserId();
+      Key userKey = KeyFactory.createKey("User", id);
+      String userKeyString = KeyFactory.keyToString(userKey);
+      recipe.setProperty("user", userKeyString);
+    }
     datastore.put(recipe);
 
     response.sendRedirect("/recipe.html");
@@ -131,31 +143,8 @@ public class NewRecipeServlet extends HttpServlet {
     searchStrings.add(stringToAdd.toUpperCase());
   }
 
-<<<<<<< HEAD
-  /** Converts a Datastore entity into a Recipe. */
-  private Recipe entityToRecipe(Entity recipeEntity) {
-    String name = (String) recipeEntity.getProperty("name");
-    String user = (String) recipeEntity.getProperty("user");
-    String description = (String) recipeEntity.getProperty("description");
-    LinkedHashSet<String> tags = new LinkedHashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("tags"), TAG));
-    LinkedHashSet<String> ingredients = new LinkedHashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("ingredients"), INGREDIENT));
-    LinkedList<Step> steps = (LinkedList<Step>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("steps"), STEP);
-    long timestamp = (long) recipeEntity.getProperty("timestamp");
-    return new Recipe(name, user, description, tags, ingredients, steps, timestamp);
-  }
-
-  /** Gets a list of Recipe parameters from a Datastore property. */
-  private Collection<Object> getDataAsList(Object propertiesObject, String field) {
-    Collection<EmbeddedEntity> properties = (Collection<EmbeddedEntity>) propertiesObject;
-    Collection<Object> dataAsList = new LinkedList<>();
-    for (EmbeddedEntity property : properties) {
-      dataAsList.add(property.getProperty(field));
-    }
-    return dataAsList;
-=======
   private String convertToJsonUsingGson(Recipe recipe) {
     Gson gson = new Gson();
     return gson.toJson(recipe);
->>>>>>> origin/master
   }
 }

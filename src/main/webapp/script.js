@@ -1108,7 +1108,7 @@ function getRecipeInfo() {
     document.getElementById('recipe-author').innerHTML = recipe.user;
     document.getElementById('recipe-description').innerHTML = recipe.description;
     console.log("HAS LIVE STREAM? " + recipe.hasLiveStream);
-    if (recipe.hasLiveStream === 'true') {
+    if (recipe.hasLiveStream) {
       setAssociatedLiveStreamLink(key);
     } else {
       hideAddToCalButton();
@@ -1196,7 +1196,7 @@ function displaySteps(stepList) {
     // Create and format the step text.
     var stepTextElement = document.createElement("p");
     stepTextElement.class = "col-sm-10 col-md-10 col-lg-10";
-    stepTextElement.innerHTML = step;
+    stepTextElement.innerHTML = step.instruction;
 
     rowVars['stepElement' + stepCount].appendChild(stepNumElement);
     rowVars['stepElement' + stepCount].appendChild(stepTextElement);
