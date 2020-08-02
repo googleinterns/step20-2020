@@ -75,7 +75,12 @@ public class NewRecipeServlet extends HttpServlet {
     Collection<EmbeddedEntity> tags = getParameters(request, TAG, searchStrings);
     Collection<EmbeddedEntity> ingredients = getParameters(request, INGREDIENT, searchStrings);
     Collection<EmbeddedEntity> steps = getParameters(request, STEP, null);
-    int likes = Integer.parseInt(request.getParameter("likes"));
+    int likes;
+    try {
+      likes = Integer.parseInt(request.getParameter("likes"));
+    } catch (NumberFormatException e) {
+      likes = 0;
+    }
     long timestamp = System.currentTimeMillis();
 
     Entity recipe = new Entity("Recipe");
@@ -89,7 +94,7 @@ public class NewRecipeServlet extends HttpServlet {
     recipe.setProperty("likes", likes);
     datastore.put(recipe);
 
-    response.sendRedirect("/edit-recipe.html");
+    response.sendRedirect("/recipe.html");
   }
 
   /**
