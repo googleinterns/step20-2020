@@ -98,7 +98,7 @@ public class NewRecipeServlet extends HttpServlet {
     recipe.setProperty("likes", likes);
     datastore.put(recipe);
 
-    response.sendRedirect("/recipe.html");
+    response.sendRedirect("/recipe.html?key=" + KeyFactory.keyToString(recipe.getKey()));
   }
 
   /**
@@ -131,15 +131,13 @@ public class NewRecipeServlet extends HttpServlet {
     int parameterNum = 0;
     String parameterName = "ingredient" + parameterNum;
     String[] parameterValues = request.getParameterValues(parameterName);
-    for (int i = 0; i < parameterValues.length; i++)
-      System.out.println(parameterValues[i]);
 
     // In the HTML form, parameters are named as [field name][index], ie step0.
     // This loop increments the index of the parameter's name, exiting once it reaches an index for which there is no parameter.
     while (parameterValues != null) {
       addToSearchStrings(searchStrings, parameterValues[2]);
       EmbeddedEntity parameterEntity = new EmbeddedEntity();
-      parameterEntity.setProperty("amount", Double.parseDouble(parameterValues[0]));
+      parameterEntity.setProperty("amount", parameterValues[0].equals("") ? 0 : Double.parseDouble(parameterValues[0]));
       parameterEntity.setProperty("unit", parameterValues[1]);
       parameterEntity.setProperty("name", parameterValues[2]);
       parameters.add(parameterEntity);

@@ -218,7 +218,7 @@ function displayIngredients(ingredList) {
     // Label the checkbox with the individual ingredient.
     var label = document.createElement("label");
     label.label = "form-check-label";
-    label.innerHTML = "<p>" + ingredient + "</p>";
+    label.innerHTML = "<p>" + ingredient.amount + " " + units[ingredient.unit].abbreviation + " " + ingredient.name + "</p>";
 
     ingredElements['ingredElement' + ingredCount].appendChild(input);
     ingredElements['ingredElement' + ingredCount].appendChild(label);
@@ -245,7 +245,7 @@ function displaySteps(stepList) {
     // Create and format the step text.
     var stepTextElement = document.createElement("p");
     stepTextElement.class = "col-sm-10 col-md-10 col-lg-10";
-    stepTextElement.innerHTML = step;
+    stepTextElement.innerText = step.instruction;
 
     rowVars['stepElement' + stepCount].appendChild(stepNumElement);
     rowVars['stepElement' + stepCount].appendChild(stepTextElement);
@@ -475,6 +475,187 @@ class ParameterInput extends HTMLElement {
 }
 customElements.define('parameter-input', ParameterInput);
 
+/**
+ * @class A custom element that represents an ingredient input.
+ * This class extends ParameterInput to add functionality.
+*/
+class IngredientInput extends ParameterInput {
+  constructor() {
+    super();
+    this.amountInput = document.createElement('input');
+    this.unitInput = document.createElement('select');
+    this.textArea.insertAdjacentElement('beforebegin', this.amountInput);
+    this.textArea.insertAdjacentElement('beforebegin', this.unitInput);
+    this.textArea.insertAdjacentElement('beforebegin', document.createElement('br'));
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.amountInput.type = 'number';
+    this.amountInput.min = '0';
+    this.amountInput.placeholder= 'Enter amount';
+    this.amountInput.step = '0.5';
+    this.amountInput.name = this.textArea.name;
+    this.unitInput.placeholder = 'Select unit';
+    this.unitInput.name = this.textArea.name;
+
+    for (var unit in units) {
+      const option = document.createElement('option');
+      option.value = unit;
+      option.innerText = units[unit].abbreviation;
+      this.unitInput.appendChild(option);
+    }
+    this.setIndexAttributes();
+  }
+
+  setIndexAttributes() {
+    super.setIndexAttributes();
+    this.addButton.onclick = () => {
+      var newParameter = createIngredientInput(this.name, this.index + 1);
+      insertParameterInput(this, newParameter);
+    };
+  }
+
+  get amount() {
+    return parseFloat(this.amountInput.value);
+  }
+
+  get unit() {
+    return this.unitInput.value;
+  }
+
+  set amount(value) {
+    this.amountInput.value = value;
+  }
+
+  set unit(value) {
+    this.unitInput.value = value;
+  }
+}
+customElements.define('ingredient-input', IngredientInput);
+
+/** 
+ * Creates a ParameterInput.
+ * @param {string} name Used for displaying and determining the parent field.
+ * @param {string} index The position of the ParameterInput.
+ */
+function createParameterInput(name, index) {
+  var newParameter = document.createElement('parameter-input');
+  newParameter.setAttribute('name', name);
+  newParameter.setAttribute('index', index);
+  newParameter.setAttribute('id', name + index);
+  return newParameter;
+}
+
+function createIngredientInput(name, index) {
+  var newParameter = document.createElement('ingredient-input');
+  newParameter.setAttribute('name', name);
+  newParameter.setAttribute('index', index);
+  newParameter.setAttribute('id', name + index);
+  return newParameter;
+}
+
+/** 
+ * Inserts a ParameterInput.
+ * @param {ParameterInput} previous The ParameterInput to insert after.
+ * @param {ParameterInput} parameterInput The ParameterInput to insert.
+ */
+function insertParameterInput(previous, parameterInput) {
+  previous.insertAdjacentElement('afterend', parameterInput);
+  updateIndices(parameterInput.field, parameterInput.position + 1);
+}
+
+/** 
+ * Appends an existing ParameterInput.
+ * @param {string} fieldName The field to append to.
+ * @param {ParameterInput} parameterInput The ParameterInput to append.
+ */
+function appendParameterInput(fieldName, parameterInput) {
+  const field = document.getElementById(fieldName);
+  field.appendChild(parameterInput);
+}
+
+/** 
+ * Appends a new ParameterInput.
+ * @param {string} fieldName The field to append to.
+ */
+function appendNewParameterInput(fieldName) {
+  const field = document.getElementById(fieldName);
+  field.appendChild(createParameterInput(fieldName.slice(0, -1), field.children.length));
+}
+
+/**
+ * Updates the indices of ParameterInputs after an insertion or deletion.
+ * @param {string} fieldName The field with the ParameterInputs to update.
+ * @param {number} startIndex The index of the first ParameterInput to update.
+ */
+function updateIndices(fieldName, startIndex) {
+  var parameters = document.getElementById(fieldName).children;
+  for (var i = startIndex; i < parameters.length; i++) {
+    parameters[i].position = i;
+    parameters[i].setIndexAttributes();
+  }
+}
+
+/** Gets a parent recipe's data from Datastore. */
+function getOriginalRecipe() {
+  const key = document.getElementById('key').value;
+  if (key) {
+    fetch('/new-recipe?key=' + key).then(response => response.json()).then((recipe) => {
+      populateRecipeCreationForm(recipe);
+    });
+  }
+}
+
+/** Populates the fields of the recipe editor with a parent recipe's data. */
+function populateRecipeCreationForm(recipe) {
+  document.getElementById('dishNameInput').value = recipe.name;
+  document.getElementById('descriptionTextArea').value = recipe.description;
+  document.getElementById('timeInput').value = recipe.time;
+  document.getElementById('servingsInput').value = recipe.servings;
+  document.getElementById('recipe-image').src = '/blob?blob-key=' + recipe.imageKey;
+  populateFormField('Tag', recipe.tags);
+  populateIngredients(recipe.ingredients);
+  populateFormField('Equipment', recipe.equipment);
+  populateFormField('Step', recipe.steps);
+}
+
+/** Populates the ParamterInputs in a field with a parent recipe's data. */
+function populateFormField(fieldName, data) {
+  for (var i = 0; i < data.length; i++) {
+    var parameter = document.getElementById(fieldName + i);
+    if (parameter !== null) {
+      parameter.text = getText(data[i]);
+    } else {
+      var newParameter = createParameterInput(fieldName, i);
+      newParameter.text = getText(data[i]);
+      appendParameterInput(fieldName + 's', newParameter);
+    }
+  }
+}
+
+function populateIngredients(data) {
+  for (var i = 0; i < data.length; i++) {
+    var parameter = document.getElementById('Ingredient' + i);
+    if (!parameter) {
+      var parameter = createIngredientInput('Ingredient', i);
+    }
+    parameter.amount = data[i].amount;
+    parameter.unit = data[i].unit;
+    parameter.text = data[i].name;
+    appendParameterInput('Ingredients', parameter);
+  }
+}
+
+/** Gets the text of a tag, ingredient, or step. */
+function getText(data) {
+  if (typeof data == 'string') {
+    return data;
+  } else {
+    return data.instruction;
+  }
+}
+
 const volume = {
   units: ['teaspoon', 'tablespoon', 'fluid ounce', 'cup', 'pint', 'quart', 'gallon', 'millilter', 'liter'],
   conversions: [
@@ -601,188 +782,11 @@ const units = {
   },
 }
 
-/**
- * @class A custom element that represents an ingredient input.
- * This class extends ParameterInput to add functionality.
-*/
-class IngredientInput extends ParameterInput {
-  constructor() {
-    super();
-    this.amountInput = document.createElement('input');
-    this.unitInput = document.createElement('select');
-    this.textArea.insertAdjacentElement('beforebegin', this.amountInput);
-    this.textArea.insertAdjacentElement('beforebegin', this.unitInput);
-    this.textArea.insertAdjacentElement('beforebegin', document.createElement('br'));
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.amountInput.type = 'number';
-    this.amountInput.min = '0';
-    this.amountInput.placeholder= 'Enter amount';
-    this.amountInput.step = '0.5';
-    this.amountInput.name = this.textArea.name;
-    this.unitInput.placeholder = 'Select unit';
-    this.unitInput.name = this.textArea.name;
-
-    for (var unit in units) {
-      const option = document.createElement('option');
-      option.value = unit;
-      option.innerText = units[unit].abbreviation;
-      this.unitInput.appendChild(option);
-    }
-    this.setIndexAttributes();
-  }
-
-  setIndexAttributes() {
-    super.setIndexAttributes();
-    this.addButton.onclick = () => {
-      var newParameter = createIngredientInput(this.name, this.index + 1);
-      insertParameterInput(this, newParameter);
-    };
-  }
-
-  get amount() {
-    return parseDouble(this.amountInput.value);
-  }
-
-  get unit() {
-    return this.unitInput.value;
-  }
-
-  set amount(value) {
-    this.amountInput.value = value.toString();
-  }
-
-  set unit(value) {
-    this.unitInput.value = value;
-  }
-}
-customElements.define('ingredient-input', IngredientInput);
-
-/** 
- * Creates a ParameterInput.
- * @param {string} name Used for displaying and determining the parent field.
- * @param {string} index The position of the ParameterInput.
- */
-function createParameterInput(name, index) {
-  var newParameter = document.createElement('parameter-input');
-  newParameter.setAttribute('name', name);
-  newParameter.setAttribute('index', index);
-  newParameter.setAttribute('id', name + index);
-  return newParameter;
-}
-
-function createIngredientInput(name, index) {
-  var newParameter = document.createElement('ingredient-input');
-  newParameter.setAttribute('name', name);
-  newParameter.setAttribute('index', index);
-  newParameter.setAttribute('id', name + index);
-  return newParameter;
-}
-
-/** 
- * Inserts a ParameterInput.
- * @param {ParameterInput} previous The ParameterInput to insert after.
- * @param {ParameterInput} parameterInput The ParameterInput to insert.
- */
-function insertParameterInput(previous, parameterInput) {
-  previous.insertAdjacentElement('afterend', parameterInput);
-  updateIndices(parameterInput.field, parameterInput.position + 1);
-}
-
-/** 
- * Appends an existing ParameterInput.
- * @param {string} fieldName The field to append to.
- * @param {ParameterInput} parameterInput The ParameterInput to append.
- */
-function appendParameterInput(fieldName, parameterInput) {
-  const field = document.getElementById(fieldName);
-  field.appendChild(parameterInput);
-}
-
-/** 
- * Appends a new ParameterInput.
- * @param {string} fieldName The field to append to.
- */
-function appendNewParameterInput(fieldName) {
-  const field = document.getElementById(fieldName);
-  field.appendChild(createParameterInput(fieldName.slice(0, -1), field.children.length));
-}
-
-/**
- * Updates the indices of ParameterInputs after an insertion or deletion.
- * @param {string} fieldName The field with the ParameterInputs to update.
- * @param {number} startIndex The index of the first ParameterInput to update.
- */
-function updateIndices(fieldName, startIndex) {
-  var parameters = document.getElementById(fieldName).children;
-  for (var i = startIndex; i < parameters.length; i++) {
-    parameters[i].position = i;
-    parameters[i].setIndexAttributes();
-  }
-}
-
-/** Gets a parent recipe's data from Datastore. */
-function getOriginalRecipe() {
-  const key = document.getElementById('key').value;
-  if (key) {
-    fetch('/new-recipe?key=' + key).then(response => response.json()).then((recipe) => {
-      populateRecipeCreationForm(recipe);
-    });
-  }
-}
-
-/** Populates the fields of the recipe editor with a parent recipe's data. */
-function populateRecipeCreationForm(recipe) {
-  document.getElementById('dishNameInput').value = recipe.name;
-  document.getElementById('descriptionTextArea').value = recipe.description;
-  document.getElementById('timeInput').value = recipe.time;
-  document.getElementById('servingsInput').value = recipe.servings;
-  document.getElementById('recipe-image').src = '/blob?blob-key=' + recipe.imageKey;
-  populateFormField('Tag', recipe.tags);
-  populateIngredients(recipe.ingredients);
-  populateFormField('Equipment', recipe.equipment);
-  populateFormField('Step', recipe.steps);
-}
-
-/** Populates the ParamterInputs in a field with a parent recipe's data. */
-function populateFormField(fieldName, data) {
-  for (var i = 0; i < data.length; i++) {
-    var parameter = document.getElementById(fieldName + i);
-    if (parameter !== null) {
-      parameter.text = getText(data[i]);
-    } else {
-      var newParameter = createParameterInput(fieldName, i);
-      newParameter.text = getText(data[i]);
-      appendParameterInput(fieldName + 's', newParameter);
-    }
-  }
-}
-
-function populateIngredients(data) {
-  for (var i = 0; i < data.length; i++) {
-    var parameter = document.getElementById('Ingredient' + i);
-    if (parameter !== null) {
-      parameter.amount = data[i].amount;
-      parameter.unit = data[i].unit;
-      parameter.text = data[i].name;
-    } else {
-      var newParameter = createIngredientInput('Ingredient', i);
-      newParameter.amount = data[i].amount;
-      newParameter.unit = data[i].unit;
-      newParameter.text = data[i].name;
-      appendParameterInput('Ingredients', newParameter);
-    }
-  }
-}
-
-/** Gets the text of a tag, ingredient, or step. */
-function getText(data) {
-  if (typeof data == 'string') {
-    return data;
-  } else {
-    return data.instruction;
+function scaleRecipe(factor) {
+  document.getElementById('servingsInput').value *= factor;
+  var ingredients = document.getElementById('Ingredients').children;
+  for (var i = 0; i < ingredients.length; i++) {
+    ingredients[i].amount *= factor;
   }
 }
 
