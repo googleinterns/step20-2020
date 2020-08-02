@@ -1097,11 +1097,20 @@ function getRecipeInfo() {
     document.getElementById('recipe-title').innerHTML = recipe.name;
     document.getElementById('recipe-author').innerHTML = recipe.user;
     document.getElementById('recipe-description').innerHTML = recipe.description;
-    setAssociatedLiveStreamLink(key);
+    console.log("HAS LIVE STREAM? " + recipe.hasLiveStream);
+    if (recipe.hasLiveStream === 'true') {
+      setAssociatedLiveStreamLink(key);
+    } else {
+      hideAddToCalButton();
+    }
     displayTags(recipe.tags);
     displayIngredients(recipe.ingredients);
     displaySteps(recipe.steps);
   });
+}
+
+function hideAddToCalButton() {
+  document.getElementById('add-to-cal-button').style.display = 'none';
 }
 
 /** Gets the link to the live stream associated with the given recipe key

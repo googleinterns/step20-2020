@@ -102,6 +102,7 @@ public class NewRecipeServlet extends HttpServlet {
     recipe.setProperty("ingredients", ingredients);
     recipe.setProperty("steps", steps);
     recipe.setProperty("search-strings", new ArrayList<String>(searchStrings));
+    recipe.setProperty("has-live-stream", false); // A newly created recipe does not have an associated live stream.
     recipe.setProperty("timestamp", timestamp);
     // Temporary if statement, can be removed once user service is fully integrated with recipe creation.
     // Without this if statement for the time being, the servlet crashes.

@@ -35,6 +35,7 @@ public class Recipe {
   private List<Step> steps;
   private Set<SpinOff> spinOffs;
   private long timestamp;
+  private boolean hasLiveStream;
 
   /**
    * Copy constructor called when creating spin-offs.
