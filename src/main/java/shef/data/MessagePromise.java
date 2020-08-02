@@ -32,7 +32,6 @@ public class MessagePromise implements Observer {
     this.message = null;
     this.updated = false;
     this.messageUpdate = messageUpdate;
-    this.messageUpdate.addObserver(this);
   }
 
   /**
@@ -41,6 +40,8 @@ public class MessagePromise implements Observer {
    * It then unblocks, and returns the message to the servlet.
    */
   public synchronized String getNextMessage() {
+    messageUpdate.addObserver(this);
+
     // Ensure that the thread waits until an update is detected.
     while (!updated) {
       try {
@@ -51,6 +52,7 @@ public class MessagePromise implements Observer {
     }
 
     messageUpdate.deleteObserver(this);
+    this.updated = false;
     return message;
   }
 

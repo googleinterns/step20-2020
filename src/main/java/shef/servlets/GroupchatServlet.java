@@ -27,6 +27,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import shef.data.Groupchat;
+
 
 @WebServlet("/load-groupchat")
 public class GroupchatServlet extends HttpServlet {
@@ -41,19 +43,11 @@ public class GroupchatServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String keyString = request.getParameter("key");
-    Entity groupchatEntity = null;
-    try {
-      groupchatEntity = datastore.get(KeyFactory.stringToKey(keyString));
-    } catch (EntityNotFoundException e) {
-      e.printStackTrace();
-      return;
-    }
+    Groupchat group = new Groupchat(keyString);
 
-    Object messageObject = groupchatEntity.getProperty("messages");
-    ArrayList<String> messages = messageObject != null ? (ArrayList<String>) messageObject : new ArrayList<>();
     response.setContentType("application/json;");
     Gson gson = new Gson();
-    response.getWriter().println(gson.toJson(messages));
+    response.getWriter().println(gson.toJson(group.getMessages()));
   }
 
   @Override
