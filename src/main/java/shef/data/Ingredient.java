@@ -21,7 +21,7 @@ public class Ingredient {
   public Ingredient() {
     
   }
-
+  
   public Ingredient(EmbeddedEntity entity) {
 
   }

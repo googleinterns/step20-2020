@@ -1254,6 +1254,7 @@ function getOriginalRecipe() {
   const key = document.getElementById('key').value;
   if (key) {
     fetch('/new-recipe?key=' + key).then(response => response.json()).then((recipe) => {
+      console.log(recipe);
       populateRecipeCreationForm(recipe);
     });
   }
@@ -1261,10 +1262,14 @@ function getOriginalRecipe() {
 
 /** Populates the fields of the recipe editor with a parent recipe's data. */
 function populateRecipeCreationForm(recipe) {
-  document.getElementById('name').value = recipe.name;
-  document.getElementById('description').value = recipe.description;
+  document.getElementById('dishNameInput').value = recipe.name;
+  document.getElementById('descriptionTextArea').value = recipe.description;
+  document.getElementById('timeInput').value = recipe.time;
+  document.getElementById('servingsInput').value = recipe.servings;
+  document.getElementById('recipe-image').src = '/blob?blob-key=' + recipe.imageKey;
   populateFormField('Tag', recipe.tags);
   populateFormField('Ingredient', recipe.ingredients);
+  populateFormField('Equipment', recipe.equipment);
   populateFormField('Step', recipe.steps);
 }
 
@@ -1273,10 +1278,10 @@ function populateFormField(fieldName, data) {
   for (var i = 0; i < data.length; i++) {
     var parameter = document.getElementById(fieldName + i);
     if (parameter !== null) {
-      parameter.text = data[i];
+      parameter.text = getText(data[i]);
     } else {
       var newParameter = createParameterInput(fieldName, i);
-      newParameter.text = data[i];
+      newParameter.text = getText(data[i]);
       appendParameterInput(fieldName + 's', newParameter);
     }
   }
@@ -1323,6 +1328,12 @@ function createRecipeForBrowsing(recipe) {
   container.appendChild(name);
   container.appendChild(description);
   return container;
+}
+
+function getRecipeImageUploadUrl() {
+  fetch('/recipe-image-upload-url').then(response => response.text()).then(url => {
+    document.getElementById('form').action = url;
+  });
 }
 
 /** Called by every page that requires the user to be logged in order to access. */

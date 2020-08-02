@@ -42,6 +42,7 @@ public class NewRecipeServlet extends HttpServlet {
   private DatastoreService datastore;
   private final String TAG = "tag";
   private final String INGREDIENT = "ingredient";
+  private final String EQUIPMENT = "equipment";
   private final String STEP = "step";
 
   @Override
@@ -62,7 +63,7 @@ public class NewRecipeServlet extends HttpServlet {
     }
     Recipe original = new Recipe(recipeEntity);
     response.setContentType("application/json;");
-    response.getWriter().println(convertToJsonUsingGson(original));  
+    response.getWriter().println(new Gson().toJson(original));  
   }
 
   /** Posts a new recipe to the servlet. */
@@ -71,23 +72,26 @@ public class NewRecipeServlet extends HttpServlet {
     Collection<String> searchStrings = new HashSet<>();
     String name = request.getParameter("name");
     searchStrings.add(name.toUpperCase());
+    double time = request.getParameter("time").equals("") ? 0 : Double.parseDouble(request.getParameter("time"));
+    double servings = request.getParameter("servings").equals("") ? 0 : Double.parseDouble(request.getParameter("servings"));
+    String imageKey = BlobServlet.getUploadedFileBlobKey(request, "image");
     String description = request.getParameter("description");
     Collection<EmbeddedEntity> tags = getParameters(request, TAG, searchStrings);
-    Collection<EmbeddedEntity> ingredients = getParameters(request, INGREDIENT, searchStrings);
+    Collection<EmbeddedEntity> ingredients = getIngredients(request, searchStrings);
+    Collection<EmbeddedEntity> equipment = getParameters(request, EQUIPMENT, null);
     Collection<EmbeddedEntity> steps = getParameters(request, STEP, null);
-    int likes;
-    try {
-      likes = Integer.parseInt(request.getParameter("likes"));
-    } catch (NumberFormatException e) {
-      likes = 0;
-    }
+    int likes = request.getParameter("likes") == null ? 0 : Integer.parseInt(request.getParameter("likes"));
     long timestamp = System.currentTimeMillis();
 
     Entity recipe = new Entity("Recipe");
     recipe.setProperty("name", name);
+    recipe.setProperty("time", time);
+    recipe.setProperty("servings", servings);
+    recipe.setProperty("imageKey", imageKey);
     recipe.setProperty("description", description);
     recipe.setProperty("tags", tags);
     recipe.setProperty("ingredients", ingredients);
+    recipe.setProperty("equipment", equipment);
     recipe.setProperty("steps", steps);
     recipe.setProperty("search-strings", new ArrayList<String>(searchStrings));
     recipe.setProperty("timestamp", timestamp);
@@ -122,16 +126,34 @@ public class NewRecipeServlet extends HttpServlet {
     return parameters;
   }
 
+  private Collection<EmbeddedEntity> getIngredients(HttpServletRequest request, Collection<String> searchStrings) {
+    Collection<EmbeddedEntity> parameters = new LinkedList<>();
+    int parameterNum = 0;
+    String parameterName = "ingredient" + parameterNum;
+    String[] parameterValues = request.getParameterValues(parameterName);
+    System.out.println(parameterValues.length);
+
+    // In the HTML form, parameters are named as [field name][index], ie step0.
+    // This loop increments the index of the parameter's name, exiting once it reaches an index for which there is no parameter.
+    while (parameterValues != null) {
+      addToSearchStrings(searchStrings, parameterValues[2]);
+      EmbeddedEntity parameterEntity = new EmbeddedEntity();
+      parameterEntity.setProperty("amount", parameterValues[0]);
+      parameterEntity.setProperty("unit", parameterValues[1]);
+      parameterEntity.setProperty("ingredient", parameterValues[2]);
+      parameters.add(parameterEntity);
+
+      parameterName = "ingredient" + (++parameterNum);
+      parameterValues = request.getParameterValues(parameterName);
+    }
+    return parameters;
+  }
+
   /** Adds a formatted search string to the set of search strings. */
   private void addToSearchStrings(Collection<String> searchStrings, String stringToAdd) {
     if (searchStrings == null) {
       return;
     }
     searchStrings.add(stringToAdd.toUpperCase());
-  }
-
-  private String convertToJsonUsingGson(Recipe recipe) {
-    Gson gson = new Gson();
-    return gson.toJson(recipe);
   }
 }

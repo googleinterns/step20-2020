@@ -92,7 +92,7 @@ public final class UserServlet extends HttpServlet {
     // Get properties that don't come from the request.
     String id = userService.getCurrentUser().getUserId();
     String email = userService.getCurrentUser().getEmail();
-    String profilePicKey = getUploadedFileBlobKey(request, "profile-pic");
+    String profilePicKey = BlobServlet.getUploadedFileBlobKey(request, "profile-pic");
 
     // Get properties from the request.
     Map<String, String[]> parameterMap = request.getParameterMap();
@@ -129,29 +129,5 @@ public final class UserServlet extends HttpServlet {
     // Store the user in Datastore.
     datastore.put(finalUser);
     response.sendRedirect(redirectUrl);
-  }
-
-  // Returns the String representation of the BlobKey of the uploaded file, or null if the user didn't upload a file.
-  private String getUploadedFileBlobKey(HttpServletRequest request, String formInputElementName) {
-    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-    Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
-    List<BlobKey> blobKeys = blobs.get(formInputElementName);
-
-    // User submitted form without selecting a file, so we can't get a URL. (dev server)
-    if (blobKeys == null || blobKeys.isEmpty()) {
-      return null;
-    }
-
-    // Our form only contains a single file input, so get the first index.
-    BlobKey blobKey = blobKeys.get(0);
-
-    // User submitted form without selecting a file, so we can't get a URL. (live server)
-    BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
-    if (blobInfo.getSize() == 0) {
-      blobstoreService.delete(blobKey);
-      return null;
-    }
-
-  return blobKey.getKeyString();
   }
 }
