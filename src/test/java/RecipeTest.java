@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Arrays;
-import java.util.HashSet;
 import shef.data.Recipe;
 import shef.data.SpinOff;
 import shef.data.Step;
@@ -200,6 +199,7 @@ public final class RecipeTest {
     recipe.removeStep(-10);
   }
 
+
   @Test
   public void addTag() {
     Set<String> expected = new HashSet<>(Arrays.asList("grilledcheese", "quick", "cheese"));
@@ -254,7 +254,7 @@ public final class RecipeTest {
   public void removeSpinOff() {
     Set<SpinOff> expected = new HashSet<SpinOff>();
     
-    //The SpinOff constructor automatically adds the SpinOff to the recipe's list.
+    // The SpinOff constructor automatically adds the SpinOff to the recipe's list.
     SpinOff spinOff = new SpinOff(recipe);
     recipe.removeSpinOff(spinOff);
     Assert.assertEquals(expected, recipe.getSpinOffs());

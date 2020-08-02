@@ -19,8 +19,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -35,16 +33,13 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.LinkedHashSet;
 import shef.data.Recipe;
 import shef.data.Step;
 
-/** POST adds new recipes to Datastore, and GET returns a Recipe to the client to create a spin-off from. */
 @WebServlet("/new-recipe")
 public class NewRecipeServlet extends HttpServlet {
 
   private DatastoreService datastore;
-  private UserService userService;
   private final String TAG = "tag";
   private final String INGREDIENT = "ingredient";
   private final String STEP = "step";
@@ -52,15 +47,9 @@ public class NewRecipeServlet extends HttpServlet {
   @Override
   public void init() {
     datastore = DatastoreServiceFactory.getDatastoreService();
-    userService = UserServiceFactory.getUserService();
   }
 
-  /*
-   * When a spin-off is created, this GET method gets the original recipe's data.
-   * stringToKey() may throw an IllegalArgumentException if keyString is not a parsable string.
-   * datastore.get() may throw an EntityNotFoundException if no entity exists for the given key.
-   * Both exceptions result in the same behavior: no response from the servlet.
-   */
+  /** When a spin-off is created, this GET request gets the original recipe's data. */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String keyString = request.getParameter("key");
@@ -69,21 +58,14 @@ public class NewRecipeServlet extends HttpServlet {
       recipeEntity = datastore.get(KeyFactory.stringToKey(keyString));
     } catch (Exception e) {
       e.printStackTrace();
-      response.setStatus(response.SC_NO_CONTENT);
       return;
     }
-    Recipe original = entityToRecipe(recipeEntity);
+    Recipe original = new Recipe(recipeEntity);
     response.setContentType("application/json;");
-    Gson gson = new Gson();
-    response.getWriter().println(gson.toJson(original));  
+    response.getWriter().println(convertToJsonUsingGson(original));  
   }
 
-  /**
-   * Posts a new recipe or spin-off to Datastore.
-   * Each POST request contains a recipe name, description, and lists of tags, ingredients, and steps.
-   * Because the number of tags, ingredients, and steps can vary from recipe to recipe,
-   * the method getParameters() is used to ensure that all of each are retrieved for each new recipe.
-   */
+  /** Posts a new recipe to the servlet. */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Collection<String> searchStrings = new HashSet<>();
@@ -93,6 +75,12 @@ public class NewRecipeServlet extends HttpServlet {
     Collection<EmbeddedEntity> tags = getParameters(request, TAG, searchStrings);
     Collection<EmbeddedEntity> ingredients = getParameters(request, INGREDIENT, searchStrings);
     Collection<EmbeddedEntity> steps = getParameters(request, STEP, null);
+    int likes;
+    try {
+      likes = Integer.parseInt(request.getParameter("likes"));
+    } catch (NumberFormatException e) {
+      likes = 0;
+    }
     long timestamp = System.currentTimeMillis();
 
     Entity recipe = new Entity("Recipe");
@@ -104,17 +92,10 @@ public class NewRecipeServlet extends HttpServlet {
     recipe.setProperty("search-strings", new ArrayList<String>(searchStrings));
     recipe.setProperty("has-live-stream", false); // A newly created recipe does not have an associated live stream.
     recipe.setProperty("timestamp", timestamp);
-    // Temporary if statement, can be removed once user service is fully integrated with recipe creation.
-    // Without this if statement for the time being, the servlet crashes.
-    if (userService != null && userService.getCurrentUser() != null) {
-      String id = userService.getCurrentUser().getUserId();
-      Key userKey = KeyFactory.createKey("User", id);
-      String userKeyString = KeyFactory.keyToString(userKey);
-      recipe.setProperty("user", userKeyString);
-    }
+    recipe.setProperty("likes", likes);
     datastore.put(recipe);
 
-    response.sendRedirect("/edit-recipe.html");
+    response.sendRedirect("/recipe.html");
   }
 
   /**
@@ -142,12 +123,7 @@ public class NewRecipeServlet extends HttpServlet {
     return parameters;
   }
 
-  /**
-   * Adds a formatted search string to the set of search strings.
-   * Search strings include a recipe's name, tags, and ingredients, all in upper-case.
-   * @param searchStrings The set of search strings to add to, or null if the string shouldn't be added.
-   * @param stringToAdd The string to be added.
-   */
+  /** Adds a formatted search string to the set of search strings. */
   private void addToSearchStrings(Collection<String> searchStrings, String stringToAdd) {
     if (searchStrings == null) {
       return;
@@ -155,6 +131,7 @@ public class NewRecipeServlet extends HttpServlet {
     searchStrings.add(stringToAdd.toUpperCase());
   }
 
+<<<<<<< HEAD
   /** Converts a Datastore entity into a Recipe. */
   private Recipe entityToRecipe(Entity recipeEntity) {
     String name = (String) recipeEntity.getProperty("name");
@@ -175,5 +152,10 @@ public class NewRecipeServlet extends HttpServlet {
       dataAsList.add(property.getProperty(field));
     }
     return dataAsList;
+=======
+  private String convertToJsonUsingGson(Recipe recipe) {
+    Gson gson = new Gson();
+    return gson.toJson(recipe);
+>>>>>>> origin/master
   }
 }

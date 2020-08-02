@@ -129,6 +129,12 @@ function getResults(param) {
   });
 }
 
+/** Gets the ID of the YouTube video that the user inputs. */
+function getId() {
+  const liveStreamLink = document.getElementById('live-stream-link').value;
+  return getIdFromUrl(liveStreamLink);
+}
+
 /** Fetches live streams from the server and adds them to the DOM. */
 function loadLiveStreams() {
   // rowVars used to dynamically name divs of class row.
@@ -180,7 +186,12 @@ function createLiveStreamElement(liveStream) {
     Will work only for a URL of a certain format
     (i.e. youtube.com/watch?v=). */
 function getIdFromUrl(url) {
-  return url.substring(url.lastIndexOf('=') + 1);
+  if (url.includes('&')) {
+    let searchParams = new URLSearchParams(url);
+    return searchParams.get("v");
+  } else {
+    return url.substring(url.lastIndexOf('=') + 1);
+  }
 }
 
 /** Gets the ID of the YouTube video that the user inputs. */
@@ -928,7 +939,6 @@ gapi.load("client:auth2", function() {
 });
 
 /** Calendar */
-
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 
@@ -1321,18 +1331,27 @@ function shareViaGmail() {
 
 /** @class A custom element that represents a parameter input. */
 class ParameterInput extends HTMLElement {
+  static placeholders = {
+    'Tag': 'Enter a tag...',
+    'Ingredient': 'Enter an ingredient...',
+    'Equipment': 'Enter a kitchen tool...',
+    'Step': 'Enter a step...'
+  }
+
   constructor() {
     super();
     this.label = document.createElement('label');
     this.textArea = document.createElement('textarea');
-    this.addButton = document.createElement('button');
-    this.deleteButton = document.createElement('button');
+    this.addButton = document.getElementsByTagName('template')[0].content.querySelector('span').cloneNode(true);
+    this.deleteButton = document.getElementsByTagName('template')[1].content.querySelector('span').cloneNode(true);
     this.container = document.createElement('div');
 
     this.container.appendChild(this.label);
+    this.container.appendChild(document.createElement('br'));
     this.container.appendChild(this.textArea);
     this.container.appendChild(this.addButton);
     this.container.appendChild(this.deleteButton);
+    //this.container.appendChild(document.createElement('br'));
   }
 
   /** Once the attributes for the ParameterInput exist, set its values accordingly. */
@@ -1342,10 +1361,8 @@ class ParameterInput extends HTMLElement {
     this.parent = this.name + 's';
 
     this.textArea.rows = '1';
-    this.addButton.type = 'button';
-    this.addButton.innerText = 'Add ' + this.name;
-    this.deleteButton.type = 'button';
-    this.deleteButton.innerText = 'Delete ' + this.name;
+    this.textArea.cols = '75';
+    this.textArea.placeholder = ParameterInput.placeholders[this.name];
     this.setIndexAttributes();
 
     this.appendChild(this.container);
@@ -1367,7 +1384,7 @@ class ParameterInput extends HTMLElement {
     this.addButton.onclick = event => {
       var newParameter = createParameterInput(this.name, this.index + 1);
       insertParameterInput(this, newParameter);
-    }
+    };
 
     // Deletes the ParameterInput clicked.
     this.deleteButton.onclick = event => {
@@ -1375,7 +1392,7 @@ class ParameterInput extends HTMLElement {
       const startIndex = this.index;
       this.remove();
       updateIndices(fieldName, startIndex);
-    }
+    };
   }
 
   /** Gets the text in a ParameterInput's text area. */
@@ -1484,6 +1501,7 @@ function populateRecipeCreationForm(recipe) {
   populateFormField('Step', recipe.steps);
 }
 
+/** Populates the ParamterInputs in a field with a parent recipe's data. */
 function populateFormField(fieldName, data) {
   for (var i = 0; i < data.length; i++) {
     var parameter = document.getElementById(fieldName + i);
@@ -1495,6 +1513,49 @@ function populateFormField(fieldName, data) {
       appendParameterInput(fieldName + 's', newParameter);
     }
   }
+}
+
+/** Gets the text of a tag, ingredient, or step. */
+function getText(data) {
+  if (typeof data == 'string') {
+    return data;
+  } else {
+    return data.instruction;
+  }
+}
+
+/**
+ * Gets recipes for browsing, based on the algorithm provided.
+ * For You displays recipes unique to each user's preferences.
+ * Trending displays the recipes that are most popular. */
+function getRecipes(algorithm) {
+  const results = document.getElementById('results');
+  results.innerHTML = '';
+  fetch('/browse-recipes?algorithm=' + algorithm).then(response => response.json()).then((recipes) => {
+    for (var i = 0; i < recipes.length; i++) {
+      results.appendChild(createRecipeForBrowsing(recipes[i]));
+      results.appendChild(document.createElement('br'));
+    }
+  });
+}
+
+/** Helper method that creates a DOM element to display a recipe. */
+function createRecipeForBrowsing(recipe) {
+  const container = document.createElement('div');
+  container.id = 'recipe';
+  container.style.border = 'thick solid #000';
+  container.style.width = '30%';
+  container.style.backgroundColor = '#ccc'
+
+  const name = document.createElement('h2');
+  name.innerText = recipe.name;
+
+  const description = document.createElement('p');
+  description.innerText = recipe.description;
+
+  container.appendChild(name);
+  container.appendChild(description);
+  return container;
 }
 
 /** Called by every page that requires the user to be logged in order to access. */
