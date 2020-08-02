@@ -14,12 +14,16 @@
 
 package shef.data;
 
+import com.google.appengine.api.datastore.EmbeddedEntity;
+
 public class Ingredient {
 
   public Ingredient() {
     
   }
+  
+  public Ingredient(EmbeddedEntity entity) {
 
-
+  }
 
 }

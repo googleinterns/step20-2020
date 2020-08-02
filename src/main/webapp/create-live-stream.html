@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="css/style.css"/>
+    <script src="script.js"></script>
+    <title>shef</title>
+  </head>
+ 
+  <body>
+    <button onclick="authenticate().then(loadClient)">Authorize</button>
+
+    <form method="POST" action="/new-live-stream" class="form-group">
+      <h4>1.</h4>
+      <div class="form-group">
+        <label for="recipe-selection">Recipe associated with live stream:</label>
+        <select multiple class="form-control" id="recipe-selection-input" name="recipe-selection">
+          <option>Recipe 1</option>
+          <option>Recipe 2</option>
+          <option>Recipe 3</option>
+        </select>
+      </div>
+      <h4>2.</h4>
+      <label for="live-stream-link">Link to your live stream:</label>
+      <input type="url" id="live-stream-link" name="live-stream-link">
+    </form>
+
+    <button onclick="execute(getId())">Submit</button>
+  </body>
+</html>
