@@ -27,13 +27,14 @@ THE SOFTWARE.-->
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="css/style.css"/>
     <script src="script.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <link rel="stylesheet" href="css/style.css"/>
+
     <title>shef</title>
   </head>
 
-  <body class="page-container" onload="protectPage(); fetchBlobstoreUrl();">
+  <body class="page-container" onload="getSignInLink(); signInFailMessage();">
     <!--Nav bar-->
     <div id="nav-placeholder"></div>
     <script>
@@ -42,32 +43,22 @@ THE SOFTWARE.-->
       });
     </script>
 
-    <div class="jumbotron-header signup">
-        <h1 class="display-4">And so your story begins...</h1>
-        <p class="lead">Let's get to know you, culinary adventurer.</p>
+    <div class="tab-guide">
+        <ul class="list-inline">
+          <li class="list-inline-item-active">Sign In</li>
+          <li class="list-inline-item"><a href="sign-up.html">Sign Up</a></li>
+        </ul>
     </div>
 
-    <img src="assets/images/delivery.svg" class="large-img" alt="">
-
-    <div class="jumbotron-short">
-    <form id="user-form" method="POST" enctype="multipart/form-data">
-      <label for="username" class="label">User Name:</label>
-      <textarea class="form-control" id="username" name="username" rows="1" cols="25" required></textarea>
-      <br>
-      <label for="location" class="label">Location:</label>
-      <textarea class="form-control" id="location" name="location" rows="1" cols="25"></textarea>
-      <br>
-      <div>
-        <label for="profile-pic" class="label">Upload an Profile Picture:</label>
-        <input class="form-control-file" id="profile-pic" type="file" name="profile-pic" required></input>
-      </div>
-      <br>
-      <label for="bio" class="label">Enter a Short Description of Yourself:</label>
-      <textarea class="form-control" id="bio" name="bio" rows="1" cols="25"></textarea>
-      <br>
-      <input type="submit" />
-    </form>
+    <div class="jumbotron">
+        <h1 id="normal-title" class="display-4">Oh, we didn't realize it was you!</h1>
+        <p id="normal-message" class="lead">Sorry about that - please, let us introduce you to some recipes to make up for our mishap.</p>
+        <p id="fail-message" class="lead text-danger d-none">Failed to sign in: Shef account does not exist.</p>
+        <hr class="my-4">
+        <a id="sign-in-button-big" class="btn btn-primary btn-lg" role="button">Sign in with Google</a>
     </div>
+
+    <img src="assets/images/jenga.svg" class="large-img" alt="">
 
     <!-- Optional JavaScript -->
     <!-- First Popper.js, then Bootstrap JS -->

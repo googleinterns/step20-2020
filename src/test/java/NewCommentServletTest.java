@@ -11,24 +11,28 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
- 
-package shef.data;
 
-import java.util.ArrayList;
+import shef.servlets.NewCommentServlet;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import java.util.LinkedList;
 import java.util.List;
- 
-/** A recipe, with recipe info used for search. */
-public class TestRecipe {
-  long id;
-  List<String> searchStrings;
-  long timestamp;
- 
- /**
-  * @param id The entity's id.
-  */
-  public TestRecipe(long id, ArrayList<String> searchStrings, long timestamp) {
-    this.id = id;
-    this.searchStrings = searchStrings;
-    this.timestamp = timestamp;
+import java.util.Arrays;
+
+/** Tests for NewCommentServlet. */
+@RunWith(JUnit4.class)
+public class NewCommentServletTest {
+
+  @Test
+  public void timestampToMMDDYYYYTest() {
+    long timestamp = 1595263347000L;
+    String expectedMMDDYYYY = "07/20/2020";
+
+    String actualMMDDYYYY = NewCommentServlet.timestampToMMDDYYYY(timestamp);
+
+    Assert.assertEquals(expectedMMDDYYYY, actualMMDDYYYY);
   }
-}  
+}

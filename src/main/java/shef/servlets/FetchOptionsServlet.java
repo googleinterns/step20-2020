@@ -13,11 +13,13 @@
 // limitations under the License.
  
 package shef.servlets;
- 
+
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import com.google.sps.data.TestRecipe;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import shef.data.TestRecipe;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -31,9 +33,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
-/** Servlet responsible for displaying recipes. */
-@WebServlet("/display-recipes")
-public class TestDisplayRecipesServlet extends HttpServlet {
+/** Servlet responsible for fetching all possible search options,
+    based on existing recipes in Datastore (i.e. recipes on Shef). */
+@WebServlet("/fetch-options")
+public class FetchOptionsServlet extends HttpServlet {
  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -42,19 +45,22 @@ public class TestDisplayRecipesServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
  
-    List<TestRecipe> testRecipes = new LinkedList<>();
+    Set<String> allOptions = new HashSet<>();
     for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
-      ArrayList<String> searchStrings = (ArrayList<String>) entity.getProperty("search-strings");
-      long timestamp = (long) entity.getProperty("timestamp");
- 
-      TestRecipe testRecipe = new TestRecipe(id, searchStrings, timestamp);
-      testRecipes.add(testRecipe);
+      ArrayList<String> options = (ArrayList<String>) entity.getProperty("search-strings");
+       allOptions.addAll(options);
     }
+    allOptions = titleCaseItems(allOptions);
  
     Gson gson = new Gson();
- 
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(testRecipes));
+    response.getWriter().println(gson.toJson(allOptions));
+  }
+
+  /** Title cases all strings in the given array, returning a new array
+      with the modified strings. */
+  public static Set<String> titleCaseItems(Set<String> set) {
+    return set.stream().map(str -> str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase())
+                        .collect(Collectors.toSet()); 
   }
 }

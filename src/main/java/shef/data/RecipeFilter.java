@@ -14,26 +14,20 @@
 
 package shef.data;
 
-public class Step {
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.CompositeFilter;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.PreparedQuery;
 
-  private String instruction;
+public interface RecipeFilter {
 
-  public Step(String instruction) {
-    this.instruction = instruction;
-  }
+  /** Returns a PreparedQuery of filtered Recipe entities. */
+  public PreparedQuery getResults(Query query);
 
-  public String getInstruction() {
-    return instruction;
-  }
+  /** Helper method that adds a filter to the composite filter. */
+  public Filter addFilter(CompositeFilter filters);
 
-  @Override
-  public String toString() {
-    return instruction;
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    return other instanceof Step && instruction.equals(((Step) other).getInstruction());
-  }
-
+  /** Retrieves additional data from Datastore to be used in the filter. */
+  public PreparedQuery getData(Query query);
+  
 }
