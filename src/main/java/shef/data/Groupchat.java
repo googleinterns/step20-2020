@@ -22,6 +22,12 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import java.util.ArrayList;
 
+/**
+ * A wrapper class for Groupchat entities in Datastore.
+ * Groupchat objects hold references to their corresponding Datastore entities and provide methods that
+ *     update both the Groupchat object and entity.
+ * This ensures that Groupchat data is consistent between servlets and Datastore.
+ */
 public class Groupchat {
 
   private ArrayList<String> messages;
