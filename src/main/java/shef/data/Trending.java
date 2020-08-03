@@ -23,6 +23,7 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.PreparedQuery;
+import java.util.List;
 
 /** 
  * Returns recipes that are currently popular.
@@ -49,7 +50,7 @@ public class Trending implements RecipeFilter {
   }
 
   /** Retrieves additional data from Datastore to be used in the filter. */
-  public PreparedQuery getData(Query query) {
+  public List<String> getUserData() {
     throw new UnsupportedOperationException();
   }  
 }

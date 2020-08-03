@@ -35,6 +35,7 @@ public class ForYou implements RecipeFilter {
 
   private DatastoreService datastore;
   private static final List<String> TEMP_PREFERENCES = new ArrayList<>(Arrays.asList("SPICY", "CHICKEN", "CHOCOLATE"));
+  private List<String> preferences;
   private Set<Filter> filters;
 
   public ForYou() {
@@ -47,19 +48,15 @@ public class ForYou implements RecipeFilter {
    * For now, returns recipes that match SPICY, CHICKEN, and CHOCOLATE, or that have more than 50 likes.
    * This is just a hard-coded example, and will change. */
   public PreparedQuery getResults(Query query) {
+    preferences = getUserPreferences();
     filters.add(new FilterPredicate("search-strings", FilterOperator.IN, TEMP_PREFERENCES));
     filters.add(new FilterPredicate("likes", FilterOperator.GREATER_THAN_OR_EQUAL, 50));
     query.setFilter(new CompositeFilter(CompositeFilterOperator.OR, filters));
     return datastore.prepare(query);
   }
 
-  /** Helper method that adds a filter to the composite filter. */
-  public Filter addFilter(CompositeFilter filters) {
-    throw new UnsupportedOperationException();
-  }
-
   /** Retrieves additional data from Datastore to be used in the filter. */
-  public PreparedQuery getData(Query query) {
+  public List<String> getUserData() {
     throw new UnsupportedOperationException();
   }  
 }

@@ -18,16 +18,14 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.CompositeFilter;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.PreparedQuery;
+import java.util.List;
 
 public interface RecipeFilter {
 
   /** Returns a PreparedQuery of filtered Recipe entities. */
   public PreparedQuery getResults(Query query);
 
-  /** Helper method that adds a filter to the composite filter. */
-  public Filter addFilter(CompositeFilter filters);
-
-  /** Retrieves additional data from Datastore to be used in the filter. */
-  public PreparedQuery getData(Query query);
+  /** Retrieves user data from Datastore to be used in the filter. */
+  public List<String> getUserData();
   
 }
