@@ -14,7 +14,6 @@
 
 package shef.data;
 
-import javax.servlet.http.HttpServletRequest;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Query;
@@ -23,6 +22,7 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.PreparedQuery;
+import java.util.List;
 
 /** 
  * Returns recipes that are currently popular.
@@ -43,13 +43,8 @@ public class Trending implements RecipeFilter {
     return datastore.prepare(query);
   }
 
-  /** Helper method that adds a filter to the composite filter. */
-  public Filter addFilter(CompositeFilter filters) {
-    throw new UnsupportedOperationException();
-  }
-
   /** Retrieves additional data from Datastore to be used in the filter. */
-  public PreparedQuery getData(Query query) {
+  public List<String> getUserData() {
     throw new UnsupportedOperationException();
   }  
 }

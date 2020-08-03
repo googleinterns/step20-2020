@@ -16,30 +16,29 @@ package shef.data;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import javax.servlet.http.HttpServletRequest;
 import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.CompositeFilter;
-import com.google.appengine.api.datastore.Query.CompositeFilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Arrays;
 
 /** Defines the For You algorithm, which shows users recipes unique to their preferences. */
 public class ForYou implements RecipeFilter {
 
   private DatastoreService datastore;
-  private static final List<String> TEMP_PREFERENCES = new ArrayList<>(Arrays.asList("SPICY", "CHICKEN", "CHOCOLATE"));
-  private Set<Filter> filters;
+  private UserService userService;
+  private List<String> preferences;
 
   public ForYou() {
     datastore = DatastoreServiceFactory.getDatastoreService();
-    filters = new HashSet<>();
+    userService = UserServiceFactory.getUserService();
   }
 
   /** 
@@ -47,19 +46,26 @@ public class ForYou implements RecipeFilter {
    * For now, returns recipes that match SPICY, CHICKEN, and CHOCOLATE, or that have more than 50 likes.
    * This is just a hard-coded example, and will change. */
   public PreparedQuery getResults(Query query) {
-    filters.add(new FilterPredicate("search-strings", FilterOperator.IN, TEMP_PREFERENCES));
-    filters.add(new FilterPredicate("likes", FilterOperator.GREATER_THAN_OR_EQUAL, 50));
-    query.setFilter(new CompositeFilter(CompositeFilterOperator.OR, filters));
+    preferences = getUserData();
+    if (preferences == null) {
+      // If the user cannot be found, return null.
+      return null;
+    }
+    query.setFilter(new FilterPredicate("search-strings", FilterOperator.IN, preferences));
     return datastore.prepare(query);
   }
 
-  /** Helper method that adds a filter to the composite filter. */
-  public Filter addFilter(CompositeFilter filters) {
-    throw new UnsupportedOperationException();
-  }
-
   /** Retrieves additional data from Datastore to be used in the filter. */
-  public PreparedQuery getData(Query query) {
-    throw new UnsupportedOperationException();
+  public List<String> getUserData() {
+    Entity user;
+    try {
+      user = datastore.get(KeyFactory.createKey("User", userService.getCurrentUser().getUserId()));
+    } catch(Exception e) {
+      // User could not be found. In this case, return null, which will cause the servlet to return trending recipes.
+      e.printStackTrace();
+      return null;
+    }
+    List<String> userPreferences = (List<String>) user.getProperty("preferences");
+    return userPreferences;
   }  
 }
