@@ -38,3 +38,33 @@ function createCommentElement(comment) {
 function addParagraph(content) {
   return "<p>" + content + "</p>";
 }
+
+function newGroupchat() {
+  const request = new Request("/load-groupchat", {method: 'POST'});
+  fetch(request).then(response => response.text()).then((key) => {
+    redirectToGroupchat(key);
+  });
+}
+
+function loadGroupchat() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const key = urlParams.get('key');
+  fetch('/load-groupchat?key=' + key).then(response => response.json())
+    .catch(error => {
+      alert('Error: Groupchat does not exist');
+      window.location.href = 'index.html';
+    }).then((messages) => {
+      const messageContainer = document.getElementById('messages');
+      messageContainer.innerHTML = '';
+      for (var i = 0; i < messages.length; i++) {
+        const message = document.createElement('p');
+        message.innerText = messages[i];
+        messageContainer.appendChild(message);
+      }
+  });
+}
+
+function redirectToGroupchat(keyParameter) {
+  const key = keyParameter ? keyParameter : document.getElementById('groupchat-key').value;
+  window.location.href = "/groupchat.html?key=" + key;
+}
