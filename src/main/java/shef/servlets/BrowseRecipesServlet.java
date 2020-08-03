@@ -59,6 +59,10 @@ public class BrowseRecipesServlet extends HttpServlet  {
 
     Query query = new Query("Recipe");
     PreparedQuery recipeEntities = filter.getResults(query);
+
+    // If the filter returns null, an error has occurred with UserService.
+    // In this case, show trending recipes.
+    recipeEntities = recipeEntities != null ? recipeEntities : new Trending().getResults(query);
     List<Recipe> recipes = new LinkedList<>();
 
     for (Entity recipeEntity : recipeEntities.asIterable()) {

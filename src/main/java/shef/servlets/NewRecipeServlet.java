@@ -94,7 +94,7 @@ public class NewRecipeServlet extends HttpServlet {
     recipe.setProperty("likes", likes);
     datastore.put(recipe);
 
-    response.sendRedirect("/recipe.html");
+    response.sendRedirect("/recipe.html?key=" + KeyFactory.keyToString(recipe.getKey()));
   }
 
   /**
