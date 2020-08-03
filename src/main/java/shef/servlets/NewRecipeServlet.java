@@ -42,6 +42,7 @@ public class NewRecipeServlet extends HttpServlet {
   private DatastoreService datastore;
   private final String TAG = "tag";
   private final String INGREDIENT = "ingredient";
+  private final String EQUIPMENT = "equipment";
   private final String STEP = "step";
 
   @Override
@@ -71,25 +72,38 @@ public class NewRecipeServlet extends HttpServlet {
     Collection<String> searchStrings = new HashSet<>();
     String name = request.getParameter("name");
     searchStrings.add(name.toUpperCase());
+    double time = Double.parseDouble(request.getParameter("time"));
+    double servings = Double.parseDouble(request.getParameter("servings"));
+    String imageKey = BlobServlet.getUploadedFileBlobKey(request, "image");
     String description = request.getParameter("description");
     Collection<EmbeddedEntity> tags = getParameters(request, TAG, searchStrings);
     Collection<EmbeddedEntity> ingredients = getParameters(request, INGREDIENT, searchStrings);
+    Collection<EmbeddedEntity> equipment = getParameters(request, EQUIPMENT, null);
     Collection<EmbeddedEntity> steps = getParameters(request, STEP, null);
-    int likes = Integer.parseInt(request.getParameter("likes"));
+    int likes;
+    try {
+      likes = Integer.parseInt(request.getParameter("likes"));
+    } catch (NumberFormatException e) {
+      likes = 0;
+    }
     long timestamp = System.currentTimeMillis();
 
     Entity recipe = new Entity("Recipe");
     recipe.setProperty("name", name);
+    recipe.setProperty("time", time);
+    recipe.setProperty("servings", servings);
+    recipe.setProperty("imageKey", imageKey);
     recipe.setProperty("description", description);
     recipe.setProperty("tags", tags);
     recipe.setProperty("ingredients", ingredients);
+    recipe.setProperty("equipment", equipment);
     recipe.setProperty("steps", steps);
     recipe.setProperty("search-strings", new ArrayList<String>(searchStrings));
     recipe.setProperty("timestamp", timestamp);
     recipe.setProperty("likes", likes);
     datastore.put(recipe);
 
-    response.sendRedirect("/edit-recipe.html");
+    response.sendRedirect("/recipe.html");
   }
 
   /**

@@ -11484,6 +11484,12 @@ p {
   font-size: 1.25rem;
 }
 
+parameter-input {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0 15px 0;
+}
+
 .display-4 {
   font-weight: bold;
 }
