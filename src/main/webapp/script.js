@@ -1217,12 +1217,25 @@ function redirectToResults(userQuery) {
 
 /** Fetches results from the server and adds them to the DOM. */
 function getResults(param) {
+  // rowVars used to dynamically name divs of class row, for up to 3 recipes.
+  var rowVars = {};
+  let resultCount = 0;
+  let rowCount = 0;
   var userQuery = getURLParamVal(param);
   // Search string is in all caps, so the userQuery should also be in all caps for querying purposes.
   fetch('/results?user-query=' + userQuery.toUpperCase()).then(response => response.json()).then((results) => {
+    console.log('/results?user-query=' + userQuery.toUpperCase());
     const resultListElement = document.getElementById('result-list');
     results.forEach((result) => {
-      resultListElement.appendChild(createResultElement(result));
+      // Every three live streams, create a new row.
+      if (resultCount % 3 == 0) {
+        rowCount++;
+        rowVars['recipeRow' + rowCount] = document.createElement('div');
+        rowVars['recipeRow' + rowCount].className = "row";
+      }
+      rowVars['recipeRow' + rowCount].appendChild(createFeedElement(result));
+      resultListElement.appendChild(rowVars['recipeRow' + rowCount]);
+      resultCount++;
     })
   });
 }

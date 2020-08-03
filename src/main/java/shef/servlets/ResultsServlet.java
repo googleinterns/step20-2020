@@ -14,11 +14,11 @@
 
 package shef.servlets;
 
+import shef.data.Recipe;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import shef.data.TestRecipe;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -50,14 +50,9 @@ public class ResultsServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    List<TestRecipe> testRecipes = new LinkedList<>();
+    List<Recipe> recipes = new LinkedList<>();
     for (Entity entity : results.asIterable()) {
-      long id = entity.getKey().getId();
-      ArrayList<String> searchStrings = (ArrayList<String>) entity.getProperty("search-strings");
-      long timestamp = (long) entity.getProperty("timestamp");
-
-      TestRecipe testRecipe = new TestRecipe(id, searchStrings, timestamp);
-      testRecipes.add(testRecipe);
+      recipes.add(new Recipe(entity));
     }
     
     Gson gson = new Gson();
@@ -65,7 +60,7 @@ public class ResultsServlet extends HttpServlet {
     // Max-age: Keep the response cached for 10 minutes.
     response.setHeader("Cache-Control", "max-age=600"); // HTTP 1.1.
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(testRecipes));
+    response.getWriter().println(gson.toJson(recipes));
   }
 
   public static String[] formatQueryAsList(String query) {
@@ -74,7 +69,7 @@ public class ResultsServlet extends HttpServlet {
     // The latter of which requires queries to be trimmed.
     // The search-strings we are querying are in all caps - 
     // in order to match results, query must also be in all upper case.
-    query = query.replace(",", " ").toUpperCase();
+    query = query.replace(",", " ").replace("\"", "").toUpperCase();
     return (String[]) query.split("\\s+");
   }
 
