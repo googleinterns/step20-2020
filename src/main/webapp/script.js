@@ -782,12 +782,16 @@ const units = {
   },
 }
 
-function scaleRecipe(factor) {
+/** Scales the serving size and amount of each ingredient. */
+function scaleRecipe(newValue) {
+  const scaleElement = document.getElementById('scale');
+  const factor = newValue / scaleElement.dataset.previous;
   document.getElementById('servingsInput').value *= factor;
   var ingredients = document.getElementById('Ingredients').children;
   for (var i = 0; i < ingredients.length; i++) {
     ingredients[i].amount *= factor;
   }
+  scaleElement.dataset.previous = newValue;
 }
 
 /**
