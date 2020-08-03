@@ -896,9 +896,10 @@ function recipePageInit() {
 
 function getRecipeInfo() {
   var url = window.location.href;
-  var key = url.split('?')[1];
+  var key = url.split('=')[1];
+  console.log(key);
 
-  fetch('/new-recipe?' + key).then(response => response.json()).then(recipe => {
+  fetch('/new-recipe?key=' + key).then(response => response.json()).then(recipe => {
     document.getElementById('recipe-title').innerHTML = recipe.name;
     document.getElementById('recipe-description').innerHTML = recipe.description;
     displayTags(recipe.tags);
