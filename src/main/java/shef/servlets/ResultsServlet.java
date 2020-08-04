@@ -44,7 +44,7 @@ public class ResultsServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String userQuery = request.getParameter("user-query");
-    Query query = new Query("Recipe").addSort("timestamp", SortDirection.DESCENDING);
+    Query query = new Query("Recipe");
     query.setFilter(generateFiltersFromQuery(formatQueryAsList(userQuery)));
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

@@ -44,7 +44,7 @@ public class DisplayCommentsServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("UserComment").addSort("timestamp", SortDirection.DESCENDING);
+    Query query = new Query("UserComment");
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);

@@ -62,7 +62,7 @@ public class NewCommentServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(userCommentEntity);
 
-    response.sendRedirect("/recipe.html");
+    response.sendRedirect("/recipe.html?key=" + recipeKeyString);
   }
 
  /**

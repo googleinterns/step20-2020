@@ -3,10 +3,22 @@ indexes:
 - kind: Recipe
   ancestor: no
   properties:
-  - name: name
-    direction: desc
+  - name: search-strings
+  - name: user
   - name: timestamp
     direction: desc
-  - name: search-strings
-    direction: desc
   
+- kind: UserComment
+  ancestor: no
+  properties:
+  - name: username
+  - name: comment
+  - name: timestamp
+    direction: desc
+
+- kind: LiveStream
+  ancestor: no
+  properties:
+  - name: recipe-key
+  - name: timestamp
+    direction: desc

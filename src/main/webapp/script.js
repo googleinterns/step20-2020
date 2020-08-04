@@ -113,7 +113,7 @@ function createCommentElement(comment) {
   var userInfoDisplayed = userProfile + " • " + comment.location + " • " + comment.MMDDYYYY;
   userComment.innerHTML += addParagraph(userInfoDisplayed) + addParagraph(comment.comment);
 
-  commentElement.appendChild(spanElement);
+  commentElement.appendChild(userComment);
   return commentElement;
 }
 
@@ -1337,7 +1337,7 @@ function refillDatalist(input, options, existingInput) {
 }
 
 function shareViaGmail() {
-  let msgbody = "Yum!";
+  let msgbody = "Yum! You should give this a try: " + window.location.href;
   let url = 'https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su=Check+out+this+recipe!&body='+msgbody+'&ui=2&tf=1&pli=1';
   window.open(url, 'sharer', 'toolbar=0,status=0,width=648,height=395');
 }
