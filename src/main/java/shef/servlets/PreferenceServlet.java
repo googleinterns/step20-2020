@@ -51,7 +51,7 @@ public class PreferenceServlet extends HttpServlet {
       put("student", Arrays.asList("CHEAP", "INEXPENSIVE", "EASY TO MAKE", "EASY", "SIMPLE", "QUICK", "QUICK TO MAKE"));
       put("influencer", Arrays.asList("DESSERT", "CAKE", "ICE CREAM"));
       put("parent", Arrays.asList("CHEAP", "INEXPENSIVE", "EASY TO MAKE", "EASY", "SIMPLE", "QUICK", "QUICK TO MAKE"));
-      put("adventurous", Arrays.asList("AFRICAN, AMERICAN, ASIAN, CARRIBEAN", "EASTERN EUROPEAN", "WESTERN EUROPEAN", "LATIN", "LATIN AMERICAN", "MEDITERRANEAN", "MIDDLE EASTERN", "SOUTH ASIAN"));
+      put("adventurous", Arrays.asList("AFRICAN, AMERICAN, ASIAN, CARIBBEAN", "EASTERN EUROPEAN", "WESTERN EUROPEAN", "LATIN", "LATIN AMERICAN", "MEDITERRANEAN", "MIDDLE EASTERN", "SOUTH ASIAN"));
       put("picky-eater", Arrays.asList("SIMPLE"));
       put("sweets-lover", Arrays.asList("SWEET", "CAKE", "COOKIES", "SUGARY", "DESSERT", "PIE", "ICE CREAM"));
       put("newbie", Arrays.asList("EASY TO MAKE", "EASY", "SIMPLE", "QUICK", "QUICK TO MAKE"));
@@ -74,7 +74,7 @@ public class PreferenceServlet extends HttpServlet {
       put("african", Arrays.asList("AFRICAN", "NIGERIAN", "ETHIOPIAN", "EGYPTIAN", "CONGOLESE", "TANZANIAN", "SOUTH AFRICAN", "KENYAN", "UGANDAN", "ALGERIAN", "SUDANESE"));
       put("american", Arrays.asList("AMERICAN"));
       put("asian", Arrays.asList("ASIAN", "CHINESE", "INDIAN", "INDONESIAN", "PAKISTANI", "BANGLADESHI", "JAPANESE", "PHILIPINO", "FILIPINO", "VIETNAMESE", "KOREAN", "THAI"));
-      put("carribean", Arrays.asList("CARRIBEAN", "CUBAN", "HAITIAN", "DOMINICAN", "PUERTO RICAN", "JAMAICAN", "TRINIDADIAN", "COSTA RICAN"));
+      put("caribbean", Arrays.asList("CARIBBEAN", "CUBAN", "HAITIAN", "DOMINICAN", "PUERTO RICAN", "JAMAICAN", "TRINIDADIAN", "COSTA RICAN"));
       put("eastern-european", Arrays.asList("EASTERN EUROPEAN", "RUSSIAN", "UKRANIAN", "BELARUSIAN", "SLAVIC", "POLISH", "ROMANIAN", "MOLDOVAN", "SERBIAN", "SLOVAKIAN", "CROATIAN"));
       put("western-european", Arrays.asList("WESTERN EUROPEAN", "GERMAN", "ENGLISH", "IRISH", "FRENCH", "SWISS", "BELGIAN", "DUTCH"));
       put("latin-american", Arrays.asList("LATIN", "LATIN AMERICAN", "MEXICAN", "BRAZILIAN", "COLOMBIAN", "ARGENTINIAN", "PERUVIAN", "VENEZUELAN", "CHILEAN", "ECUADORIAN", "BOLIVIAN"));

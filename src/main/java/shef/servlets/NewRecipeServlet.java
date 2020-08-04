@@ -107,7 +107,7 @@ public class NewRecipeServlet extends HttpServlet {
     }
     datastore.put(recipe);
 
-    response.sendRedirect("/recipe.html");
+    response.sendRedirect("/recipe.html?key=" + KeyFactory.keyToString(recipe.getKey()));
   }
 
   /**

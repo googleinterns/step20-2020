@@ -1,0 +1,12 @@
+indexes:
+
+- kind: Recipe
+  ancestor: no
+  properties:
+  - name: name
+    direction: desc
+  - name: timestamp
+    direction: desc
+  - name: search-strings
+    direction: desc
+  
