@@ -71,9 +71,8 @@ public class Recipe {
    */
   public Recipe(Map<String, String[]> parameterMap) {
     // First, store the parameter data in a Recipe object.
-    for (String name : parameterMap.keySet()) {
-      String[] values = parameterMap.get(name);
-      handleParameter(name, values);
+    for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+      handleParameter(entry.getKey(), entry.getValue());
     }
     // Then build a recipe entity that is ready to be saved in Datastore.
     this.entity = buildEntity();
