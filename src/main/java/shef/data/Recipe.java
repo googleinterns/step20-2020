@@ -67,7 +67,7 @@ public class Recipe {
 
   /**
    * Creates a recipe from a map of parameters. 
-   * This constructor allows servlets to cleanly create recipes by passing in an HTTPRequest's paramater map.
+   * This constructor allows servlets to cleanly create recipes by passing in an HTTPRequest's parameter map.
    */
   public Recipe(Map<String, String[]> parameterMap) {
     // First, store the parameter data in a Recipe object.
