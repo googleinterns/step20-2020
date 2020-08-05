@@ -22,28 +22,17 @@ import java.io.IOException;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.gson.Gson;
-import java.util.Collection;
-import java.util.List;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Map;
 import shef.data.Recipe;
-import shef.data.Step;
 
 @WebServlet("/new-recipe")
 public class NewRecipeServlet extends HttpServlet {
 
   private DatastoreService datastore;
-  private final String TAG = "tag";
-  private final String INGREDIENT = "ingredient";
-  private final String EQUIPMENT = "equipment";
-  private final String STEP = "step";
 
   @Override
   public void init() {
@@ -69,90 +58,10 @@ public class NewRecipeServlet extends HttpServlet {
   /** Posts a new recipe to the servlet. */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Collection<String> searchStrings = new HashSet<>();
-    String name = request.getParameter("name");
-    searchStrings.add(name.toUpperCase());
-    double time = request.getParameter("time").equals("") ? 0 : Double.parseDouble(request.getParameter("time"));
-    double servings = request.getParameter("servings").equals("") ? 0 : Double.parseDouble(request.getParameter("servings"));
-    String imageKey = BlobServlet.getUploadedFileBlobKey(request, "image");
-    String description = request.getParameter("description");
-    Collection<EmbeddedEntity> tags = getParameters(request, TAG, searchStrings);
-    Collection<EmbeddedEntity> ingredients = getIngredients(request, searchStrings);
-    Collection<EmbeddedEntity> equipment = getParameters(request, EQUIPMENT, null);
-    Collection<EmbeddedEntity> steps = getParameters(request, STEP, null);
-    int likes = request.getParameter("likes") == null ? 0 : Integer.parseInt(request.getParameter("likes"));
-    long timestamp = System.currentTimeMillis();
-
-    Entity recipe = new Entity("Recipe");
-    recipe.setProperty("name", name);
-    recipe.setProperty("time", time);
-    recipe.setProperty("servings", servings);
-    recipe.setProperty("imageKey", imageKey);
-    recipe.setProperty("description", description);
-    recipe.setProperty("tags", tags);
-    recipe.setProperty("ingredients", ingredients);
-    recipe.setProperty("equipment", equipment);
-    recipe.setProperty("steps", steps);
-    recipe.setProperty("search-strings", new ArrayList<String>(searchStrings));
-    recipe.setProperty("timestamp", timestamp);
-    recipe.setProperty("likes", likes);
-    datastore.put(recipe);
-
-    response.sendRedirect("/recipe.html?key=" + KeyFactory.keyToString(recipe.getKey()));
-  }
-
-  /**
-   * Gets the parameters for fields that have different numbers of parameters from recipe to recipe.
-   * This method ensures that all tags, ingredients, and steps are recorded, no matter how many of each a recipe has.
-   * @return A Collection of EmbeddedEntities, where each EmbeddedEntity holds one parameter.
-   */
-  private Collection<EmbeddedEntity> getParameters(HttpServletRequest request, String field, Collection<String> searchStrings) {
-    Collection<EmbeddedEntity> parameters = new LinkedList<>();
-    int parameterNum = 0;
-    String parameterName = field + parameterNum;
-    String parameter = request.getParameter(parameterName);
-
-    // In the HTML form, parameters are named as [field name][index], ie step0.
-    // This loop increments the index of the parameter's name, exiting once it reaches an index for which there is no parameter.
-    while (parameter != null) {
-      addToSearchStrings(searchStrings, parameter);
-      EmbeddedEntity parameterEntity = new EmbeddedEntity();
-      parameterEntity.setProperty(field, parameter);
-      parameters.add(parameterEntity);
-
-      parameterName = field + (++parameterNum);
-      parameter = request.getParameter(parameterName);
-    }
-    return parameters;
-  }
-
-  private Collection<EmbeddedEntity> getIngredients(HttpServletRequest request, Collection<String> searchStrings) {
-    Collection<EmbeddedEntity> parameters = new LinkedList<>();
-    int parameterNum = 0;
-    String parameterName = "ingredient" + parameterNum;
-    String[] parameterValues = request.getParameterValues(parameterName);
-
-    // In the HTML form, parameters are named as [field name][index], ie step0.
-    // This loop increments the index of the parameter's name, exiting once it reaches an index for which there is no parameter.
-    while (parameterValues != null) {
-      addToSearchStrings(searchStrings, parameterValues[2]);
-      EmbeddedEntity parameterEntity = new EmbeddedEntity();
-      parameterEntity.setProperty("amount", parameterValues[0].equals("") ? 0 : Double.parseDouble(parameterValues[0]));
-      parameterEntity.setProperty("unit", parameterValues[1]);
-      parameterEntity.setProperty("name", parameterValues[2]);
-      parameters.add(parameterEntity);
-
-      parameterName = "ingredient" + (++parameterNum);
-      parameterValues = request.getParameterValues(parameterName);
-    }
-    return parameters;
-  }
-
-  /** Adds a formatted search string to the set of search strings. */
-  private void addToSearchStrings(Collection<String> searchStrings, String stringToAdd) {
-    if (searchStrings == null) {
-      return;
-    }
-    searchStrings.add(stringToAdd.toUpperCase());
+    Map<String, String[]> parameterMap = request.getParameterMap();
+    Entity recipeEntity = new Recipe(parameterMap).getEntity();
+    recipeEntity.setProperty("imageKey", BlobServlet.getUploadedFileBlobKey(request, "image"));
+    datastore.put(recipeEntity);
+    response.sendRedirect("/recipe.html?key=" + KeyFactory.keyToString(recipeEntity.getKey()));
   }
 }
