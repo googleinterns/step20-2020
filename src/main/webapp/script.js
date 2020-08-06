@@ -176,13 +176,6 @@ function createLiveStreamElement(liveStream) {
   return liveStreamItem;
 }
 
-/** Gets the ID of a YouTube video from its URL.
-    Will work only for a URL of a certain format
-    (i.e. youtube.com/watch?v=). */
-function getIdFromUrl(url) {
-  return url.substring(url.lastIndexOf('=') + 1);
-}
-
 /** Gets the ID of the YouTube video that the user inputs. */
 function getId() {
   const liveStreamLink = document.getElementById('live-stream-link').value;
@@ -197,6 +190,18 @@ function storeLiveStreamInfo(schedStartTime, schedEndTime, duration) {
   fetch('/new-live-stream?recipe-key=' + recipeKey + '&live-stream-link=' + liveStreamLink + '&sched-start-time=' + schedStartTime + '&sched-end-time=' + schedEndTime + '&duration=' + duration);
 }
 
+/** Gets the ID of a YouTube video from its URL.
+    Will work only for a URL of a certain format
+    (i.e. youtube.com/watch?v=). */
+function getIdFromUrl(url) {
+  if (url.includes('&')) {
+    let searchParams = new URLSearchParams(url);
+    return searchParams.get("v");
+  } else {
+    return url.substring(url.lastIndexOf('=') + 1);
+  }
+}
+  
 /** Videos: List JSON Response Retrieval */
 // https://apis.google.com/js/api.js
 var gapi = window.gapi = window.gapi || {};
@@ -898,23 +903,22 @@ function execute(videoId) {
     "id": [
       videoId
     ]
-  })
-      .then(function(response) {
-              // Handle results here (response.result has the parsed body).
-              try {
-              const schedStartTime = response.result.items[0].liveStreamingDetails.scheduledStartTime;
-              const schedEndTime = response.result.items[0].liveStreamingDetails.scheduledEndTime;
-              const duration = response.result.items[0].contentDetails.duration;
-              storeLiveStreamInfo(schedStartTime, schedEndTime, duration)
-              document.getElementById("invalid-link-err").innerHTML = "";
-              document.getElementById("published-msg").innerHTML = "<p>Live stream successfully registered! Please check the 'You' tab under live streams to see if it has been published.*</p>";
-              document.getElementById("published-msg").innerHTML += "<p>*If the live stream start or end time is found to be invalid, it will not be published, and will not appear in the 'You' tab or elsewhere on Shef.</p>"
-              } catch (err) {
-                document.getElementById("invalid-link-err").innerHTML = "<p>Please enter a link to a valid livestream event.</p>";
-                document.getElementById("published-msg").innerHTML = "";
-              }
-            },
-            function(err) { console.error("Execute error", err); });
+  }).then(function(response) {
+      // Handle results here (response.result has the parsed body).
+      try {
+        const schedStartTime = response.result.items[0].liveStreamingDetails.scheduledStartTime;
+        const schedEndTime = response.result.items[0].liveStreamingDetails.scheduledEndTime;
+        const duration = response.result.items[0].contentDetails.duration;
+        storeLiveStreamInfo(schedStartTime, schedEndTime, duration)
+        document.getElementById("invalid-link-err").innerHTML = "";
+        document.getElementById("published-msg").innerHTML = "<p>Live stream successfully registered! Please check the 'You' tab under live streams to see if it has been published.*</p>";
+        document.getElementById("published-msg").innerHTML += "<p>*If the live stream start or end time is found to be invalid, it will not be published, and will not appear in the 'You' tab or elsewhere on Shef.</p>";
+      } catch (err) {
+        document.getElementById("invalid-link-err").innerHTML = "<p>Please enter a link to a valid livestream event.</p>";
+        document.getElementById("published-msg").innerHTML = "";
+      }
+    },
+  function(err) { console.error("Execute error", err); });
 }
 
 gapi.load("client:auth2", function() {
@@ -1496,6 +1500,7 @@ function populateRecipeCreationForm(recipe) {
   populateFormField('Step', recipe.steps);
 }
 
+/** Populates the ParamterInputs in a field with a parent recipe's data. */
 function populateFormField(fieldName, data) {
   for (var i = 0; i < data.length; i++) {
     var parameter = document.getElementById(fieldName + i);
@@ -1507,6 +1512,49 @@ function populateFormField(fieldName, data) {
       appendParameterInput(fieldName + 's', newParameter);
     }
   }
+}
+
+/** Gets the text of a tag, ingredient, or step. */
+function getText(data) {
+  if (typeof data == 'string') {
+    return data;
+  } else {
+    return data.instruction;
+  }
+}
+
+/**
+ * Gets recipes for browsing, based on the algorithm provided.
+ * For You displays recipes unique to each user's preferences.
+ * Trending displays the recipes that are most popular. */
+function getRecipes(algorithm) {
+  const results = document.getElementById('results');
+  results.innerHTML = '';
+  fetch('/browse-recipes?algorithm=' + algorithm).then(response => response.json()).then((recipes) => {
+    for (var i = 0; i < recipes.length; i++) {
+      results.appendChild(createRecipeForBrowsing(recipes[i]));
+      results.appendChild(document.createElement('br'));
+    }
+  });
+}
+
+/** Helper method that creates a DOM element to display a recipe. */
+function createRecipeForBrowsing(recipe) {
+  const container = document.createElement('div');
+  container.id = 'recipe';
+  container.style.border = 'thick solid #000';
+  container.style.width = '30%';
+  container.style.backgroundColor = '#ccc'
+
+  const name = document.createElement('h2');
+  name.innerText = recipe.name;
+
+  const description = document.createElement('p');
+  description.innerText = recipe.description;
+
+  container.appendChild(name);
+  container.appendChild(description);
+  return container;
 }
 
 /** Called by every page that requires the user to be logged in order to access. */

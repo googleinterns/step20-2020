@@ -14,12 +14,15 @@
 
 package shef.data;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.logging.*;
 import java.util.Iterator;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EmbeddedEntity;
 
 /** Stores a recipe's data. */
 public class Recipe {
@@ -41,26 +44,33 @@ public class Recipe {
    */
   public Recipe(Recipe recipe) {
     this.name = recipe.name;
-    this.tags = recipe.tags;
-    this.ingredients = recipe.ingredients;
     this.description = recipe.description;
-    this.tags = new HashSet<String>(recipe.tags);
-    this.ingredients = new HashSet<String>(recipe.ingredients);
-    this.steps = new LinkedList<Step>(recipe.steps);
-    this.spinOffs = new HashSet<SpinOff>();
+    this.tags = new HashSet<>(recipe.tags);
+    this.ingredients = new HashSet<>(recipe.ingredients);
+    this.steps = new LinkedList<>(recipe.steps);
+    this.spinOffs = new HashSet<>();
+    this.timestamp = System.currentTimeMillis();
   }
 
   /** Default constructor called when creating a new recipe. */
   public Recipe(String name, String description, Set<String> tags, Set<String> ingredients, List<Step> steps, long timestamp) {
     this.name = name;
-    this.tags = tags;
-    this.ingredients = ingredients;
     this.description = description;
     this.tags = tags;
     this.ingredients = ingredients;
     this.steps = steps;
-    this.timestamp = timestamp;
     this.spinOffs = new HashSet<>();
+    this.timestamp = timestamp;
+  }
+
+  /** Creates a Recipe from a Datastore entity. */
+  public Recipe(Entity recipeEntity) {
+    this.name = (String) recipeEntity.getProperty("name");
+    this.description = (String) recipeEntity.getProperty("description");
+    this.tags = getTagsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("tags"));
+    this.ingredients = getIngredientsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("ingredients"));
+    this.steps = getStepsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("steps"));
+    this.timestamp = (long) recipeEntity.getProperty("timestamp");
   }
 
   /** MODIFIED WITH USER: constructor called when creating a new recipe. */
@@ -238,6 +248,33 @@ public class Recipe {
    */
   protected boolean isValidStepPosition(int position) {
     return position >= 0 && position < steps.size();
+  }
+
+  /** Returns the tags of an EmbeddedEntity as a Set. */
+  private Set<String> getTagsFromEntity(Collection<EmbeddedEntity> entityTags) {
+    Set<String> tagsSet = new HashSet<>();
+    for (EmbeddedEntity tag : entityTags) {
+      tagsSet.add((String) tag.getProperty("tag"));
+    }
+    return tagsSet;
+  }
+
+  /** Returns the ingredients of an EmbeddedEntity as a Set. */
+  private Set<String> getIngredientsFromEntity(Collection<EmbeddedEntity> entityIngredients) {
+    Set<String> ingredientsSet = new HashSet<>();
+    for (EmbeddedEntity ingredient : entityIngredients) {
+      ingredientsSet.add((String) ingredient.getProperty("ingredient"));
+    }
+    return ingredientsSet;
+  }
+
+  /** Returns the steps of an EmbeddedEntity as a List. */
+  private List<Step> getStepsFromEntity(Collection<EmbeddedEntity> entitySteps) {
+    List<Step> stepsList = new LinkedList<>();
+    for (EmbeddedEntity step : entitySteps) {
+      stepsList.add(new Step((String) step.getProperty("step")));
+    }
+    return stepsList;
   }
 
   private void handleStepException(String exceptionText) throws IndexOutOfBoundsException {
