@@ -183,6 +183,7 @@ function getRecipeInfo() {
   fetch('/new-recipe?' + key).then(response => response.json()).then(recipe => {
     document.getElementById('recipe-title').innerHTML = recipe.name;
     document.getElementById('recipe-description').innerHTML = recipe.description;
+    document.getElementById('recipe-image').src = '/blob?blob-key=' + recipe.imageKey;
     displayTags(recipe.tags);
     displayIngredients(recipe.ingredients);
     displaySteps(recipe.steps);
@@ -200,6 +201,11 @@ function displayTags(tagsList) {
       tagSection.innerHTML += ", ";
     }
   });
+}
+
+function spinOff() {
+  var key = window.location.href.split('=')[1];
+  window.location.href = 'create-recipe-blank.html?key=' + key;
 }
 
 /** Formats and displays ingredients, with corresponding checkboxes, on the page. */
@@ -245,7 +251,7 @@ function displaySteps(stepList) {
     // Create and format the step text.
     var stepTextElement = document.createElement("p");
     stepTextElement.class = "col-sm-10 col-md-10 col-lg-10";
-    stepTextElement.innerText = step.instruction;
+    stepTextElement.innerText = step;
 
     rowVars['stepElement' + stepCount].appendChild(stepNumElement);
     rowVars['stepElement' + stepCount].appendChild(stepTextElement);
@@ -599,11 +605,14 @@ function updateIndices(fieldName, startIndex) {
 
 /** Gets a parent recipe's data from Datastore. */
 function getOriginalRecipe() {
-  const key = document.getElementById('key').value;
-  if (key) {
+  let key;
+  try {
+    key = window.location.href.split('=')[1];
     fetch('/new-recipe?key=' + key).then(response => response.json()).then((recipe) => {
       populateRecipeCreationForm(recipe);
     });
+  } catch(err) {
+    return;
   }
 }
 
@@ -615,7 +624,7 @@ function populateRecipeCreationForm(recipe) {
   document.getElementById('servingsInput').value = recipe.servings;
   document.getElementById('recipe-image').src = '/blob?blob-key=' + recipe.imageKey;
   populateFormField('Tag', recipe.tags);
-  populateIngredients(recipe.ingredients);
+  populateFormField('Ingredient', recipe.ingredients);
   populateFormField('Equipment', recipe.equipment);
   populateFormField('Step', recipe.steps);
 }
@@ -624,35 +633,17 @@ function populateRecipeCreationForm(recipe) {
 function populateFormField(fieldName, data) {
   for (var i = 0; i < data.length; i++) {
     var parameter = document.getElementById(fieldName + i);
-    if (parameter !== null) {
-      parameter.text = getText(data[i]);
-    } else {
-      var newParameter = createParameterInput(fieldName, i);
-      newParameter.text = getText(data[i]);
-      appendParameterInput(fieldName + 's', newParameter);
-    }
-  }
-}
-
-function populateIngredients(data) {
-  for (var i = 0; i < data.length; i++) {
-    var parameter = document.getElementById('Ingredient' + i);
     if (!parameter) {
-      var parameter = createIngredientInput('Ingredient', i);
+      parameter = fieldName == 'Ingredient' ? createIngredientInput(fieldName, i) : createParameterInput(fieldName, i);
     }
-    parameter.amount = data[i].amount;
-    parameter.unit = data[i].unit;
-    parameter.text = data[i].name;
-    appendParameterInput('Ingredients', parameter);
-  }
-}
-
-/** Gets the text of a tag, ingredient, or step. */
-function getText(data) {
-  if (typeof data == 'string') {
-    return data;
-  } else {
-    return data.instruction;
+    if (fieldName == 'Ingredient') {
+      parameter.amount = data[i].amount;
+      parameter.unit = data[i].unit;
+      parameter.text = data[i].name;
+    } else {
+      parameter.text = data[i];
+    }
+    appendParameterInput(fieldName + 's', parameter);
   }
 }
 
