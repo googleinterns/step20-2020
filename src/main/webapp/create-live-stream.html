@@ -28,17 +28,21 @@
         <form class="form-group">
           <h4>1. Choose a recipe to attach your live stream to.</h4>
             <select multiple class="form-control" id="recipe-selection" name="recipe-selection">
-              <option>Recipe 1</option>
+              <option selected="selected">Recipe 1</option>
               <option>Recipe 2</option>
               <option>Recipe 3</option>
             </select>
           <div class="med-sep">
             <h4>2. Link a live stream.</h4>
+            <p>Please note that the live stream must be an event with a scheduled start and end time.</p>
           </div>
           <input type="url" id="live-stream-link" name="live-stream-link">
+          <div id="invalid-link-err"></div>
         </form>
         <div class="small-sep">
           <button class="btn btn-primary btn-lg" onclick="execute(getId());">Publish!</button>
+          <div class="small-sep">
+          <div id="published-msg"></div>
         </div>
       </div>
     </div>

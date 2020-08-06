@@ -16,6 +16,7 @@ package shef.servlets;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -29,12 +30,21 @@ import javax.servlet.http.HttpServletResponse;
     and storing them in Datastore. */
 @WebServlet("/new-live-stream")
 public class NewLiveStreamServlet extends HttpServlet {
+  // If a live stream has a length of P0D, it is invalid.
+  // The YouTube API returns P0D for live streams with no start
+  // and/or end time or live streams with invalid chronological
+  // start and end times.
+  public static final String INVALID_DURATION = "P0D";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Entity liveStreamEntity = new Entity("LiveStream");
-    for (String param : request.getParameterMap().keySet()) {
-      liveStreamEntity.setProperty(param, (String) request.getParameterMap().get(param)[0]);
+    Map<String, String[]> paramMap = request.getParameterMap();
+    if (paramMap.get("duration")[0].equals(INVALID_DURATION)) {
+      throw new IllegalArgumentException("Live stream start or end time is missing or invalid.");
+    }
+    for (String param : paramMap.keySet()) {
+      liveStreamEntity.setProperty(param, (String) paramMap.get(param)[0]);
     }
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
