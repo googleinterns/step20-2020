@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.sps.servlets;
+package shef.servlets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,19 +25,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet responsible for creating new livestreams. */
+/** Servlet responsible for creating new LiveStream entities
+    and storing them in Datastore. */
 @WebServlet("/new-live-stream")
 public class NewLiveStreamServlet extends HttpServlet {
 
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String recipeKey = request.getParameter("recipe-selection");
-    String link = request.getParameter("live-stream-link");
-
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     Entity liveStreamEntity = new Entity("LiveStream");
-    liveStreamEntity.setProperty("recipe-key", recipeKey);
-    liveStreamEntity.setProperty("link", link);
-
+    for (String param : request.getParameterMap().keySet()) {
+      liveStreamEntity.setProperty(param, (String) request.getParameterMap().get(param)[0]);
+    }
+    
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(liveStreamEntity);
 

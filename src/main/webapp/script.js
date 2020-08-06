@@ -97,7 +97,7 @@ function loadComments() {
   });
 }
 
-/** Creates an element that represents a comment. */
+/** Creates a list element that represents a comment. */
 function createCommentElement(comment) {
   const commentElement = document.createElement('div');
   commentElement.className = 'small-sep';
@@ -113,8 +113,42 @@ function createCommentElement(comment) {
   var userInfoDisplayed = userProfile + " • " + comment.location + " • " + comment.MMDDYYYY;
   userComment.innerHTML += addParagraph(userInfoDisplayed) + addParagraph(comment.comment);
 
-  commentElement.appendChild(userComment);
+  commentElement.appendChild(spanElement);
   return commentElement;
+}
+
+/** Fetches results from the server and adds them to the DOM. */
+function getResults(param) {
+  var userQuery = getURLParamVal(param);
+  // Search string is in all caps, so the userQuery should also be in all caps for querying purposes.
+  fetch('/results?user-query=' + userQuery.toUpperCase()).then(response => response.json()).then((results) => {
+    const resultListElement = document.getElementById('result-list');
+    results.forEach((result) => {
+      resultListElement.appendChild(createResultElement(result));
+    })
+  });
+}
+
+/** Fetches live streams from the server and adds them to the DOM. */
+function loadLiveStreams() {
+  fetch('/display-livestreams').then(response => response.json()).then((livestreams) => {
+    const liveStreamListElement = document.getElementById('livestream-list');
+    livestreams.forEach((livestream) => {
+      liveStreamListElement.appendChild(createLiveStreamElement(livestream));
+    })
+  });
+}
+
+/** Creates a list element that represents a live stream. */
+function createLiveStreamElement(liveStream) {
+  const liveStreamElement = document.createElement('li');
+  liveStreamElement.className = 'live-stream';
+
+  const spanElement = document.createElement('span');
+  spanElement.innerText = liveStream.liveStreamKey;
+
+  liveStreamElement.appendChild(spanElement);
+  return liveStreamElement;
 }
 
 /** Gets the ID of the YouTube video that the user inputs. */
@@ -124,9 +158,11 @@ function getId() {
 }
 
 /** Gets the ID of the YouTube video that the user inputs. */
-function storeLiveStreamInfo() {
+function storeLiveStreamInfo(schedStartTime, schedEndTime, duration) {
+  const recipeSelection = document.getElementById('recipe-selection');
+  const recipeKey = recipeSelection.options[recipeSelection.selectedIndex].text;
   const liveStreamLink = document.getElementById('live-stream-link').value;
-  return false;
+  fetch('/new-live-stream?recipe-key=' + recipeKey + '&live-stream-link=' + liveStreamLink + '&sched-start-time=' + schedStartTime + '&sched-end-time=' + schedEndTime + '&duration=' + duration);
 }
 
 /** Gets the ID of a YouTube video from its URL.
@@ -141,7 +177,7 @@ function getIdFromUrl(url) {
   }
 }
 
-/** Videos: List Retrieval */
+/** Videos: List JSON Response Retrieval */
 // https://apis.google.com/js/api.js
 var gapi = window.gapi = window.gapi || {};
 gapi._bs = new Date().getTime();
@@ -174,8 +210,7 @@ gapi._bs = new Date().getTime();
         this.f = a
     };
     (new n).a("");
-    /*
-     gapi.loader.OBJECT_CREATE_TEST_OVERRIDE &&*/
+    /* gapi.loader.OBJECT_CREATE_TEST_OVERRIDE && */
     var q = window,
         v = document,
         aa = q.location,
@@ -800,11 +835,24 @@ gapi.load("", {
     }
 });
 
+/** When used for livestream creation, authenticates the user and then
+    hides the auth button and shows the livestream creation form. */
 function authenticate() {
   return gapi.auth2.getAuthInstance()
       .signIn({scope: "https://www.googleapis.com/auth/youtube.readonly"})
       .then(function() { console.log("Sign-in successful"); },
-            function(err) { console.error("Error signing in", err); });
+            function(err) { console.error("Error signing in", err); })
+      .then(unhideLivestreamCreation()).then(hideAuthButton());
+}
+
+function unhideLivestreamCreation() {
+  var livestreamCreation = document.getElementById("livestream-creation");
+  livestreamCreation.style.display = "block";
+}
+
+function hideAuthButton() {
+  var authButton = document.getElementById("auth-button");
+  authButton.style.display = "none";
 }
 
 function loadClient() {
@@ -818,7 +866,8 @@ function loadClient() {
 function execute(videoId) {
   return gapi.client.youtube.videos.list({
     "part": [
-      "liveStreamingDetails"
+      "liveStreamingDetails",
+      "contentDetails"
     ],
     "id": [
       videoId
@@ -826,7 +875,10 @@ function execute(videoId) {
   })
       .then(function(response) {
               // Handle results here (response.result has the parsed body).
-              console.log("Response", response);
+              const schedStartTime = response.result.items[0].liveStreamingDetails.scheduledStartTime;
+              const schedEndTime = response.result.items[0].liveStreamingDetails.scheduledEndTime;
+              const duration = response.result.items[0].contentDetails.duration;
+              storeLiveStreamInfo(schedStartTime, schedEndTime, duration)
             },
             function(err) { console.error("Execute error", err); });
 }
