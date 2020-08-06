@@ -20,13 +20,12 @@
     </script>
  
     <div class="jumbotron">
-      <h1 class="display-4">Recipes</h1>
+      <h1 class="display-4">Browse Recipes</h1>
       <div class="tab-guide">
-      <ul class="list-inline">
-        <li class="list-inline-item-active">Recent</li>
-      </ul>
+        <button onclick="getRecipes('foryou')">For You</button>
+        <button onclick="getRecipes('trending')">Trending</button>
       </div>
-      <div id="recipe-grid"></div>
+      <div id="results"></div>
     </div>
   </body>
 </html>
