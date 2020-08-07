@@ -23,6 +23,7 @@ import java.util.logging.*;
 import java.util.Iterator;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EmbeddedEntity;
+import com.google.appengine.api.datastore.KeyFactory;
 
 /** Stores a recipe's data. */
 public class Recipe {
@@ -38,6 +39,7 @@ public class Recipe {
   private List<Step> steps;
   private Set<SpinOff> spinOffs;
   private long timestamp;
+  private boolean hasLiveStream;
 
   /**
    * Copy constructor called when creating spin-offs.
@@ -65,11 +67,14 @@ public class Recipe {
 
   /** Creates a Recipe from a Datastore entity. */
   public Recipe(Entity recipeEntity) {
+    this.key = KeyFactory.keyToString(recipeEntity.getKey());
     this.name = (String) recipeEntity.getProperty("name");
+    this.user = (String) recipeEntity.getProperty("user");
     this.description = (String) recipeEntity.getProperty("description");
     this.tags = getTagsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("tags"));
     this.ingredients = getIngredientsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("ingredients"));
     this.steps = getStepsFromEntity((Collection<EmbeddedEntity>) recipeEntity.getProperty("steps"));
+    this.hasLiveStream = (boolean) recipeEntity.getProperty("has-live-stream");
     this.timestamp = (long) recipeEntity.getProperty("timestamp");
   }
 

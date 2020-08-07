@@ -165,7 +165,7 @@ function createLiveStreamElement(liveStream) {
 
   const unorderedList = document.createElement('ul');
   unorderedList.className = "list-unstyled";
-
+  
   const listElement = document.createElement('li');
   listElement.className = "list-space";
   listElement.innerText= liveStream.liveStreamKey;
@@ -174,6 +174,18 @@ function createLiveStreamElement(liveStream) {
   overlay.appendChild(unorderedList);
   liveStreamItem.appendChild(overlay);
   return liveStreamItem;
+}
+
+/** Gets the ID of a YouTube video from its URL.
+    Will work only for a URL of a certain format
+    (i.e. youtube.com/watch?v=). */
+function getIdFromUrl(url) {
+  if (url.includes('&')) {
+    let searchParams = new URLSearchParams(url);
+    return searchParams.get("v");
+  } else {
+    return url.substring(url.lastIndexOf('=') + 1);
+  }
 }
 
 /** Gets the ID of the YouTube video that the user inputs. */
@@ -190,18 +202,6 @@ function storeLiveStreamInfo(schedStartTime, schedEndTime, duration) {
   fetch('/new-live-stream?recipe-key=' + recipeKey + '&live-stream-link=' + liveStreamLink + '&sched-start-time=' + schedStartTime + '&sched-end-time=' + schedEndTime + '&duration=' + duration);
 }
 
-/** Gets the ID of a YouTube video from its URL.
-    Will work only for a URL of a certain format
-    (i.e. youtube.com/watch?v=). */
-function getIdFromUrl(url) {
-  if (url.includes('&')) {
-    let searchParams = new URLSearchParams(url);
-    return searchParams.get("v");
-  } else {
-    return url.substring(url.lastIndexOf('=') + 1);
-  }
-}
-  
 /** Videos: List JSON Response Retrieval */
 // https://apis.google.com/js/api.js
 var gapi = window.gapi = window.gapi || {};
@@ -932,7 +932,6 @@ gapi.load("client:auth2", function() {
 });
 
 /** Calendar */
-
 // Array of API discovery doc URLs for APIs used by the quickstart
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
 
@@ -971,37 +970,19 @@ function initClient() {
   */
 function handleAuthClick(event) {
   var authorizeButton = document.getElementById('authorize_button');
-  var signoutButton = document.getElementById('signout_button');
   var eventButton = document.getElementById('event_button');
   gapi.auth2.getAuthInstance().signIn();
   authorizeButton.style.display = 'none';
   eventButton.style.display = 'block';
-  signoutButton.style.display = 'block';
 }
 
 /**
-  *  Sign out the user upon button click.
+  * Used to display the results of the API call.
+  * @param {string} message Text to be placed in an element.
   */
-function handleSignoutClick(event) {
-  var authorizeButton = document.getElementById('authorize_button');
-  var signoutButton = document.getElementById('signout_button');
-  var eventButton = document.getElementById('event_button');
-  gapi.auth2.getAuthInstance().signOut();
-  authorizeButton.style.display = 'block';
-  eventButton.style.display = 'none';
-  signoutButton.style.display = 'none';
-}
-
-/**
-  * Append a pre element to the body containing the given message
-  * as its text node. Used to display the results of the API call.
-  *
-  * @param {string} message Text to be placed in pre element.
-  */
-function appendPre(message) {
-  var pre = document.getElementById('content');
-  var textContent = document.createTextNode(message + '\n');
-  pre.appendChild(textContent);
+function appendMessage(message) {
+  var element = document.getElementById('event-message');
+  element.innerHTML = message + "\n";
 }
 
 function addEvent(link, startTime, endTime){
@@ -1016,9 +997,6 @@ function addEvent(link, startTime, endTime){
       'dateTime': endTime,
       'timeZone': 'America/Los_Angeles'
     },
-    'recurrence': [
-      'RRULE:FREQ=DAILY;COUNT=2'
-    ],
     'reminders': {
       'useDefault': false,
       'overrides': [
@@ -1034,7 +1012,7 @@ function addEvent(link, startTime, endTime){
   });
 
   request.execute(function(event) {
-    appendPre('Event created: ' + event.htmlLink);
+    appendMessage('Event created! Click <a href=' + event.htmlLink + ">here</a> to view it on your calendar.");
   });
 }
 
@@ -1122,11 +1100,19 @@ function getRecipeInfo() {
     document.getElementById('recipe-title').innerHTML = recipe.name;
     document.getElementById('recipe-author').innerHTML = recipe.user;
     document.getElementById('recipe-description').innerHTML = recipe.description;
-    setAssociatedLiveStreamLink(key);
+    if (recipe.hasLiveStream) {
+      setAssociatedLiveStreamLink(key);
+    } else {
+      hideAddToCalButton();
+    }
     displayTags(recipe.tags);
     displayIngredients(recipe.ingredients);
     displaySteps(recipe.steps);
   });
+}
+
+function hideAddToCalButton() {
+  document.getElementById('add-to-cal-button').style.display = 'none';
 }
 
 /** Gets the link to the live stream associated with the given recipe key
@@ -1202,7 +1188,7 @@ function displaySteps(stepList) {
     // Create and format the step text.
     var stepTextElement = document.createElement("p");
     stepTextElement.class = "col-sm-10 col-md-10 col-lg-10";
-    stepTextElement.innerHTML = step;
+    stepTextElement.innerHTML = step.instruction;
 
     rowVars['stepElement' + stepCount].appendChild(stepNumElement);
     rowVars['stepElement' + stepCount].appendChild(stepTextElement);
@@ -1337,18 +1323,27 @@ function shareViaGmail() {
 
 /** @class A custom element that represents a parameter input. */
 class ParameterInput extends HTMLElement {
+  static placeholders = {
+    'Tag': 'Enter a tag...',
+    'Ingredient': 'Enter an ingredient...',
+    'Equipment': 'Enter a kitchen tool...',
+    'Step': 'Enter a step...'
+  }
+
   constructor() {
     super();
     this.label = document.createElement('label');
     this.textArea = document.createElement('textarea');
-    this.addButton = document.createElement('button');
-    this.deleteButton = document.createElement('button');
+    this.addButton = document.getElementsByTagName('template')[0].content.querySelector('span').cloneNode(true);
+    this.deleteButton = document.getElementsByTagName('template')[1].content.querySelector('span').cloneNode(true);
     this.container = document.createElement('div');
 
     this.container.appendChild(this.label);
+    this.container.appendChild(document.createElement('br'));
     this.container.appendChild(this.textArea);
     this.container.appendChild(this.addButton);
     this.container.appendChild(this.deleteButton);
+    //this.container.appendChild(document.createElement('br'));
   }
 
   /** Once the attributes for the ParameterInput exist, set its values accordingly. */
@@ -1358,10 +1353,8 @@ class ParameterInput extends HTMLElement {
     this.parent = this.name + 's';
 
     this.textArea.rows = '1';
-    this.addButton.type = 'button';
-    this.addButton.innerText = 'Add ' + this.name;
-    this.deleteButton.type = 'button';
-    this.deleteButton.innerText = 'Delete ' + this.name;
+    this.textArea.cols = '75';
+    this.textArea.placeholder = ParameterInput.placeholders[this.name];
     this.setIndexAttributes();
 
     this.appendChild(this.container);
@@ -1383,7 +1376,7 @@ class ParameterInput extends HTMLElement {
     this.addButton.onclick = event => {
       var newParameter = createParameterInput(this.name, this.index + 1);
       insertParameterInput(this, newParameter);
-    }
+    };
 
     // Deletes the ParameterInput clicked.
     this.deleteButton.onclick = event => {
@@ -1391,7 +1384,7 @@ class ParameterInput extends HTMLElement {
       const startIndex = this.index;
       this.remove();
       updateIndices(fieldName, startIndex);
-    }
+    };
   }
 
   /** Gets the text in a ParameterInput's text area. */

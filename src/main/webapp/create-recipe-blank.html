@@ -37,6 +37,25 @@ THE SOFTWARE.-->
   </head>
 
   <body class="page-container" onload="protectPage(); navBarSetup();">
+    <template>
+      <span>
+        <svg class="bi bi-plus-circle bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
+          <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
+          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+        </svg>
+      </span>
+    </template>
+
+    <template>
+      <span>
+        <svg class="bootstrap-icon" viewBox="0 0 16 16" class="bi bi-dash-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path fill-rule="evenodd" d="M3.5 8a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.5-.5z"/>
+        </svg>
+      </span>
+    </template>
+
     <!--Nav bar-->
     <div id="nav-placeholder"></div>
     <script>
@@ -53,68 +72,49 @@ THE SOFTWARE.-->
       <div class="med-sep">
         <div class="row">
           <div class="col-sm-6 col-md-6 col-lg-6 text-left">
-            <form>
+            <form action="/new-recipe" method="POST">
               <h2>Basic Info</h2>
               <div class="form-group small-sep">
                 <label for="dishNameInput">1. What’s your dish called? *</label>
-                <input type="text" class="form-control" id="dishNameInput" placeholder="Name of your dish...">
+                <input type="text" name="name" class="form-control" id="dishNameInput" placeholder="Name of your dish...">
               </div>
               <div class="form-group small-sep">
-                <label for="categoriesInput">2. What categories does it fit into? *</label>
-                <input type="text" class="form-control" id="categoriesInput" placeholder="Start typing for suggestions...">
+                <label for="timeInput">2. How long does it take to make, in minutes? *</label>
+                <input type="number" name="time" class="form-control" id="timeInput" placeholder="...">
               </div>
               <div class="form-group small-sep">
-                <label for="timeInput">3. How long does it take to make, in minutes? *</label>
-                <input type="number" class="form-control" id="timeInput" placeholder="...">
-              </div>
+                <label for="servingsInput">3. How many servings does it make? *</label>
+                <input type="number" name="servings" class="form-control" id="servingsInput" placeholder="...">
+              </div>       
               <div class="form-group small-sep">
-                <label for="servingsInput">4. How many servings does it make? *</label>
-                <input type="number" class="form-control" id="servingsInput" placeholder="...">
-              </div>
-              <div class="med-sep">
-                <h2>Ingredients</h2>
-                <div class="form-group small-sep">
-                  <input type="text" class="form-control" id="ingredientInput" placeholder="Enter an ingredient (with quantity)...">
-                </div>
-                <div class="small-sep">
-                  <svg class="bi bi-plus-circle bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
-                    <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
-                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="med-sep">
-                <h2>Equipment</h2>
-                <div class="form-group small-sep">
-                  <input type="text" class="form-control" id="ingredientInput" placeholder="Start typing for suggestions...">
-                </div>
-                <div class="small-sep">
-                  <svg class="bi bi-plus-circle bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
-                    <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
-                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                  </svg>
-                </div>
-              </div>
-              <div class="med-sep">
-                <h2>Steps</h2>
-                <div class="form-group small-sep">
-                  <input type="text" class="form-control" id="ingredientInput" placeholder="Enter a step...">
-                </div>
-                <div class="small-sep">
-                  <svg class="bi bi-plus-circle bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
-                    <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
-                    <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                  </svg>
+                <label>4. What tags apply to this recipe?</label>
+                <div id="Tags">        
+                  <parameter-input name="Tag" index="0" id="Tag0"></parameter-input>
                 </div>
               </div>
               <div class="med-sep">
                 <h2>Description</h2>
                 <div class="form-group">
                   <label for="descriptionTextArea">Give your recipe some more context.</label>
-                  <textarea class="form-control" id="descriptionTextArea" placeholder="Tell us about your recipe..."></textarea>
+                  <textarea class="form-control" name="description" id="descriptionTextArea" placeholder="Tell us about your recipe..."></textarea>
+                </div>
+              </div>
+              <div class="med-sep">
+                <h2>Ingredients</h2>
+                <div class="form-group small-sep" id="Ingredients">
+                  <parameter-input name="Ingredient" index="0" id="Ingredient0"></parameter-input>
+                </div>
+              </div>
+              <div class="med-sep">
+                <h2>Equipment</h2>
+                <div class="form-group small-sep" id="Equipments">
+                  <parameter-input name="Equipment" index="0" id="Equipment0"></parameter-input>
+                </div>
+              </div>
+              <div class="med-sep">
+                <h2>Steps</h2>
+                <div class="form-group small-sep" id="Steps">
+                  <parameter-input name="Step" index="0" id="Step0"></parameter-input>
                 </div>
               </div>
               <div class="med-sep">
@@ -157,7 +157,7 @@ THE SOFTWARE.-->
         </div>
       </div>
     </div>
-    
+
     <!-- Optional JavaScript -->
     <!-- First Popper.js, then Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

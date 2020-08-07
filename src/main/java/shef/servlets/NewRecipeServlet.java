@@ -26,6 +26,8 @@ import com.google.appengine.api.datastore.EmbeddedEntity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import java.util.Collection;
 import java.util.List;
@@ -40,6 +42,7 @@ import shef.data.Step;
 public class NewRecipeServlet extends HttpServlet {
 
   private DatastoreService datastore;
+  private UserService userService;
   private final String TAG = "tag";
   private final String INGREDIENT = "ingredient";
   private final String STEP = "step";
@@ -47,6 +50,7 @@ public class NewRecipeServlet extends HttpServlet {
   @Override
   public void init() {
     datastore = DatastoreServiceFactory.getDatastoreService();
+    userService = UserServiceFactory.getUserService();
   }
 
   /** When a spin-off is created, this GET request gets the original recipe's data. */
@@ -75,7 +79,12 @@ public class NewRecipeServlet extends HttpServlet {
     Collection<EmbeddedEntity> tags = getParameters(request, TAG, searchStrings);
     Collection<EmbeddedEntity> ingredients = getParameters(request, INGREDIENT, searchStrings);
     Collection<EmbeddedEntity> steps = getParameters(request, STEP, null);
-    int likes = Integer.parseInt(request.getParameter("likes"));
+    int likes;
+    try {
+      likes = Integer.parseInt(request.getParameter("likes"));
+    } catch (NumberFormatException e) {
+      likes = 0;
+    }
     long timestamp = System.currentTimeMillis();
 
     Entity recipe = new Entity("Recipe");
@@ -85,6 +94,7 @@ public class NewRecipeServlet extends HttpServlet {
     recipe.setProperty("ingredients", ingredients);
     recipe.setProperty("steps", steps);
     recipe.setProperty("search-strings", new ArrayList<String>(searchStrings));
+    recipe.setProperty("has-live-stream", false); // A newly created recipe does not have an associated live stream.
     recipe.setProperty("timestamp", timestamp);
     // Temporary if statement, can be removed once user service is fully integrated with recipe creation.
     // Without this if statement for the time being, the servlet crashes.
@@ -95,9 +105,17 @@ public class NewRecipeServlet extends HttpServlet {
       recipe.setProperty("user", userKeyString);
     }
     recipe.setProperty("likes", likes);
+
+    // Add property for the key string of the current user.
+    if (userService != null && userService.getCurrentUser() != null) {
+      String id = userService.getCurrentUser().getUserId();
+      Key userKey = KeyFactory.createKey("User", id);
+      String userKeyString = KeyFactory.keyToString(userKey);
+      recipe.setProperty("user", userKeyString);
+    }
     datastore.put(recipe);
 
-    response.sendRedirect("/edit-recipe.html");
+    response.sendRedirect("/recipe.html");
   }
 
   /**

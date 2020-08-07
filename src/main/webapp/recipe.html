@@ -47,12 +47,27 @@ THE SOFTWARE.-->
       });
     </script>
 
-    <!-- Calendar Test -->
-    <pre id="content" style="white-space: pre-wrap;"></pre>
-    <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize_button" style="display: block;" onclick="handleAuthClick();">Authorize</button>
-    <button id="signout_button" style="display: none;" onclick="handleSignoutClick();">Sign Out</button>
-    <button id="event_button" style="display: none;" onclick="addLiveStreamToCalendar()">Add Event</button>
+    <!-- Add to Calendar Modal -->
+    <div class="modal fade" id="addToCalModal" tabindex="-1" role="dialog" aria-labelledby="addToCalModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addToCalModalLongTitle">Add to Calendar</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <button id="authorize_button" class="btn btn-primary" style="display: block;" onclick="handleAuthClick();">Authorize</button>
+            <p id="event-message" style="white-space: pre-wrap;"></p>
+            <button id="event_button" class="btn btn-primary" style="display: none;" onclick="addLiveStreamToCalendar()">Add to calendar</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <script async defer src="https://apis.google.com/js/api.js"
       onload="this.onload=function(){};handleClientLoad()"
@@ -60,12 +75,12 @@ THE SOFTWARE.-->
     </script>
 
     <div class="jumbotron text-center">
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <!-- Sharing Modal -->
+      <div class="modal fade" id="sharingModal" tabindex="-1" role="dialog" aria-labelledby="sharingModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Share</h5>
+              <h5 class="modal-title" id="sharingModalLongTitle">Share</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -85,7 +100,6 @@ THE SOFTWARE.-->
                   </a>
                 </li>
                 <li class="list-inline-item"><img src="/assets/images/mail_icon.png" id="myItem" class="share-icon"></li>
-                <div id="myItem" data-page_id="1510970">1510970</div>
               </ul>
             </div>
             <div class="modal-footer">
@@ -124,7 +138,10 @@ THE SOFTWARE.-->
             <path fill-rule="evenodd" d="M11 5h2.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5h-1v-1h1a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12v4.5h-1V5zm-8 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
             <path fill-rule="evenodd" d="M12 13a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 1a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
           </svg>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+        <button type="button" id="add-to-cal-button" class="btn btn-primary" data-toggle="modal" data-target="#addToCalModal">
+          Add to Calendar
+        </button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#sharingModal">
           Share
         </button>
         </div>

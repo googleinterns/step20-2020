@@ -20,6 +20,13 @@ import java.util.Map;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -52,6 +59,25 @@ public class NewLiveStreamServlet extends HttpServlet {
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(liveStreamEntity);
+
+    /* Get the recipe that the user wishes to associate the live stream
+      with. If the recipe already has an associated live stream, throw an error.
+      Else, set the recipe's hasLiveStream field to true. hasLiveStream is used
+      to determine whether and how the recipe shows on the recipe and live stream feeds. */
+    Query query = new Query("Recipe");
+    Key recipeKey = KeyFactory.stringToKey(request.getParameter("recipe-key"));
+    Filter recipeKeyFilter = new FilterPredicate(Entity.KEY_RESERVED_PROPERTY, FilterOperator.EQUAL, recipeKey);
+    query.setFilter(recipeKeyFilter);
+    PreparedQuery results = datastore.prepare(query);
+    for (Entity entity : results.asIterable()) {
+      boolean hasLiveStream = (boolean) entity.getProperty("has-live-stream");
+      if (hasLiveStream) {
+        System.err.println("This event already has a live stream associated with it. Each recipe can only be associated with one live stream.");
+      } else {
+        entity.setProperty("has-live-stream", true);
+        datastore.put(entity);
+      }
+    }
 
     response.sendRedirect("/create-live-stream.html");
   }
