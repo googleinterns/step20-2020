@@ -165,7 +165,7 @@ function createLiveStreamElement(liveStream) {
 
   const unorderedList = document.createElement('ul');
   unorderedList.className = "list-unstyled";
-
+  
   const listElement = document.createElement('li');
   listElement.className = "list-space";
   listElement.innerText= liveStream.liveStreamKey;
@@ -1100,7 +1100,6 @@ function getRecipeInfo() {
     document.getElementById('recipe-title').innerHTML = recipe.name;
     document.getElementById('recipe-author').innerHTML = recipe.user;
     document.getElementById('recipe-description').innerHTML = recipe.description;
-    console.log("HAS LIVE STREAM? " + recipe.hasLiveStream);
     if (recipe.hasLiveStream) {
       setAssociatedLiveStreamLink(key);
     } else {

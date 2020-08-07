@@ -96,6 +96,14 @@ public class NewRecipeServlet extends HttpServlet {
     recipe.setProperty("search-strings", new ArrayList<String>(searchStrings));
     recipe.setProperty("has-live-stream", false); // A newly created recipe does not have an associated live stream.
     recipe.setProperty("timestamp", timestamp);
+    // Temporary if statement, can be removed once user service is fully integrated with recipe creation.
+    // Without this if statement for the time being, the servlet crashes.
+    if (userService != null && userService.getCurrentUser() != null) {
+      String id = userService.getCurrentUser().getUserId();
+      Key userKey = KeyFactory.createKey("User", id);
+      String userKeyString = KeyFactory.keyToString(userKey);
+      recipe.setProperty("user", userKeyString);
+    }
     recipe.setProperty("likes", likes);
 
     // Add property for the key string of the current user.
@@ -143,6 +151,28 @@ public class NewRecipeServlet extends HttpServlet {
     searchStrings.add(stringToAdd.toUpperCase());
   }
 
+  /** Converts a Datastore entity into a Recipe. */
+  private Recipe entityToRecipe(Entity recipeEntity) {
+    String name = (String) recipeEntity.getProperty("name");
+    String user = (String) recipeEntity.getProperty("user");
+    String description = (String) recipeEntity.getProperty("description");
+    LinkedHashSet<String> tags = new LinkedHashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("tags"), TAG));
+    LinkedHashSet<String> ingredients = new LinkedHashSet<>((LinkedList<String>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("ingredients"), INGREDIENT));
+    LinkedList<Step> steps = (LinkedList<Step>) (LinkedList<?>) getDataAsList(recipeEntity.getProperty("steps"), STEP);
+    long timestamp = (long) recipeEntity.getProperty("timestamp");
+    return new Recipe(name, user, description, tags, ingredients, steps, timestamp);
+  }
+
+  /** Gets a list of Recipe parameters from a Datastore property. */
+  private Collection<Object> getDataAsList(Object propertiesObject, String field) {
+    Collection<EmbeddedEntity> properties = (Collection<EmbeddedEntity>) propertiesObject;
+    Collection<Object> dataAsList = new LinkedList<>();
+    for (EmbeddedEntity property : properties) {
+      dataAsList.add(property.getProperty(field));
+    }
+    return dataAsList;
+  }
+  
   private String convertToJsonUsingGson(Recipe recipe) {
     Gson gson = new Gson();
     return gson.toJson(recipe);
