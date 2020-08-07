@@ -66,12 +66,27 @@ public final class UserServlet extends HttpServlet {
       String location = (String) userEntity.getProperty("location");
       String profilePicKey = (String) userEntity.getProperty("profile-pic");
       String bio = (String) userEntity.getProperty("bio");
+      List<String> following = (List<String>) userEntity.getProperty("following");
+      List<String> followers = (List<String>) userEntity.getProperty("followers");
+
+      long followingCount = 0;
+      long followersCount = 0;
+      boolean isFollowedByCurrentUser = false;
+
+      if(following != null) {
+        followingCount = following.size();
+      }
+      if(followers != null) {
+        followersCount = followers.size();
+        String currentUserKeyString = KeyFactory.createKeyString("User", userService.getCurrentUser().getUserId());
+        isFollowedByCurrentUser = followers.contains(currentUserKeyString);
+      }
 
       // Since we chose to store the id as a string in Datastore, it is referred to as "name".
       String id = (String) userKey.getName();
       boolean isCurrentUser = id.equals(userService.getCurrentUser().getUserId());
 
-      User user = new User(keyString, email, username, location, profilePicKey, bio, isCurrentUser);
+      User user = new User(keyString, email, username, location, profilePicKey, bio, isCurrentUser, isFollowedByCurrentUser, followingCount, followersCount);
 
       // Convert to JSON and send it as the response.
       Gson gson = new Gson();

@@ -1,0 +1,410 @@
+<!--The MIT License (MIT)
+Copyright (c) 2011-2018 Twitter, Inc.
+Copyright (c) 2011-2018 The Bootstrap Authors
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="script.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <link rel="stylesheet" href="css/style.css"/>
+    <title>shef</title>
+  </head>
+
+  <body class="page-container" onload="protectPage(); getProfilePageData(); fetchBlobstoreUrl(); navBarSetup();">
+    <!--Nav bar-->
+    <div id="nav-placeholder"></div>
+    <script>
+      $(function(){
+        $("#nav-placeholder").load("nav.html");
+      });
+    </script>
+
+    <div class="container-fluid prof-container">
+        <div class="row">
+          <div class="col-sm-3 col-md-3 col-lg-3 text-center">
+            <img id="profile-pic-display" class="rounded-circle" alt="..."></img>
+          </div>
+          <div class="col-sm-3 col-md-3 col-lg-3 text-center">
+            <section class="h-100">
+                  <div class="d-flex align-items-center justify-content-center h-100">
+                    <div class="d-flex flex-column">
+                      <h1 class="text align-self-center p-2">67</h1>
+                      <h3 class="text align-self-center p-2">Recipes</h3>
+                    </div>
+                  </div>
+              </section>
+          </div>
+          <div class="col-sm-3 col-md-3 col-lg-3 text-center">
+            <section class="h-100">
+                  <div class="d-flex align-items-center justify-content-center h-100">
+                    <div class="d-flex flex-column">
+                      <h1 class="text align-self-center p-2">3.8k</h1>
+                      <h3 class="text align-self-center p-2">Followers</h3>
+                    </div>
+                  </div>
+              </section>
+          </div>
+          <div class="col-sm-3 col-md-3 col-lg-3 text-center">
+            <section class="h-100">
+                  <div class="d-flex align-items-center justify-content-center h-100">
+                    <div class="d-flex flex-column">
+                      <h1 class="text align-self-center p-2">93</h1>
+                      <h3 class="text align-self-center p-2">Following</h3>
+                    </div>
+                  </div>
+              </section>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 col-md-3 col-lg-3 text-center">
+              <div id="static-user-info"> 
+
+                <h1 id="username-display"></h1>
+                <h3 id="location-display"></h3>
+                <div class="small-sep">
+                  <p id="bio-display"></p>
+                </div>
+              </div>
+              <button id="edit-button" class="btn btn-secondary" onclick="toggleProfileEditMode()">Edit Profile</button>
+              <div id="editable-user-info" class="jumbotron d-none">
+              <form id="user-form" method="POST" enctype="multipart/form-data">
+                <label for="username" class="label">User Name:</label>
+                <textarea class="form-control" id="username" name="username" rows="1" cols="25"></textarea>
+                <br>
+                <label for="location">Location:</label>
+                <textarea class="form-control" id="location" name="location" rows="1" cols="25"></textarea>
+                <br>
+                <label for="profile-pic" class="label">Upload an Profile Picture:</label>
+                <input class="form-control-file" id="profile-pic" type="file" name="profile-pic"></input>
+                <br>
+                <label for="bio" class="label">Enter a Short Description:</label>
+                <textarea class="form-control" id="bio" name="bio" rows="1" cols="25"></textarea>
+                <br>
+                <input type="submit" />
+              </form>
+              </div>
+              <div class="med-sep">
+                <svg class="bi bi-pencil-square bootstrap-icon icon-sep" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                  </svg>
+                  <svg class="bi bi-basket bootstrap-icon icon-sep" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M10.243 1.071a.5.5 0 0 1 .686.172l3 5a.5.5 0 1 1-.858.514l-3-5a.5.5 0 0 1 .172-.686zm-4.486 0a.5.5 0 0 0-.686.172l-3 5a.5.5 0 1 0 .858.514l3-5a.5.5 0 0 0-.172-.686z"/>
+                    <path fill-rule="evenodd" d="M1 7v1h14V7H1zM.5 6a.5.5 0 0 0-.5.5v2a.5.5 0 0 0 .5.5h15a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5H.5z"/>
+                    <path fill-rule="evenodd" d="M14 9H2v5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V9zM2 8a1 1 0 0 0-1 1v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9a1 1 0 0 0-1-1H2z"/>
+                    <path fill-rule="evenodd" d="M4 10a.5.5 0 0 1 .5.5v3a.5.5 0 1 1-1 0v-3A.5.5 0 0 1 4 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 1 1-1 0v-3A.5.5 0 0 1 6 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 1 1-1 0v-3A.5.5 0 0 1 8 10zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 1 1-1 0v-3a.5.5 0 0 1 .5-.5zm2 0a.5.5 0 0 1 .5.5v3a.5.5 0 1 1-1 0v-3a.5.5 0 0 1 .5-.5z"/>
+                  </svg>
+                  <svg class="bi bi-bookmark bootstrap-icon icon-sep" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8 12l5 3V3a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12l5-3zm-4 1.234l4-2.4 4 2.4V3a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10.234z"/>
+                  </svg>
+                  <svg class="bi bi-gear bootstrap-icon icon-sep" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M8.837 1.626c-.246-.835-1.428-.835-1.674 0l-.094.319A1.873 1.873 0 0 1 4.377 3.06l-.292-.16c-.764-.415-1.6.42-1.184 1.185l.159.292a1.873 1.873 0 0 1-1.115 2.692l-.319.094c-.835.246-.835 1.428 0 1.674l.319.094a1.873 1.873 0 0 1 1.115 2.693l-.16.291c-.415.764.42 1.6 1.185 1.184l.292-.159a1.873 1.873 0 0 1 2.692 1.116l.094.318c.246.835 1.428.835 1.674 0l.094-.319a1.873 1.873 0 0 1 2.693-1.115l.291.16c.764.415 1.6-.42 1.184-1.185l-.159-.291a1.873 1.873 0 0 1 1.116-2.693l.318-.094c.835-.246.835-1.428 0-1.674l-.319-.094a1.873 1.873 0 0 1-1.115-2.692l.16-.292c.415-.764-.42-1.6-1.185-1.184l-.291.159A1.873 1.873 0 0 1 8.93 1.945l-.094-.319zm-2.633-.283c.527-1.79 3.065-1.79 3.592 0l.094.319a.873.873 0 0 0 1.255.52l.292-.16c1.64-.892 3.434.901 2.54 2.541l-.159.292a.873.873 0 0 0 .52 1.255l.319.094c1.79.527 1.79 3.065 0 3.592l-.319.094a.873.873 0 0 0-.52 1.255l.16.292c.893 1.64-.902 3.434-2.541 2.54l-.292-.159a.873.873 0 0 0-1.255.52l-.094.319c-.527 1.79-3.065 1.79-3.592 0l-.094-.319a.873.873 0 0 0-1.255-.52l-.292.16c-1.64.893-3.433-.902-2.54-2.541l.159-.292a.873.873 0 0 0-.52-1.255l-.319-.094c-1.79-.527-1.79-3.065 0-3.592l.319-.094a.873.873 0 0 0 .52-1.255l-.16-.292c-.892-1.64.902-3.433 2.541-2.54l.292.159a.873.873 0 0 0 1.255-.52l.094-.319z"/>
+                    <path fill-rule="evenodd" d="M8 5.754a2.246 2.246 0 1 0 0 4.492 2.246 2.246 0 0 0 0-4.492zM4.754 8a3.246 3.246 0 1 1 6.492 0 3.246 3.246 0 0 1-6.492 0z"/>
+                  </svg>
+              </div>
+            </div>
+            <div class="col-sm-8 col-md-9 col-lg-9 text-center">
+                <div class="row">
+                    <div class="col feed-img-container-prof">
+                      <img src="/assets/images/pasta_salad.jpg" class="feed-img-prof" alt="...">
+                      <div class="overlay">
+                        <span>
+                          <ul class="list-unstyled">
+                            <li class="list-space">
+                              <svg class="bi bi-credit-card bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+                                <rect width="3" height="3" x="2" y="9" rx="1"/>
+                                <path d="M1 5h14v2H1z"/>
+                              </svg>
+                              11
+                            </li>
+                            <li class="list-space">
+                              <svg class="bi bi-clock bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+                                <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                              </svg>
+                              70
+                            </li>
+                            <li>
+                              <svg class="bi bi-heart bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                              </svg> 
+                              1.6k              
+                            </li>
+                          </ul>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col feed-img-container-prof">
+                      <img src="/assets/images/jollof_rice.jpg"  class="feed-img-prof" alt="...">
+                      <div class="overlay">
+                        <span>
+                          <ul class="list-unstyled">
+                            <li class="list-space">
+                              <svg class="bi bi-credit-card bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+                                <rect width="3" height="3" x="2" y="9" rx="1"/>
+                                <path d="M1 5h14v2H1z"/>
+                              </svg>
+                              18
+                            </li>
+                            <li class="list-space">
+                              <svg class="bi bi-clock bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+                                <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                              </svg>
+                              40
+                            </li>
+                            <li>
+                              <svg class="bi bi-heart bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                              </svg> 
+                              685              
+                            </li>
+                          </ul>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col feed-img-container-prof">
+                      <img src="/assets/images/ramen.jpg"  class="feed-img-prof" alt="...">
+                      <div class="overlay">
+                        <span>
+                          <ul class="list-unstyled">
+                            <li class="list-space">
+                              <svg class="bi bi-credit-card bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+                                <rect width="3" height="3" x="2" y="9" rx="1"/>
+                                <path d="M1 5h14v2H1z"/>
+                              </svg>
+                              11
+                            </li>
+                            <li class="list-space">
+                              <svg class="bi bi-clock bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+                                <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                              </svg>
+                              45
+                            </li>
+                            <li>
+                              <svg class="bi bi-heart bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                              </svg> 
+                              1.4k              
+                            </li>
+                          </ul>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+            <div class="row">
+                <div class="col feed-img-container">
+                  <img src="/assets/images/blueb_bread.jpg" class="feed-img" alt="...">
+                  <div class="overlay">
+                    <span>
+                      <ul class="list-unstyled">
+                        <li class="list-space">
+                          <svg class="bi bi-credit-card bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+                            <rect width="3" height="3" x="2" y="9" rx="1"/>
+                            <path d="M1 5h14v2H1z"/>
+                          </svg>
+                          12
+                        </li>
+                        <li class="list-space">
+                          <svg class="bi bi-clock bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+                            <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                          </svg>
+                          55
+                        </li>
+                        <li>
+                          <svg class="bi bi-heart bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                          </svg> 
+                          2.3k               
+                        </li>
+                      </ul>
+                    </span>
+                  </div>
+                </div>
+                <div class="col feed-img-container">
+                  <img src="/assets/images/loaded_fries.jpg"  class="feed-img" alt="...">
+                  <div class="overlay">
+                    <span>
+                      <ul class="list-unstyled">
+                        <li class="list-space">
+                          <svg class="bi bi-credit-card bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+                            <rect width="3" height="3" x="2" y="9" rx="1"/>
+                            <path d="M1 5h14v2H1z"/>
+                          </svg>
+                          15
+                        </li>
+                        <li class="list-space">
+                          <svg class="bi bi-clock bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+                            <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                          </svg>
+                          60
+                        </li>
+                        <li>
+                          <svg class="bi bi-heart bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                          </svg> 
+                          1.7k               
+                        </li>
+                      </ul>
+                    </span>
+                  </div>
+                </div>
+                <div class="col feed-img-container">
+                  <img src="/assets/images/cheese_soup.jpg"  class="feed-img" alt="...">
+                  <div class="overlay">
+                    <span>
+                      <ul class="list-unstyled">
+                        <li class="list-space">
+                          <svg class="bi bi-credit-card bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+                            <rect width="3" height="3" x="2" y="9" rx="1"/>
+                            <path d="M1 5h14v2H1z"/>
+                          </svg>
+                          9
+                        </li>
+                        <li class="list-space">
+                          <svg class="bi bi-clock bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+                            <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                          </svg>
+                          30
+                        </li>
+                        <li>
+                          <svg class="bi bi-heart bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                          </svg> 
+                          927              
+                        </li>
+                      </ul>
+                    </span>
+                  </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col feed-img-container">
+                  <img src="/assets/images/pasta_salad.jpg" class="feed-img" alt="...">
+                  <div class="overlay">
+                    <span>
+                      <ul class="list-unstyled">
+                        <li class="list-space">
+                          <svg class="bi bi-credit-card bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+                            <rect width="3" height="3" x="2" y="9" rx="1"/>
+                            <path d="M1 5h14v2H1z"/>
+                          </svg>
+                          11
+                        </li>
+                        <li class="list-space">
+                          <svg class="bi bi-clock bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+                            <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                          </svg>
+                          70
+                        </li>
+                        <li>
+                          <svg class="bi bi-heart bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                          </svg> 
+                          1.6k              
+                        </li>
+                      </ul>
+                    </span>
+                  </div>
+                </div>
+                <div class="col feed-img-container">
+                  <img src="/assets/images/jollof_rice.jpg"  class="feed-img" alt="...">
+                  <div class="overlay">
+                    <span>
+                      <ul class="list-unstyled">
+                        <li class="list-space">
+                          <svg class="bi bi-credit-card bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+                            <rect width="3" height="3" x="2" y="9" rx="1"/>
+                            <path d="M1 5h14v2H1z"/>
+                          </svg>
+                          18
+                        </li>
+                        <li class="list-space">
+                          <svg class="bi bi-clock bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+                            <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                          </svg>
+                          40
+                        </li>
+                        <li>
+                          <svg class="bi bi-heart bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                          </svg> 
+                          685              
+                        </li>
+                      </ul>
+                    </span>
+                  </div>
+                </div>
+                <div class="col feed-img-container">
+                  <img src="/assets/images/ramen.jpg"  class="feed-img" alt="...">
+                  <div class="overlay">
+                    <span>
+                      <ul class="list-unstyled">
+                        <li class="list-space">
+                          <svg class="bi bi-credit-card bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2z"/>
+                            <rect width="3" height="3" x="2" y="9" rx="1"/>
+                            <path d="M1 5h14v2H1z"/>
+                          </svg>
+                          11
+                        </li>
+                        <li class="list-space">
+                          <svg class="bi bi-clock bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm8-7A8 8 0 1 1 0 8a8 8 0 0 1 16 0z"/>
+                            <path fill-rule="evenodd" d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                          </svg>
+                          45
+                        </li>
+                        <li>
+                          <svg class="bi bi-heart bootstrap-icon" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                          </svg> 
+                          1.4k              
+                        </li>
+                      </ul>
+                    </span>
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+    <!-- Optional JavaScript -->
+    <!-- First Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+  </body>
+</html>
