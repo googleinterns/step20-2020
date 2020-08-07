@@ -46,6 +46,9 @@ public class NewLiveStreamServlet extends HttpServlet {
     for (String param : paramMap.keySet()) {
       liveStreamEntity.setProperty(param, (String) paramMap.get(param)[0]);
     }
+
+    long timestamp = System.currentTimeMillis();
+    liveStreamEntity.setProperty("timestamp", timestamp);
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(liveStreamEntity);

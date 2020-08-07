@@ -16,24 +16,23 @@ package shef.data;
 
 import java.util.Date;
  
-/** A YouTube live stream.
-    TODO: Add field for associated user. */
+/** A YouTube live stream. */
 public class LiveStream {
-  String liveStreamKey;
   String recipeKey;
+  String liveStreamKey;
   String link;
   String startTime;
   String endTime;
   String duration;
 
  /**
-  * @param liveStreamKey Unique key of the livestream.
   * @param recipeKey Unique key of the associated recipe.
+  * @param liveStreamKey Unique key of the live stream.
   * @param link Link to the live stream.
   */
-  public LiveStream(String liveStreamKey, String recipeKey, String link, String startTime, String endTime, String duration) {
-    this.liveStreamKey = liveStreamKey;
+  public LiveStream(String recipeKey, String liveStreamKey, String link, String startTime, String endTime, String duration) {
     this.recipeKey = recipeKey;
+    this.liveStreamKey = liveStreamKey;
     this.link = link;
     this.startTime = startTime;
     this.endTime = endTime;

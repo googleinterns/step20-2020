@@ -131,24 +131,49 @@ function getResults(param) {
 
 /** Fetches live streams from the server and adds them to the DOM. */
 function loadLiveStreams() {
-  fetch('/display-livestreams').then(response => response.json()).then((livestreams) => {
-    const liveStreamListElement = document.getElementById('livestream-list');
-    livestreams.forEach((livestream) => {
-      liveStreamListElement.appendChild(createLiveStreamElement(livestream));
+  // rowVars used to dynamically name divs of class row.
+  var rowVars = {};
+  let liveStreamCount = 0;
+  let rowCount = 0;
+  fetch('/display-livestreams').then(response => response.json()).then((liveStreams) => {
+    const liveStreamGrid = document.getElementById('live-stream-grid');
+    liveStreams.forEach((liveStream) => {
+      // Every three live streams, create a new row.
+      if (liveStreamCount % 3 == 0) {
+        rowCount++;
+        rowVars['liveStreamRow' + rowCount] = document.createElement('div');
+        rowVars['liveStreamRow' + rowCount].className = "row";
+      }
+      rowVars['liveStreamRow' + rowCount].appendChild(createLiveStreamElement(liveStream));
+      liveStreamGrid.appendChild(rowVars['liveStreamRow' + rowCount]);
+      liveStreamCount++;
     })
   });
 }
 
-/** Creates a list element that represents a live stream. */
+/** Creates an element that represents a live stream. */
 function createLiveStreamElement(liveStream) {
-  const liveStreamElement = document.createElement('li');
-  liveStreamElement.className = 'live-stream';
+  const liveStreamItem = document.createElement('div');
+  liveStreamItem.className = 'col feed-img-container';
+  liveStreamItem.innerHTML += "<img src=" + "https://tinyurl.com/y8eph3n6" + ">";
+  liveStreamItem.onclick = function() {
+    window.location="/recipe.html?key=" + liveStream.recipeKey;
+  }
 
-  const spanElement = document.createElement('span');
-  spanElement.innerText = liveStream.liveStreamKey;
+  const overlay = document.createElement('div');
+  overlay.className = "overlay";
 
-  liveStreamElement.appendChild(spanElement);
-  return liveStreamElement;
+  const unorderedList = document.createElement('ul');
+  unorderedList.className = "list-unstyled";
+
+  const listElement = document.createElement('li');
+  listElement.className = "list-space";
+  listElement.innerText= liveStream.liveStreamKey;
+  
+  unorderedList.appendChild(listElement);
+  overlay.appendChild(unorderedList);
+  liveStreamItem.appendChild(overlay);
+  return liveStreamItem;
 }
 
 /** Gets the ID of the YouTube video that the user inputs. */
@@ -176,7 +201,7 @@ function getIdFromUrl(url) {
     return url.substring(url.lastIndexOf('=') + 1);
   }
 }
-
+  
 /** Videos: List JSON Response Retrieval */
 // https://apis.google.com/js/api.js
 var gapi = window.gapi = window.gapi || {};
@@ -906,8 +931,133 @@ gapi.load("client:auth2", function() {
   });
 });
 
+/** Calendar */
+
+// Array of API discovery doc URLs for APIs used by the quickstart
+var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+
+// Authorization scopes required by the API; multiple scopes can be
+// included, separated by spaces.
+var SCOPES = "https://www.googleapis.com/auth/calendar";
+
+/**
+  *  On load, called to load the auth2 library and API client library.
+  */
+function handleClientLoad() {
+  gapi.load('client:auth2', initClient());
+}
+
+/**
+  * Initializes the API client library and sets up sign-in state
+  * listeners.
+  */
+function initClient() {
+  fetch('assets/files/api_key.json').then(response => {
+    return response.json();
+  }).then(data => {
+    gapi.client.init({
+      apiKey: data.API_KEY,
+      clientId: data.CLIENT_ID,
+      discoveryDocs: DISCOVERY_DOCS,
+      scope: SCOPES
+    })
+  }).catch(error => {
+    console.log(error);
+  });
+}
+
+/**
+  *  Sign in the user upon button click.
+  */
+function handleAuthClick(event) {
+  var authorizeButton = document.getElementById('authorize_button');
+  var signoutButton = document.getElementById('signout_button');
+  var eventButton = document.getElementById('event_button');
+  gapi.auth2.getAuthInstance().signIn();
+  authorizeButton.style.display = 'none';
+  eventButton.style.display = 'block';
+  signoutButton.style.display = 'block';
+}
+
+/**
+  *  Sign out the user upon button click.
+  */
+function handleSignoutClick(event) {
+  var authorizeButton = document.getElementById('authorize_button');
+  var signoutButton = document.getElementById('signout_button');
+  var eventButton = document.getElementById('event_button');
+  gapi.auth2.getAuthInstance().signOut();
+  authorizeButton.style.display = 'block';
+  eventButton.style.display = 'none';
+  signoutButton.style.display = 'none';
+}
+
+/**
+  * Append a pre element to the body containing the given message
+  * as its text node. Used to display the results of the API call.
+  *
+  * @param {string} message Text to be placed in pre element.
+  */
+function appendPre(message) {
+  var pre = document.getElementById('content');
+  var textContent = document.createTextNode(message + '\n');
+  pre.appendChild(textContent);
+}
+
+function addEvent(link, startTime, endTime){
+  var event = {
+    'summary': 'Shef Live Stream',
+    'description': link,
+    'start': {
+      'dateTime': startTime,
+      'timeZone': 'America/Los_Angeles'
+    },
+    'end': {
+      'dateTime': endTime,
+      'timeZone': 'America/Los_Angeles'
+    },
+    'recurrence': [
+      'RRULE:FREQ=DAILY;COUNT=2'
+    ],
+    'reminders': {
+      'useDefault': false,
+      'overrides': [
+        {'method': 'email', 'minutes': 24 * 60},
+        {'method': 'popup', 'minutes': 10}
+      ]
+    }
+  };
+
+  var request = gapi.client.calendar.events.insert({
+    'calendarId': 'primary',
+    'resource': event
+  });
+
+  request.execute(function(event) {
+    appendPre('Event created: ' + event.htmlLink);
+  });
+}
+
 function hyperlinkText(text, link) {
   return "<a href=" + link + ">" + text + "</a>";
+}
+
+/** Fetches the recipes associated with the user from the server and adds them
+    as options to the DOM. */
+function loadUserRecipes() {
+  fetch('/fetch-user-recipes').then(response => response.json()).then((recipes) => {
+    const recipeList = document.getElementById('recipe-selection');
+    recipeCount = 0;
+    recipes.forEach((recipe) => {
+      var recipeOption = document.createElement('option');
+      if (recipeCount === 0) {
+        recipeOption.selected = "selected";
+        recipeCount++;
+      }
+      recipeOption.innerHTML += recipe;
+      recipeList.appendChild(recipeOption);
+    })
+  });
 }
 
 /** Fetches recipes from the server and adds them to the DOM. */
@@ -966,16 +1116,34 @@ function recipePageInit() {
 }
 
 function getRecipeInfo() {
-  var url = window.location.href;
-  var key = url.split('?')[1];
+  var key = getURLParamVal("key");
 
-  fetch('/new-recipe?' + key).then(response => response.json()).then(recipe => {
+  fetch('/new-recipe?key=' + key).then(response => response.json()).then(recipe => {
     document.getElementById('recipe-title').innerHTML = recipe.name;
+    document.getElementById('recipe-author').innerHTML = recipe.user;
     document.getElementById('recipe-description').innerHTML = recipe.description;
+    setAssociatedLiveStreamLink(key);
     displayTags(recipe.tags);
     displayIngredients(recipe.ingredients);
     displaySteps(recipe.steps);
   });
+}
+
+/** Gets the link to the live stream associated with the given recipe key
+    and adds it to the DOM. */
+function setAssociatedLiveStreamLink(recipeKey) {
+  fetch('/fetch-associated-live-stream?recipe-key=' + recipeKey).then(response => response.json()).then((liveStreams) => {
+    // There should only be one live stream.
+    document.getElementById('recipe-video').innerHTML += liveStreams[0].link;
+  });
+}
+
+function addLiveStreamToCalendar() {
+  var key = getURLParamVal("key");
+  fetch('/fetch-associated-live-stream?recipe-key=' + key).then(response => response.json()).then((liveStreams => {
+    // There should only be one live stream.
+    addEvent(liveStreams[0].link, liveStreams[0].startTime, liveStreams[0].endTime)
+  }));
 }
 
 /** Formats and displays tags on the page. */
